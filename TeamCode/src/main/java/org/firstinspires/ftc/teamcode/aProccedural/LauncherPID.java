@@ -17,6 +17,8 @@ public class LauncherPID {
     private static double lastTime;
     private static double currentVel = 0;
     private static double totalError = 0;
+
+    //TODO Tune these
     public static double LauncherkP = .5;
     public static double LauncherkI = .2;
     public static double LauncherkD = .2;
@@ -40,9 +42,6 @@ public class LauncherPID {
         totalError += (currentError * timeStep);
         //Secant approximation of a derivative
         double errorChange = (currentError - (LauncherTargetVelocity - lastVel)) / timeStep;
-
-        //TODO Tune these
-
 
         double p = normalizeLauncherPID(
                 LauncherkP * currentError + //P term
