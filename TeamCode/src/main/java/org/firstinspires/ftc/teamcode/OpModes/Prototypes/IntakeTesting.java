@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
 
 @TeleOp
-public class LauncherTesting extends OpMode {
+public class IntakeTesting extends OpMode {
 
     //left
     private DcMotor l;
@@ -19,7 +19,7 @@ public class LauncherTesting extends OpMode {
     Input input = new Input();
     @Override
     public void init() {
-        l = hardwareMap.get(DcMotor.class, "LauncherMotor");
+        l = hardwareMap.get(DcMotor.class, "IntakeMotor");
         l.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //r = hardwareMap.get(DcMotor.class, "right");
         //r.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

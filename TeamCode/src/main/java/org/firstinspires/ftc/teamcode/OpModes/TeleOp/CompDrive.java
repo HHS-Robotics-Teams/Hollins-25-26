@@ -1,16 +1,19 @@
 package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftLauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightLauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.CONVEYOR_REVERSED;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.CONVEYOR_RUN;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_IDLE_POWER;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_POWER;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LaunchAmt;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -24,6 +27,15 @@ public class CompDrive extends OpMode {
 
     //Instantiated new input
     Input input = new Input();
+
+    private enum LaunchState {
+        SPIN_UP,
+        LAUNCH_ONE,
+        LAUNCH_TWO,
+        LAUNCH_THREE,
+        SPIN_DOWN
+    }
+    private LaunchState launchState = LaunchState.SPIN_UP;
 
 
     @Override
@@ -42,19 +54,18 @@ public class CompDrive extends OpMode {
 
         /* ---------- Launcher ---------- */
         if(input.a.down()){
-            LAUNCHER_RUN =! LAUNCHER_RUN;
+            LaunchAmt++;
         }
-        if(LAUNCHER_RUN){
-            leftLauncherMotor.setPower(LAUNCHER_POWER);
-            rightLauncherMotor.setPower(LAUNCHER_POWER);
-        }
+        runLauncher();
 
         /* ---------- Intake ---------- */
         if(input.b.down()){
             INTAKE_RUN =! INTAKE_RUN;
         }
         if(INTAKE_RUN){
-            //todo this (need to design)
+            IntakeMotor.setPower(INTAKE_POWER);
+        } else {
+            IntakeMotor.setPower(INTAKE_IDLE_POWER);
         }
 
         /* ---------- Conveyor ---------- */
@@ -92,4 +103,10 @@ public class CompDrive extends OpMode {
         telemetry.addLine("Launcher running status: " + LAUNCHER_RUN);
     }
 
+    public void runLauncher() {
+        switch(launchState){
+            case SPIN_UP:
+                LauncherMotor.setPower(LAUNCHER_POWER);
+        }
+    }
 }

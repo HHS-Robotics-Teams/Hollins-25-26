@@ -20,11 +20,8 @@ public class Components {
     public static DcMotor rightRear;
 
     //Instantiate Launcher Motors
-    public static DcMotor leftLauncherMotor;
-    public static DcMotor rightLauncherMotor;
-
-    //Instantiate Pivot Motors
-    public static DcMotorEx pivotMotor;
+    public static DcMotorEx LauncherMotor;
+    public static DcMotor IntakeMotor;
 
 
     /*
@@ -46,17 +43,10 @@ public class Components {
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Initialize Launcher
-        leftLauncherMotor = hardwareMap.get(DcMotor.class, "leftLauncherMotor");
-        rightLauncherMotor = hardwareMap.get(DcMotor.class, "rightLauncherMotor");
+        LauncherMotor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
 
         //Launcher Settings
-        leftLauncherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightLauncherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        //Initialize Pivot Motor
-        pivotMotor = hardwareMap.get(DcMotorEx.class, "pivotMotor");
-        pivotMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivotMotor.setTargetPosition(PIVOT_HORIZONTAL_POS);
+        LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
