@@ -1,0 +1,81 @@
+package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
+
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR;
+import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.LauncherkD;
+import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.LauncherkI;
+import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.LauncherkP;
+import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.getLauncherTargetVelocity;
+import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.initLauncherPID;
+import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.setLauncherTargetVelocity;
+import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.updateLauncherPID;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.aProccedural.Components;
+import org.firstinspires.ftc.teamcode.aProccedural.Input;
+
+@TeleOp
+public class LauncherPIDTesting extends OpMode {
+    //Instantiated new input
+    Input input = new Input();
+    double delta = 0.05;
+
+
+    @Override
+    public void init() {
+        //Initialize Components
+        Components.initComponents(hardwareMap);
+
+        /* ---------- Telemetry ---------- */
+        telemetry.addLine("--------- Initialization Complete ---------");
+    }
+
+    @Override
+    public void start() {
+        initLauncherPID(getRuntime(), LAUNCHER_FAR);
+    }
+
+    @Override
+    public void loop() {
+        input.pollGamepad(gamepad1);
+
+        /* ---------- Launcher ---------- */
+        if (input.a.down()) {
+            if(getLauncherTargetVelocity() == 0) {
+                setLauncherTargetVelocity(LAUNCHER_FAR);
+            } else {
+                setLauncherTargetVelocity(0);
+            }
+        }
+        updateLauncherPID(getRuntime());
+
+        if(input.b.down()){
+            LauncherkP += delta;
+        }
+        if(input.x.down()){
+            LauncherkI += delta;
+        }
+        if(input.y.down()){
+            LauncherkD += delta;
+        }
+        if(input.right_trigger.down()){
+            delta += 0.01;
+        }
+        if(input.left_trigger.down()){
+            delta -= 0.01;
+        }
+
+        telemetry.addLine("Target: " + getLauncherTargetVelocity());
+        telemetry.addLine("Current: " + LauncherMotor.getVelocity(AngleUnit.RADIANS));
+        telemetry.addLine("Error: " + (getLauncherTargetVelocity() - LauncherMotor.getVelocity(AngleUnit.RADIANS)));
+        telemetry.addLine();
+        telemetry.addLine("kP: " + LauncherkP);
+        telemetry.addLine("kI: " + LauncherkI);
+        telemetry.addLine("kD: " + LauncherkD);
+        telemetry.addLine();
+        telemetry.addLine("Delta: " + delta);
+    }
+}
