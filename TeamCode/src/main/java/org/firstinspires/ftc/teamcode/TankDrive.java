@@ -79,13 +79,13 @@ public final class TankDrive {
         public double kV = 0;
         public double kA = 0;
         // drive model parameters
-        public double inPerTick = 1.998; //todo
-        public double trackWidthTicks = 0; //todo
+//        public double inPerTick = 1.998; //todo
+//        public double trackWidthTicks = 0; //todo
 
         // feedforward parameters (in tick units)
-        public double kS = 0; //todo
-        public double kV = 0; //todo
-        public double kA = 0; //todo
+//        public double kS = 0; //todo
+//        public double kV = 0; //todo
+//        public double kA = 0; //todo
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;
