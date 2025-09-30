@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode.aProccedural;
+package org.firstinspires.ftc.teamcode.LauncherPID;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -14,15 +16,25 @@ public class LauncherPID {
       */
     private static double LauncherTargetVelocity = 0;
     private static double lastVel;
+    public static double getLastVel(){return lastVel;}
     private static double lastTime;
+    public static double getLastTime(){return lastTime;}
     private static double currentVel = 0;
     private static double totalError = 0;
+    public static double getTotalError(){return totalError;}
 
     //TODO Tune these
     public static double LauncherkP = .5;
-    public static double LauncherkI = .2;
-    public static double LauncherkD = .2;
+    public static double LauncherkI = 0;
+    public static double LauncherkD = 0;
 
+    /**
+     * Initializes some vars and starts motor spin-up
+     * DO NOT RUN IN INIT
+     * @param currentTime use getRuntime();
+     * @param startTarget target vel
+     * DO NOT RUN IN INIT
+     */
     public static void initLauncherPID(double currentTime, double startTarget) {
         lastTime = currentTime;
         lastVel = 0;
@@ -43,13 +55,22 @@ public class LauncherPID {
         //Secant approximation of a derivative
         double errorChange = (currentError - (LauncherTargetVelocity - lastVel)) / timeStep;
 
-        double p = normalizeLauncherPID(
+        double powerOutput = normalizeLauncherPID(
                 LauncherkP * currentError + //P term
                 LauncherkI * totalError +   //I term
                 LauncherkD * errorChange    //D term
         );
 
-        LauncherMotor.setPower(p);
+        //TODO Decide if still needed after testing,
+        //mostly is here for fault tolerance
+        if((currentVel >= 2.5) && (powerOutput <=0)){
+            LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            powerOutput =0;
+        } else {
+            LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
+
+        LauncherMotor.setPower(powerOutput);
 
         //More var updating
         lastVel = currentVel;
@@ -71,7 +92,7 @@ public class LauncherPID {
         return LauncherTargetVelocity;
     }
 
-    public static double getLauncherCurentVelocity() {
+    public static double getLauncherCurrentVelocity() {
         return currentVel;
     }
 

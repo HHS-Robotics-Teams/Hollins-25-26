@@ -9,7 +9,11 @@ public class Constants {
 
     public static final int PIVOT_HORIZONTAL_POS = 0; //todo tune
 
+    public static final double LAUNCHER_HOLDER_HOLDING_POSITION = 0.75;
+    public static final double LAUNCHER_HOLDER_LAUNCH_POSITION = 0.25;
+
     /* Flags */
     public static boolean INTAKE_REVERSED;
     public static boolean INTAKE_RUN;
+    public static boolean LAUNCHER_HOLDER_ENABLE = true;
 }

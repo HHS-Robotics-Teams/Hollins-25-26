@@ -1,14 +1,17 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
+import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getLastTime;
+import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getLastVel;
+import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getTotalError;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR;
-import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.LauncherkD;
-import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.LauncherkI;
-import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.LauncherkP;
-import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.getLauncherTargetVelocity;
-import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.initLauncherPID;
-import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.setLauncherTargetVelocity;
-import static org.firstinspires.ftc.teamcode.aProccedural.LauncherPID.updateLauncherPID;
+import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.LauncherkD;
+import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.LauncherkI;
+import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.LauncherkP;
+import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getLauncherTargetVelocity;
+import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.initLauncherPID;
+import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.setLauncherTargetVelocity;
+import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.updateLauncherPID;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -68,6 +71,14 @@ public class LauncherPIDTesting extends OpMode {
             delta -= 0.01;
         }
 
+
+        telemetry.addLine("'A' to toggle motor\n" +
+                "'B' to change kP\n" +
+                "'X' to change kI\n" +
+                "'Y' to change kD\n" +
+                "'RT' to increase delta\n" +
+                "'LT' to decrease delta");
+        telemetry.addLine();
         telemetry.addLine("Target: " + getLauncherTargetVelocity());
         telemetry.addLine("Current: " + LauncherMotor.getVelocity(AngleUnit.RADIANS));
         telemetry.addLine("Error: " + (getLauncherTargetVelocity() - LauncherMotor.getVelocity(AngleUnit.RADIANS)));
@@ -77,5 +88,11 @@ public class LauncherPIDTesting extends OpMode {
         telemetry.addLine("kD: " + LauncherkD);
         telemetry.addLine();
         telemetry.addLine("Delta: " + delta);
+        telemetry.addLine();
+        telemetry.addLine("Total Error: " + getTotalError());
+        telemetry.addLine("Last Time: " + getLastTime());
+        telemetry.addLine("Time: " + getRuntime());
+        telemetry.addLine("Delta Time: " + (getRuntime() - getLastTime()) );
+        telemetry.addLine("Last Vel: " + getLastVel());
     }
 }
