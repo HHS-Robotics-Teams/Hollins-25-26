@@ -77,6 +77,10 @@ public class LauncherPID {
         lastTime = currentTime;
     }
 
+    public static boolean getLaunchReadinessStatus() {
+        return Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LauncherTargetVelocity) <= Math.PI / 6;
+    }
+
     /**
      * @param n power from PID Controller
      * @return value usable for DcMotorEx,

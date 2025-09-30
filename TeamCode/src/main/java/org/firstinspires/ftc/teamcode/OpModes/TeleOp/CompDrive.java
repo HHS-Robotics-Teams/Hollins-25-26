@@ -43,6 +43,7 @@ public class CompDrive extends OpMode {
     @Override
     public void start(){
         initLauncherPID(getRuntime(), LAUNCHER_FAR);
+        LauncherHolderServo.setPosition(LAUNCHER_HOLDER_HOLDING_POSITION);
     }
 
     @Override
