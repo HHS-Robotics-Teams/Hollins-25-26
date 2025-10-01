@@ -38,6 +38,8 @@ public class RobotComponents {
 
         // Reverse the direction of the right motor
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        arm_tilt.setDirection(DcMotor.Direction.REVERSE);
+        claw_tilt.setDirection(DcMotor.Direction.REVERSE);
 
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);

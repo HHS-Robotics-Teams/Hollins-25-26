@@ -9,7 +9,6 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.clawtiltpick
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.clawtiltstartpos;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.pincerleftclosed;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.pincerleftopen;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.pincerrightopen;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.tiltdroppos;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.tiltmaxpos;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.tiltminpos;
@@ -49,20 +48,23 @@ public class OutreachBotDrive extends OpMode {
 
         RobotComponents.init(hardwareMap);
         // Create AprilTag processor
+
         tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
 
-        pincer_left.setPosition(pincerrightopen);
+        pincer_left.setPosition(pincerleftopen);
+        arm_tilt.setTargetPosition(tiltminpos);
+        claw_tilt.setTargetPosition(0);
+
         claw_tilt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm_tilt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         claw_tilt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm_tilt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        arm_tilt.setPower(1);
-        claw_tilt.setPower(1);
+        arm_tilt.setPower(.3);
+        claw_tilt.setPower(.5);
 
-        arm_tilt.setTargetPosition(tiltminpos);
-        claw_tilt.setTargetPosition(clawtiltstartpos);
+
 
         input = new Input();
 
@@ -76,6 +78,7 @@ public class OutreachBotDrive extends OpMode {
             telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
             telemetry.addData("Pitch (deg)", "%.2f", tag.ftcPose.pitch);
             telemetry.addData("Roll (deg)", "%.2f", tag.ftcPose.roll);
+            telemetry.update();
         }
 
     }
@@ -87,7 +90,7 @@ public class OutreachBotDrive extends OpMode {
 
 
         // Tank drive control
-        double forwardPower = -gamepad1.left_stick_y; // Forward/backward movement
+        double forwardPower = gamepad1.left_stick_y; // Forward/backward movement
         double turnPower = -gamepad1.right_stick_x; // Left/right turning
 
         // Calculate motor powers for left and right motors
@@ -98,35 +101,30 @@ public class OutreachBotDrive extends OpMode {
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);
 
-        // Automatic claw tilt
-        if ((Math.abs(arm_tilt.getCurrentPosition() - tiltpickuppos) < AutomaticPickupInterval)) {
-            claw_tilt.setTargetPosition(clawtiltpickuppos);
-            isClawTilted = true;
-        }
+         //Automatic claw tilt
+//        if ((Math.abs(arm_tilt.getCurrentPosition() - tiltpickuppos) < AutomaticPickupInterval)) {
+//            claw_tilt.setTargetPosition(clawtiltpickuppos);
+//            isClawTilted = true;
+//        }
         //Home Position
         if (input.start.down()) {
-            arm_tilt.setPower(0);
             claw_tilt.setTargetPosition(clawtiltmaxpos);
-            clawTiltTimer.reset();
-            if (clawTiltTimer.seconds() > 1) {
-                arm_tilt.setPower(1);
-                arm_tilt.setTargetPosition(tiltminpos);
-                claw_tilt.setTargetPosition(clawtiltstartpos);
-                pincer_left.setPosition(pincerrightopen);
-            }
+            arm_tilt.setTargetPosition(tiltminpos);
+            claw_tilt.setTargetPosition(clawtiltstartpos);
+            pincer_left.setPosition(pincerleftopen);
         }
         //Manual arm tilt
-        if (input.dpad_up.down() && (arm_tilt.getCurrentPosition() >= tiltminpos)){
+        if (input.dpad_up.down() && (arm_tilt.getCurrentPosition() <= tiltmaxpos)){
             arm_tilt.setTargetPosition(arm_tilt.getCurrentPosition() + TiltInterval);
         }
-        if (input.dpad_down.down() && (arm_tilt.getCurrentPosition() <= tiltmaxpos)){
+        if (input.dpad_down.down() && (arm_tilt.getCurrentPosition() >= tiltminpos)){
             arm_tilt.setTargetPosition(arm_tilt.getCurrentPosition() - TiltInterval);
         }
         //Manual Claw Tilt
-        if (input.left_bumper.down() && (claw_tilt.getCurrentPosition() >= clawtiltstartpos)){
+        if (input.left_bumper.down() && (claw_tilt.getCurrentPosition() <= clawtiltmaxpos )){
             claw_tilt.setTargetPosition(claw_tilt.getCurrentPosition() + ClawInterval);
         }
-        if (input.left_trigger.down() && (claw_tilt.getCurrentPosition() <= clawtiltdroppos)){
+        if (input.left_trigger.down() && (claw_tilt.getCurrentPosition() >= clawtiltdroppos)){
             claw_tilt.setTargetPosition(claw_tilt.getCurrentPosition() - ClawInterval);
         }
         // Claw
@@ -138,25 +136,17 @@ public class OutreachBotDrive extends OpMode {
         }
         //Pickup Position
         if (input.a.down()) {
-            arm_tilt.setPower(0);
             claw_tilt.setTargetPosition(clawtiltmaxpos);
+            arm_tilt.setTargetPosition(tiltpickuppos);
+            claw_tilt.setTargetPosition(clawtiltpickuppos);
+            pincer_left.setPosition(pincerleftopen);
             clawTiltTimer.reset();
-            if (clawTiltTimer.seconds() > 1) {
-                arm_tilt.setPower(1);
-                arm_tilt.setTargetPosition(tiltpickuppos);
-                claw_tilt.setTargetPosition(clawtiltpickuppos);
-                pincer_left.setPosition(pincerrightopen);
-            }
         }
         //Drop Position
         if (input.b.down()){
             arm_tilt.setTargetPosition(tiltdroppos);
             claw_tilt.setTargetPosition(clawtiltdroppos);
         }
-
-
-
-
 
 
         // --- AprilTag Detection ---
@@ -170,6 +160,7 @@ public class OutreachBotDrive extends OpMode {
             telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
             telemetry.addData("Pitch (deg)", "%.2f", tag.ftcPose.pitch);
             telemetry.addData("Roll (deg)", "%.2f", tag.ftcPose.roll);
+            telemetry.update();
         }
 
         // Display the detected color on telemetry

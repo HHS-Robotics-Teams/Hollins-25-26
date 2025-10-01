@@ -19,6 +19,9 @@ public class PoseFinder extends OpMode {
     @Override
     public void init() {
         RobotComponents.init(hardwareMap);
+        arm_tilt.setTargetPosition(0);
+        claw_tilt.setTargetPosition(0);
+
         arm_tilt.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm_tilt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm_tilt.setPower(1);
@@ -27,8 +30,7 @@ public class PoseFinder extends OpMode {
         claw_tilt.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         claw_tilt.setPower(1);
 
-        arm_tilt.setTargetPosition(0);
-        claw_tilt.setTargetPosition(0);
+
 
         pincer_left.setPosition(0);
     }
