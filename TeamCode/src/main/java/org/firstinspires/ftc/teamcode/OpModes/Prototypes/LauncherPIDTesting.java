@@ -1,17 +1,17 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getLastTime;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getLastVel;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getTotalError;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getLastTime;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getLastVel;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getTotalError;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.LauncherkD;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.LauncherkI;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.LauncherkP;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getLauncherTargetVelocity;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.initLauncherPID;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.setLauncherTargetVelocity;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.updateLauncherPID;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.LauncherkD;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.LauncherkI;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.LauncherkP;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getLauncherTargetVelocity;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.initLauncherPID;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.setLauncherTargetVelocity;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.updateLauncherPID;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;

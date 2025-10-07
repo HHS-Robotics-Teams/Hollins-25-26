@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue.Far;
 
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getLaunchReadinessStatus;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.initLauncherPID;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.setLauncherTargetVelocity;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.updateLauncherPID;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getLaunchReadinessStatus;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.initLauncherPID;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.setLauncherTargetVelocity;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.updateLauncherPID;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHolderServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_HOLDING_POSITION;
@@ -14,9 +14,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 

@@ -4,8 +4,11 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHolderServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftMiddleRollerServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.middleSecondRollerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightMiddleRollerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_REVERSED;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_RUN;
@@ -14,11 +17,12 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOL
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_HOLDING_POSITION;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_LAUNCH_POSITION;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_IDLE;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getLauncherCurrentVelocity;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.getLauncherTargetVelocity;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.initLauncherPID;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.setLauncherTargetVelocity;
-import static org.firstinspires.ftc.teamcode.LauncherPID.LauncherPID.updateLauncherPID;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getLauncherCurrentVelocity;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getLauncherTargetVelocity;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.initLauncherPID;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.setLauncherTargetVelocity;
+import static org.firstinspires.ftc.teamcode.Math.LauncherPID.updateLauncherPID;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.ROLLER_POWER;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -77,11 +81,20 @@ public class CompDrive extends OpMode {
         if(INTAKE_RUN){
             if(!INTAKE_REVERSED){
                 IntakeMotor.setPower(INTAKE_POWER);
+                leftMiddleRollerServo.setPower(ROLLER_POWER);
+                rightMiddleRollerServo.setPower(ROLLER_POWER);
+                middleSecondRollerServo.setPower(ROLLER_POWER);
             } else {
                 IntakeMotor.setPower(-INTAKE_POWER);
+                leftMiddleRollerServo.setPower(-ROLLER_POWER);
+                rightMiddleRollerServo.setPower(-ROLLER_POWER);
+                middleSecondRollerServo.setPower(-ROLLER_POWER);
             }
         } else {
             IntakeMotor.setPower(0);
+            leftMiddleRollerServo.setPower(0);
+            rightMiddleRollerServo.setPower(0);
+            middleSecondRollerServo.setPower(0);
         }
 
         /* ---------- Drivetrain ---------- */
@@ -99,11 +112,11 @@ public class CompDrive extends OpMode {
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Comp Drive Running ---------");
-        telemetry.addLine("Intake running? "       + INTAKE_RUN);
-        telemetry.addLine("Intake reversed? "      + INTAKE_REVERSED);
-        telemetry.addLine("Launcher Holder? "      + LAUNCHER_HOLDER_ENABLE);
-        telemetry.addLine("Launcher Velocity: "    + getLauncherCurrentVelocity());
-        telemetry.addLine("Launcher TargetVel: "   + getLauncherTargetVelocity());
+        telemetry.addLine("Intake running? "     + INTAKE_RUN);
+        telemetry.addLine("Intake reversed? "    + INTAKE_REVERSED);
+        telemetry.addLine("Launcher Holder? "    + LAUNCHER_HOLDER_ENABLE);
+        telemetry.addLine("Launcher Velocity: "  + getLauncherCurrentVelocity());
+        telemetry.addLine("Launcher TargetVel: " + getLauncherTargetVelocity());
     }
 
 }

@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.aProccedural;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.openftc.easyopencv.OpenCvWebcam;
 
 /**
  * File to store all hardware code
@@ -25,6 +28,13 @@ public class Components {
 
     //Instantiate Servos
     public static Servo LauncherHolderServo;
+
+    //Instantiate middle roller servos
+    public static CRServo leftMiddleRollerServo;
+    public static CRServo rightMiddleRollerServo;
+    public static CRServo middleSecondRollerServo;
+
+    //todo public static OpenCvWebcam webcam;
 
 
     /*
@@ -60,8 +70,12 @@ public class Components {
 
         //Initialize Servos
         LauncherHolderServo = hardwareMap.get(Servo.class, "LauncherHolderServo");
+        leftMiddleRollerServo = hardwareMap.get(CRServo.class, "LeftMiddleHolderServo");
+        rightMiddleRollerServo = hardwareMap.get(CRServo.class, "RightMiddleRollerServo");
+        middleSecondRollerServo = hardwareMap.get(CRServo.class, "MiddleSecondRollerServo");
 
-
+        //todo Initalize Webcam
+        //webcam = hardwareMap.get(OpenCvWebcam.class, "webcam");
 
     }
 
