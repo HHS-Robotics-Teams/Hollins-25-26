@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Math;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
+import android.annotation.SuppressLint;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -11,6 +13,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WebcamPos {
@@ -43,6 +46,17 @@ public class WebcamPos {
     }
 
     public static double calculateLauncherPower() {
+        double launcherDistance;
+        List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
+        for(AprilTagDetection detection : currentDetections) {
+            if(allianceSide == "BLUE" && detection.id == 20){
+                calculateDistance(detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z, detection.ftcPose.yaw);
+                break;
+            } else if(allianceSide == "RED" && detection.id == 24){
+                calculateDistance(detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z, detection.ftcPose.yaw);
+                break;
+            }
+        }
 
         return 0;
     }
@@ -52,6 +66,7 @@ public class WebcamPos {
      *
      * @param telemetry telemetry
      */
+    @SuppressLint("DefaultLocale")
     public static void aprilTagTelemetry(Telemetry telemetry) {
 
         List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
@@ -79,7 +94,11 @@ public class WebcamPos {
      * calculates the distance for power calculations
      * @return distance (hypotenuse) of triangle
      */
-    private static double calculateDistance() {
+    private static double calculateDistance(double camX, double camY, double camZ, double camYaw) {
+        double launchX = camX + /*cam offset*/(-2);
+        double launchY = camY + /*cam offset*/(-5);
+        double launchZ = camZ + /*cam offset*/(-2);
+        double launchElevation = Math.atan(launchZ / launchY);
         return 0;
     }
 }
