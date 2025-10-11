@@ -2,17 +2,15 @@ package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHolderServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftMiddleRollerServo;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.middleSecondRollerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightMiddleRollerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_REVERSED;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_RUN;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_BASE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_ENABLE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_HOLDING_POSITION;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_LAUNCH_POSITION;
@@ -22,13 +20,14 @@ import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getLauncherTargetV
 import static org.firstinspires.ftc.teamcode.Math.LauncherPID.initLauncherPID;
 import static org.firstinspires.ftc.teamcode.Math.LauncherPID.setLauncherTargetVelocity;
 import static org.firstinspires.ftc.teamcode.Math.LauncherPID.updateLauncherPID;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.ROLLER_POWER;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
-
+@TeleOp
 public class CompDrive extends OpMode {
 
     //Instantiated new input
@@ -46,7 +45,7 @@ public class CompDrive extends OpMode {
 
     @Override
     public void start(){
-        initLauncherPID(getRuntime(), LAUNCHER_FAR);
+        //initLauncherPID(getRuntime(), LAUNCHER_FAR_BASE);
         LauncherHolderServo.setPosition(LAUNCHER_HOLDER_HOLDING_POSITION);
     }
 
@@ -56,20 +55,21 @@ public class CompDrive extends OpMode {
 
         /* ---------- Launcher ---------- */
         if(input.right_trigger.down()){
-            if(getLauncherTargetVelocity()==LAUNCHER_IDLE){
-                setLauncherTargetVelocity(LAUNCHER_FAR);
+            if(getLauncherTargetVelocity()<=LAUNCHER_IDLE){
+                LauncherMotor.setVelocity(2.75, AngleUnit.RADIANS);
+                //setLauncherTargetVelocity(LAUNCHER_FAR_BASE);
             } else {
                 LAUNCHER_HOLDER_ENABLE = true;
                 LauncherHolderServo.setPosition(LAUNCHER_HOLDER_HOLDING_POSITION);
-                setLauncherTargetVelocity(LAUNCHER_IDLE);
+                LauncherMotor.setVelocity(LAUNCHER_IDLE);
+                //setLauncherTargetVelocity(LAUNCHER_IDLE);
             }
         }
-        updateLauncherPID(getRuntime());
+        //updateLauncherPID(getRuntime());
         if(LAUNCHER_HOLDER_ENABLE && (input.right_bumper.down())) {//(/*vel error*/Math.abs((getLauncherCurrentVelocity() - getLauncherTargetVelocity())) <= /*margin*/Math.PI / 10) is a future goal
             LAUNCHER_HOLDER_ENABLE = false;
             LauncherHolderServo.setPosition(LAUNCHER_HOLDER_LAUNCH_POSITION);
         }
-
 
         /* ---------- Intake ---------- */
         if(input.b.down()){
@@ -81,20 +81,11 @@ public class CompDrive extends OpMode {
         if(INTAKE_RUN){
             if(!INTAKE_REVERSED){
                 IntakeMotor.setPower(INTAKE_POWER);
-                leftMiddleRollerServo.setPower(ROLLER_POWER);
-                rightMiddleRollerServo.setPower(ROLLER_POWER);
-                middleSecondRollerServo.setPower(ROLLER_POWER);
             } else {
                 IntakeMotor.setPower(-INTAKE_POWER);
-                leftMiddleRollerServo.setPower(-ROLLER_POWER);
-                rightMiddleRollerServo.setPower(-ROLLER_POWER);
-                middleSecondRollerServo.setPower(-ROLLER_POWER);
             }
         } else {
             IntakeMotor.setPower(0);
-            leftMiddleRollerServo.setPower(0);
-            rightMiddleRollerServo.setPower(0);
-            middleSecondRollerServo.setPower(0);
         }
 
         /* ---------- Drivetrain ---------- */

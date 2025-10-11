@@ -5,7 +5,7 @@ import static org.firstinspires.ftc.teamcode.Math.LauncherPID.initLauncherPID;
 import static org.firstinspires.ftc.teamcode.Math.LauncherPID.setLauncherTargetVelocity;
 import static org.firstinspires.ftc.teamcode.Math.LauncherPID.updateLauncherPID;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHolderServo;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_BASE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_HOLDING_POSITION;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_LAUNCH_POSITION;
 
@@ -45,7 +45,7 @@ public class ScrimmageAuto extends OpMode {
     }
 
     public void start() {
-        initLauncherPID(getRuntime(), LAUNCHER_FAR);
+        initLauncherPID(getRuntime(), LAUNCHER_FAR_BASE);
         LauncherHolderServo.setPosition(LAUNCHER_HOLDER_HOLDING_POSITION);
         state = AutoState.Shoot;
     }

@@ -64,8 +64,8 @@ public class LauncherPID {
         //TODO Decide if still needed after testing,
         //mostly is here for fault tolerance
         if((currentVel >= 2.5) && (powerOutput <=0)){
-            LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            powerOutput =0;
+            //LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            //powerOutput =0;
         } else {
             LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }

@@ -29,10 +29,6 @@ public class Components {
     //Instantiate Servos
     public static Servo LauncherHolderServo;
 
-    //Instantiate middle roller servos
-    public static CRServo leftMiddleRollerServo;
-    public static CRServo rightMiddleRollerServo;
-    public static CRServo middleSecondRollerServo;
 
     //todo public static OpenCvWebcam webcam;
 
@@ -61,7 +57,7 @@ public class Components {
 
         //Initialize Launcher
         LauncherMotor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
-        LauncherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //Initialize Pivot Motor
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
@@ -70,9 +66,6 @@ public class Components {
 
         //Initialize Servos
         LauncherHolderServo = hardwareMap.get(Servo.class, "LauncherHolderServo");
-        leftMiddleRollerServo = hardwareMap.get(CRServo.class, "LeftMiddleHolderServo");
-        rightMiddleRollerServo = hardwareMap.get(CRServo.class, "RightMiddleRollerServo");
-        middleSecondRollerServo = hardwareMap.get(CRServo.class, "MiddleSecondRollerServo");
 
         //todo Initalize Webcam
         //webcam = hardwareMap.get(OpenCvWebcam.class, "webcam");
