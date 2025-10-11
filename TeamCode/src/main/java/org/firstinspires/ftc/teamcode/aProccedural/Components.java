@@ -15,6 +15,7 @@ public class Components {
     public DcMotor rightFront;
     public DcMotor leftRear;
     public DcMotor rightRear;
+    public DcMotor shooter;
 
 
     /*
