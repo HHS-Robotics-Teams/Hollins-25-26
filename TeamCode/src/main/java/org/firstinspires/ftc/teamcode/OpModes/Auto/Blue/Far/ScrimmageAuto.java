@@ -4,10 +4,10 @@ import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getLaunchReadiness
 import static org.firstinspires.ftc.teamcode.Math.LauncherPID.initLauncherPID;
 import static org.firstinspires.ftc.teamcode.Math.LauncherPID.setLauncherTargetVelocity;
 import static org.firstinspires.ftc.teamcode.Math.LauncherPID.updateLauncherPID;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHolderServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftLauncherHolderServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_BASE;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_HOLDING_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_LAUNCH_POSITION;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_HOLDING_POSITION;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -46,7 +46,7 @@ public class ScrimmageAuto extends OpMode {
 
     public void start() {
         initLauncherPID(getRuntime(), LAUNCHER_FAR_BASE);
-        LauncherHolderServo.setPosition(LAUNCHER_HOLDER_HOLDING_POSITION);
+        LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
         state = AutoState.Shoot;
     }
 
@@ -59,14 +59,14 @@ public class ScrimmageAuto extends OpMode {
                 break;
             case Shoot:
                 if(getLaunchReadinessStatus()) {
-                    LauncherHolderServo.setPosition(LAUNCHER_HOLDER_LAUNCH_POSITION);
+                    LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
                     launchTime = getRuntime();
                     if(getRuntime() - launchTime >= 1){
                         state = AutoState.Move;
                         setLauncherTargetVelocity(0);
                     }
                 } else {
-                    LauncherHolderServo.setPosition(LAUNCHER_HOLDER_HOLDING_POSITION);
+                    LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
                 }
                 break;
             case Move:

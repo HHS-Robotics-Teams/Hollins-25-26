@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHolderServo;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_HOLDING_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_LAUNCH_POSITION;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftLauncherHolderServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightLauncherHolderServo;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,20 +19,20 @@ public class LauncherHolderServoTesting extends OpMode {
     }
 
     public void start() {
-        LauncherHolderServo.setPosition(0);
+        RightLauncherHolderServo.setPosition(0);
     }
 
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
         if(input.x.down()){
-            LauncherHolderServo.setPosition(LauncherHolderServo.getPosition()+0.05);
+            RightLauncherHolderServo.setPosition(RightLauncherHolderServo.getPosition()+0.05);
         }
         if(input.y.down()){
-            LauncherHolderServo.setPosition(LauncherHolderServo.getPosition()-0.05);
+            RightLauncherHolderServo.setPosition(RightLauncherHolderServo.getPosition()-0.05);
         }
         telemetry.addLine("X to increase");
         telemetry.addLine("Y to decrease");
-        telemetry.addData("Launcher Pos: ", LauncherHolderServo.getPosition());
+        telemetry.addData("Launcher Pos: ", RightLauncherHolderServo.getPosition());
     }
 }

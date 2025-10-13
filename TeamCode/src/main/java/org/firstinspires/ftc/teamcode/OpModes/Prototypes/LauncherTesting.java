@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -14,19 +13,25 @@ import org.firstinspires.ftc.teamcode.aProccedural.Input;
 public class LauncherTesting extends OpMode {
 
     //left
-    private DcMotorEx l;
+    private DcMotorEx launcher_motor;
     //right
-    private DcMotor r;
+    private DcMotor intake_motor;
     //power
-    private double p = 0.25;
+    private double power = 0.25;
     private double delta = 0.05;
     Input input = new Input();
     @Override
     public void init() {
-        l = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
-        l.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        r = hardwareMap.get(DcMotor.class, "IntakeMotor");
-        r.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        launcher_motor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
+        launcher_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake_motor = hardwareMap.get(DcMotor.class, "IntakeMotor");
+        intake_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        telemetry.addLine("WARNING: UPON START LAUNCHER AND INTAKE WILL START SPINNING");
+    }
+
+    public void start() {
+        launcher_motor.setPower(power);
+        intake_motor.setPower(1);
     }
 
     @Override
@@ -34,29 +39,29 @@ public class LauncherTesting extends OpMode {
 
         //run
         if(gamepad1.a){
-            l.setPower(p);
-            r.setPower(1);
+            launcher_motor.setPower(power);
+            intake_motor.setPower(1);
         } else {
-            l.setPower(0);
-            r.setPower(0);
+            launcher_motor.setPower(0);
+            intake_motor.setPower(0);
         }
 
         //change power
         if(input.x.down()){
-            p += delta;
+            power += delta;
         }
         if(input.y.down()){
-            p -= delta;
+            power -= delta;
         }
 
         //Reverse
         if(input.b.down()){
-            if(l.getDirection() == DcMotorSimple.Direction.REVERSE){
-                l.setDirection(DcMotorSimple.Direction.FORWARD);
-                r.setDirection(DcMotorSimple.Direction.FORWARD);
+            if(launcher_motor.getDirection() == DcMotorSimple.Direction.REVERSE){
+                launcher_motor.setDirection(DcMotorSimple.Direction.FORWARD);
+                intake_motor.setDirection(DcMotorSimple.Direction.FORWARD);
             } else {
-                l.setDirection(DcMotorSimple.Direction.REVERSE);
-                r.setDirection(DcMotorSimple.Direction.REVERSE);
+                launcher_motor.setDirection(DcMotorSimple.Direction.REVERSE);
+                intake_motor.setDirection(DcMotorSimple.Direction.REVERSE);
             }
         }
 
@@ -69,7 +74,10 @@ public class LauncherTesting extends OpMode {
 
         input.pollGamepad(gamepad1);
 
-        telemetry.addData("Current power: ", p);
-        telemetry.addData("Current speed: ", l.getVelocity(AngleUnit.RADIANS));
+        telemetry.addData("Current power: ", power);
+        telemetry.addData("Current speed: ", launcher_motor.getVelocity(AngleUnit.RADIANS));
+        telemetry.addData("Current delta: ", delta);
+        telemetry.addLine();
+        telemetry.addLine("dpad up to increase delta\ndpad down to decrease delta\na to toggle on/off\nx to increase power by delta\ny to decrease power by delta\nb to reverse");
     }
 }

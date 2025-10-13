@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHolderServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftLauncherHolderServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightLauncherHolderServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
@@ -12,14 +13,15 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_REVER
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_BASE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_ENABLE;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_HOLDING_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_LAUNCH_POSITION;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_IDLE;
-import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getLauncherCurrentVelocity;
-import static org.firstinspires.ftc.teamcode.Math.LauncherPID.getLauncherTargetVelocity;
-import static org.firstinspires.ftc.teamcode.Math.LauncherPID.initLauncherPID;
-import static org.firstinspires.ftc.teamcode.Math.LauncherPID.setLauncherTargetVelocity;
-import static org.firstinspires.ftc.teamcode.Math.LauncherPID.updateLauncherPID;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_HOLDING_POSITION;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.max;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -27,12 +29,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
+
 @TeleOp
 public class CompDrive extends OpMode {
 
     //Instantiated new input
     Input input = new Input();
-
 
     @Override
     public void init() {
@@ -41,34 +43,38 @@ public class CompDrive extends OpMode {
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
+        telemetry.addLine("WARNING: ROBOT MOVES ON START");
+        telemetry.addLine("Launcher & Intake start spinning on start");
     }
 
     @Override
     public void start(){
-        //initLauncherPID(getRuntime(), LAUNCHER_FAR_BASE);
-        LauncherHolderServo.setPosition(LAUNCHER_HOLDER_HOLDING_POSITION);
+        LauncherMotor.setPower(LAUNCHER_IDLE);
+        IntakeMotor.setPower(LAUNCHER_IDLE);
+        LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
     }
 
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
 
-        /* ---------- Launcher ---------- */
+        /* ---------- Launch ---------- */
         if(input.right_trigger.down()){
-            if(getLauncherTargetVelocity()<=LAUNCHER_IDLE){
-                LauncherMotor.setVelocity(2.75, AngleUnit.RADIANS);
-                //setLauncherTargetVelocity(LAUNCHER_FAR_BASE);
-            } else {
-                LAUNCHER_HOLDER_ENABLE = true;
-                LauncherHolderServo.setPosition(LAUNCHER_HOLDER_HOLDING_POSITION);
-                LauncherMotor.setVelocity(LAUNCHER_IDLE);
-                //setLauncherTargetVelocity(LAUNCHER_IDLE);
-            }
+            LAUNCHER_RUN =! LAUNCHER_RUN;
         }
-        //updateLauncherPID(getRuntime());
-        if(LAUNCHER_HOLDER_ENABLE && (input.right_bumper.down())) {//(/*vel error*/Math.abs((getLauncherCurrentVelocity() - getLauncherTargetVelocity())) <= /*margin*/Math.PI / 10) is a future goal
-            LAUNCHER_HOLDER_ENABLE = false;
-            LauncherHolderServo.setPosition(LAUNCHER_HOLDER_LAUNCH_POSITION);
+        if(LAUNCHER_RUN){
+            LauncherMotor.setPower(LAUNCHER_FAR_BASE);
+        } else {
+            LauncherMotor.setPower(LAUNCHER_IDLE);
+        }
+        /* ---------- LauncherHolders ---------- */
+        if(input.left_bumper.down()){
+            LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
+            RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
+        }
+        if(input.right_bumper.down()){
+            LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+            RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
         }
 
         /* ---------- Intake ---------- */
@@ -91,23 +97,26 @@ public class CompDrive extends OpMode {
         /* ---------- Drivetrain ---------- */
 
         //Drivetrain movement values
-        double forward = gamepad1.left_stick_y;
-        double strafes = gamepad1.left_stick_x;
-        double rotates = gamepad1.right_stick_x;
+        double forward =  gamepad1.left_stick_y;
+        double strafes = -gamepad1.left_stick_x;
+        double rotates =  gamepad1.right_stick_x;
+        //Power fixer
+        double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 1);
 
         //Setting Powers
-        leftFront .setPower(forward + strafes + rotates);
-        rightFront.setPower(forward - strafes - rotates);
-        leftBack  .setPower(forward - strafes + rotates);
-        rightBack .setPower(forward + strafes - rotates);
+        leftFront .setPower((forward + strafes + rotates) / denominator);
+        rightFront.setPower((forward - strafes - rotates) / denominator);
+        leftBack  .setPower((forward - strafes + rotates) / denominator);
+        rightBack .setPower((forward + strafes - rotates) / denominator);
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Comp Drive Running ---------");
-        telemetry.addLine("Intake running? "     + INTAKE_RUN);
-        telemetry.addLine("Intake reversed? "    + INTAKE_REVERSED);
-        telemetry.addLine("Launcher Holder? "    + LAUNCHER_HOLDER_ENABLE);
-        telemetry.addLine("Launcher Velocity: "  + getLauncherCurrentVelocity());
-        telemetry.addLine("Launcher TargetVel: " + getLauncherTargetVelocity());
+        telemetry.addData("Intake running? "           , INTAKE_RUN);
+        telemetry.addData("Intake reversed? "          , INTAKE_REVERSED);
+        telemetry.addData("Launcher holders holding? " , LAUNCHER_HOLDER_ENABLE);
+        telemetry.addData("Launcher running? "         , LAUNCHER_RUN);
+        telemetry.addData("Launcher Velocity: "        , LauncherMotor.getVelocity(AngleUnit.RADIANS));
+        telemetry.addLine("");
     }
 
 }

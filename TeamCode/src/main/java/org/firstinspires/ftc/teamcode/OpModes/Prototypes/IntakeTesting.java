@@ -3,27 +3,26 @@ package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
 
 @TeleOp
 public class IntakeTesting extends OpMode {
 
     //left
-    private DcMotor l;
+    private DcMotorEx intake_motor;
     //right
     //private DcMotor r;
     //power
-    private double p = 0.25;
+    private double power = 0.25;
     Input input = new Input();
     @Override
     public void init() {
-        l = hardwareMap.get(DcMotor.class, "IntakeMotor");
-        l.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //r = hardwareMap.get(DcMotor.class, "right");
-        //r.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //r.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake_motor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
+        intake_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
@@ -31,34 +30,34 @@ public class IntakeTesting extends OpMode {
 
         //run
         if(gamepad1.a){
-            l.setPower(p);
-            //r.setPower(p);
+            intake_motor.setPower(power);
         } else {
-            l.setPower(0);
-            //r.setPower(0);
+            intake_motor.setPower(0);
         }
 
         //change power
         if(input.x.down()){
-            p += 0.05;
+            power += 0.05;
         }
         if(input.y.down()){
-            p -= 0.05;
+            power -= 0.05;
         }
 
         //Reverse
         if(input.b.down()){
-            if(l.getDirection() == DcMotorSimple.Direction.REVERSE){
-                l.setDirection(DcMotorSimple.Direction.FORWARD);
-                //r.setDirection(DcMotorSimple.Direction.REVERSE);
+            if(intake_motor.getDirection() == DcMotorSimple.Direction.REVERSE){
+                intake_motor.setDirection(DcMotorSimple.Direction.FORWARD);
             } else {
-                l.setDirection(DcMotorSimple.Direction.REVERSE);
-                //  r.setDirection(DcMotorSimple.Direction.FORWARD);
+                intake_motor.setDirection(DcMotorSimple.Direction.REVERSE);
             }
         }
 
         input.pollGamepad(gamepad1);
 
-        telemetry.addData("Current speed: ", p);
+        telemetry.addData("Current power: ", power);
+        telemetry.addData("Current speed: ", intake_motor.getVelocity(AngleUnit.RADIANS));
+        telemetry.addLine();
+        telemetry.addLine("a to toggle on/off\nx to increase power by delta\ny to decrease power by delta\nb to reverse");
+
     }
 }
