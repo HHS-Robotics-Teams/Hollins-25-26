@@ -45,6 +45,7 @@ public class CompDrive extends OpMode {
         telemetry.addLine("--------- Init Complete ---------");
         telemetry.addLine("WARNING: ROBOT MOVES ON START");
         telemetry.addLine("Launcher & Intake start spinning on start");
+        telemetry.speak("Warning: Robot moves on start");
     }
 
     @Override
@@ -52,6 +53,7 @@ public class CompDrive extends OpMode {
         LauncherMotor.setPower(LAUNCHER_IDLE);
         IntakeMotor.setPower(LAUNCHER_IDLE);
         LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
+        RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
     }
 
     @Override
@@ -92,6 +94,14 @@ public class CompDrive extends OpMode {
             }
         } else {
             IntakeMotor.setPower(0);
+        }
+
+        //todo change
+        if(input.dpad_down.down()){
+            INTAKE_POWER += 0.05;
+        }
+        if(input.dpad_up.down()){
+            INTAKE_POWER -= 0.05;
         }
 
         /* ---------- Drivetrain ---------- */
