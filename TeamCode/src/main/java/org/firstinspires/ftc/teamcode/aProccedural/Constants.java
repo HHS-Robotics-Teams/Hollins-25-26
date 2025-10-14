@@ -18,7 +18,9 @@ public class Constants {
 
     /* FLAGS */
     public static boolean INTAKE_RUN;
+    public static boolean INTAKE_REVERSED = false;
     public static boolean LAUNCHER_HOLDER_ENABLE = true;
     public static boolean LAUNCHER_RUN = false;
+
     public static int numShot = 0;
 }
