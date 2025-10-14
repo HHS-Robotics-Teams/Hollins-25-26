@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -56,6 +57,7 @@ public class Components {
         //Initialize Launcher
         LauncherMotor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
         LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //todo this LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients());
 
         //Initialize Pivot Motor
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
