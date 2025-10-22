@@ -31,7 +31,11 @@ public class ScrimmageAuto extends OpMode {
     enum Autostate{
         WAIT_FOR_START,
         SPIN_UP,
-        SHOOT,
+        SHOOT_FIRST,
+        RESET_SHOT,
+        SHOOT_SECOND,
+        RESET_SECOND,
+        SHOOT_THIRD,
         DRIVE,
         STOP
     }
@@ -40,48 +44,95 @@ public class ScrimmageAuto extends OpMode {
     @Override
     public void init() {
         Components.initComponents(hardwareMap);
+        numShot = 0;
     }
 
     @Override
     public void start() {
         autostate = Autostate.SPIN_UP;
+        LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
+        RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
     }
 
     double timeAtShot;
-    double shootTime = 0.1;
+    double timeAfterShot;
+    double timeStartDrive;
+    double shootTime = 0.15;
 
     @Override
     public void loop() {
         switch (autostate){
             case SPIN_UP:
-                LauncherMotor.setPower(LAUNCHER_FAR_BASE);
+                LauncherMotor.setPower(1);
                 if(getRuntime() - timeAtShot >= shootTime * 2){IntakeMotor.setPower(0);}
                 if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD){
-                    autostate = Autostate.SHOOT;
+                    autostate = Autostate.SHOOT_FIRST;
+                    numShot++;
+                    timeAtShot = getRuntime();
+                    LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                    RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                    IntakeMotor.setPower(INTAKE_POWER);
+                }
+                break;
+            case SHOOT_FIRST:
+                LauncherMotor.setPower(.5);
+                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                IntakeMotor.setPower(INTAKE_POWER);
+                if(getRuntime() - timeAtShot >= 0.30){
+                    autostate = Autostate.RESET_SHOT;
+                    timeAfterShot = getRuntime();
+                }
+                break;
+            case RESET_SHOT:
+                IntakeMotor.setPower(0);
+                LauncherMotor.setPower(1);
+                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
+                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
+                if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD){
+                    autostate = Autostate.SHOOT_SECOND;
+                    numShot++;
+                    timeAtShot = getRuntime();
+                    LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                    RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                }
+                break;
+            case SHOOT_SECOND:
+                LauncherMotor.setPower(0.5);
+                IntakeMotor.setPower(INTAKE_POWER);
+                if(getRuntime() - timeAtShot >= 0.5){
+                    autostate = Autostate.DRIVE;
+                    timeAfterShot = getRuntime();
+                }
+                break;
+            case RESET_SECOND:
+                IntakeMotor.setPower(0);
+                LauncherMotor.setPower(1);
+                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
+                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
+                if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD){
+                    autostate = Autostate.SHOOT_SECOND;
                     numShot++;
                     timeAtShot = getRuntime();
                 }
                 break;
-            case SHOOT:
+            case SHOOT_THIRD:
                 LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
                 RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                if(getRuntime() - timeAtShot >= shootTime){
-                    if(numShot >= 3){
-                        autostate = Autostate.DRIVE;
-                    }
-                    LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
-                    RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
-                    IntakeMotor.setPower(INTAKE_POWER);
+                IntakeMotor.setPower(INTAKE_POWER);
+                if(getRuntime() - timeAtShot >= 1){
+                    autostate = Autostate.DRIVE;
+                    timeStartDrive = getRuntime();
                 }
                 break;
             case DRIVE:
                 IntakeMotor.setPower(0);
                 LauncherMotor.setPower(0);
-                rightFront.setPower(0.5);
-                leftFront.setPower(0.5);
-                leftBack.setPower(0.5);
-                rightBack.setPower(0.5);
-                if(getRuntime() - timeAtShot >= 1) {
+                rightFront.setPower(-1);
+                leftFront.setPower(-1);
+                leftBack.setPower(-1);
+                rightBack.setPower(-1);
+                if(getRuntime() - timeStartDrive >= 2) {
                     autostate = Autostate.STOP;
                 }
                 break;
@@ -94,5 +145,7 @@ public class ScrimmageAuto extends OpMode {
                 requestOpModeStop();
                 break;
         }
+        telemetry.addData("AutoState: ", autostate);
+        telemetry.addData("numShot: ", numShot);
     }
 }

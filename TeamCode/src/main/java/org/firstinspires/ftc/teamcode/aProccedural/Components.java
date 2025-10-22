@@ -27,6 +27,7 @@ public class Components {
     //Instantiate Servos
     public static Servo LeftLauncherHolderServo;
     public static Servo RightLauncherHolderServo;
+    //public static Servo TopRampHolderServo;
 
 
     //todo public static OpenCvWebcam webcam;
@@ -67,6 +68,7 @@ public class Components {
         //Initialize Servos
         LeftLauncherHolderServo = hardwareMap.get(Servo.class, "LeftLauncherHolderServo");
         RightLauncherHolderServo = hardwareMap.get(Servo.class, "RightLauncherHolderServo");
+        //TopRampHolderServo = hardwareMap.get(Servo.class, "TopRampHolderServo");
 
         //todo Initalize Webcam
         //webcam = hardwareMap.get(OpenCvWebcam.class, "webcam");

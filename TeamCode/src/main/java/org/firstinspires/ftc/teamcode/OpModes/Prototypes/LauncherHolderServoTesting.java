@@ -20,6 +20,7 @@ public class LauncherHolderServoTesting extends OpMode {
 
     public void start() {
         RightLauncherHolderServo.setPosition(0);
+        LeftLauncherHolderServo.setPosition(0);
     }
 
     @Override
@@ -27,9 +28,11 @@ public class LauncherHolderServoTesting extends OpMode {
         input.pollGamepad(gamepad1);
         if(input.x.down()){
             RightLauncherHolderServo.setPosition(RightLauncherHolderServo.getPosition()+0.05);
+            LeftLauncherHolderServo.setPosition(LeftLauncherHolderServo.getPosition()+0.05);
         }
         if(input.y.down()){
             RightLauncherHolderServo.setPosition(RightLauncherHolderServo.getPosition()-0.05);
+            LeftLauncherHolderServo.setPosition(LeftLauncherHolderServo.getPosition()-0.05);
         }
         telemetry.addLine("X to increase");
         telemetry.addLine("Y to decrease");
