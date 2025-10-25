@@ -102,6 +102,7 @@ public class CompDrive extends OpMode {
         /* ---------- Intake ---------- */
         if (input.b.down()) {
             INTAKE_REVERSED = !INTAKE_REVERSED;
+            INTAKE_RUN = !INTAKE_RUN;
         }
         if (input.left_trigger.down()) {
             INTAKE_RUN = !INTAKE_RUN;
@@ -111,25 +112,24 @@ public class CompDrive extends OpMode {
                 IntakeMotor.setPower(INTAKE_POWER);
             } else {
                 IntakeMotor.setPower(-INTAKE_POWER);
+                LauncherMotor.setPower(-LauncherMotor.getPower());
             }
         } else {
             IntakeMotor.setPower(0);
         }
 
-        //todo change
-        if (input.dpad_down.down()) {
-            INTAKE_POWER += 0.05;
-        }
-        if (input.dpad_up.down()) {
-            INTAKE_POWER -= 0.05;
-        }
-
         /* ---------- Drivetrain ---------- */
 
         //Drivetrain movement values
-        double forward = gamepad1.left_stick_y;
-        double strafes = -gamepad1.left_stick_x * 1.2;
-        double rotates = -gamepad1.right_stick_x;
+        double forward =  gamepad1.left_stick_y  * 0.8;
+        double strafes = -gamepad1.left_stick_x  * 1;
+        double rotates = -gamepad1.right_stick_x * 0.6;
+
+        if(INTAKE_RUN){
+            forward /= 3;
+            strafes /= 5;
+            rotates /= 5;
+        }
 
         if (abs(forward) <= 0.2) {
             forward = 0;

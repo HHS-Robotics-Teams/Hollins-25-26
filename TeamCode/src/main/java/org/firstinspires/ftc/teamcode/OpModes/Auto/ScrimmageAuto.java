@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue.Far;
+package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
@@ -9,7 +9,7 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_BASE;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHED_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_HOLDING_POSITION;
@@ -78,15 +78,15 @@ public class ScrimmageAuto extends OpMode {
                 LauncherMotor.setPower(.5);
                 LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
                 RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                IntakeMotor.setPower(INTAKE_POWER);
-                if(getRuntime() - timeAtShot >= 0.30){
+                IntakeMotor.setPower(0.95);
+                if(LauncherMotor.getVelocity(AngleUnit.RADIANS) <= LAUNCHED_THRESHOLD){
                     autostate = Autostate.RESET_SHOT;
                     timeAfterShot = getRuntime();
                 }
                 break;
             case RESET_SHOT:
                 IntakeMotor.setPower(0);
-                LauncherMotor.setPower(1);
+                LauncherMotor.setPower(.8);
                 LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
                 RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
                 if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD){
@@ -100,9 +100,10 @@ public class ScrimmageAuto extends OpMode {
             case SHOOT_SECOND:
                 LauncherMotor.setPower(0.5);
                 IntakeMotor.setPower(INTAKE_POWER);
-                if(getRuntime() - timeAtShot >= 0.5){
+                if(getRuntime() - timeAtShot >= 1){
                     autostate = Autostate.DRIVE;
                     timeAfterShot = getRuntime();
+                    timeStartDrive = getRuntime();
                 }
                 break;
             case RESET_SECOND:
@@ -110,7 +111,7 @@ public class ScrimmageAuto extends OpMode {
                 LauncherMotor.setPower(1);
                 LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
                 RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
-                if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD){
+                if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET - 0.1) <= LAUNCH_THRESHOLD * 3){
                     autostate = Autostate.SHOOT_SECOND;
                     numShot++;
                     timeAtShot = getRuntime();
@@ -128,11 +129,11 @@ public class ScrimmageAuto extends OpMode {
             case DRIVE:
                 IntakeMotor.setPower(0);
                 LauncherMotor.setPower(0);
-                rightFront.setPower(-1);
-                leftFront.setPower(-1);
-                leftBack.setPower(-1);
-                rightBack.setPower(-1);
-                if(getRuntime() - timeStartDrive >= 2) {
+                rightFront.setPower(-.5);
+                leftFront.setPower(-.5);
+                leftBack.setPower(-.5);
+                rightBack.setPower(-.5);
+                if((getRuntime() - timeStartDrive) >= 1) {
                     autostate = Autostate.STOP;
                 }
                 break;

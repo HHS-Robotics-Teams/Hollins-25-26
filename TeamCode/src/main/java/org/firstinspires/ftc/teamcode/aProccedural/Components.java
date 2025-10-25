@@ -4,8 +4,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.openftc.easyopencv.OpenCvWebcam;
 
 /**
  * File to store all hardware code
@@ -29,8 +32,8 @@ public class Components {
     public static Servo RightLauncherHolderServo;
     //public static Servo TopRampHolderServo;
 
-
-    //todo public static OpenCvWebcam webcam;
+    //todo public static imu;
+    public static OpenCvWebcam webcam;
 
 
     /*
@@ -70,8 +73,7 @@ public class Components {
         RightLauncherHolderServo = hardwareMap.get(Servo.class, "RightLauncherHolderServo");
         //TopRampHolderServo = hardwareMap.get(Servo.class, "TopRampHolderServo");
 
-        //todo Initalize Webcam
-        //webcam = hardwareMap.get(OpenCvWebcam.class, "webcam");
+        webcam = hardwareMap.get(OpenCvWebcam.class, "webcam");
 
     }
 

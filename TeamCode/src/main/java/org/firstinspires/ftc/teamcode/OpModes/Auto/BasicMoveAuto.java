@@ -21,10 +21,10 @@ public class BasicMoveAuto extends OpMode {
 
     @Override
     public void start() {
-        leftFront.setPower(.5);
-        rightFront.setPower(.5);
-        leftBack.setPower(.5);
-        rightBack.setPower(.5);
+        leftFront.setPower(-.5);
+        rightFront.setPower(-.5);
+        leftBack.setPower(-.5);
+        rightBack.setPower(-.5);
         timeAtStart = getRuntime();
     }
 

@@ -13,10 +13,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class WebcamPos {
+public class WebcamUtil {
 
     static AprilTagProcessor aprilTagProcessor;
     static VisionPortal visionPortal;
@@ -37,28 +36,12 @@ public class WebcamPos {
         VisionPortal.Builder builder = new VisionPortal.Builder();
 
 
-        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam"));
+        builder.setCamera(hardwareMap.get(WebcamName.class, "webcam"));
         builder.addProcessor(aprilTagProcessor);
         builder.enableLiveView(true);
         visionPortal = builder.build();
 
         allianceSide = color;
-    }
-
-    public static double calculateLauncherPower() {
-        double launcherDistance;
-        List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
-        for(AprilTagDetection detection : currentDetections) {
-            if(allianceSide == "BLUE" && detection.id == 20){
-                calculateDistance(detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z, detection.ftcPose.yaw);
-                break;
-            } else if(allianceSide == "RED" && detection.id == 24){
-                calculateDistance(detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z, detection.ftcPose.yaw);
-                break;
-            }
-        }
-
-        return 0;
     }
 
     /**
@@ -90,16 +73,21 @@ public class WebcamPos {
             telemetry.addLine("RBE = Range, Bearing & Elevation");
         }
 
-    /**
-     * calculates the distance for power calculations
-     * @return distance (hypotenuse) of triangle
-     */
-    private static double calculateDistance(double camX, double camY, double camZ, double camYaw) {
-        double launchX = camX + /*cam offset*/(-2);
-        double launchY = camY + /*cam offset*/(-5);
-        double launchZ = camZ + /*cam offset*/(-2);
-        double launchElevation = Math.atan(launchZ / launchY);
-        return 0;
+    public static double getTagYaw() {
+        List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
+        AprilTagDetection usableDetection = null;
+        // Step through the list of detections and display info for each one.
+        for (AprilTagDetection detection : currentDetections) {
+            if((detection.metadata.id == 20 && allianceSide == "BLUE") || (detection.metadata.id == 24 && allianceSide == "RED")){
+                usableDetection = detection;
+            }
+        }
+        if(usableDetection != null){
+            return usableDetection.ftcPose.yaw;
+        } else {
+            return 0;
+        }
     }
+
 }
 
