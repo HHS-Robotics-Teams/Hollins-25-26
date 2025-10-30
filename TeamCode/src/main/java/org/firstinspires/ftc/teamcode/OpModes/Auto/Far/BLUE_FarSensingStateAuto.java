@@ -1,30 +1,24 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.Far;
 
 import static org.firstinspires.ftc.teamcode.Math.WebcamUtil.aprilTagTelemetry;
-import static org.firstinspires.ftc.teamcode.Math.WebcamUtil.getTagYaw;
 import static org.firstinspires.ftc.teamcode.Math.WebcamUtil.initWebcamFinder;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftLauncherHolderServo;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightLauncherHolderServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.webcam;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_HOLDING_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.OpModes.Auto.ScrimmageAuto;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 
 @Autonomous
@@ -118,8 +112,7 @@ public class BLUE_FarSensingStateAuto extends OpMode {
                 }
                 break;
             case OPEN:
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 if(getRuntime() - shotTempTime >= 0.1){
                     shotState = ShotState.INTAKE_MOVE;
                     shotTempTime = getRuntime();
@@ -136,8 +129,7 @@ public class BLUE_FarSensingStateAuto extends OpMode {
                 }
                 break;
             case CLOSE:
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 if(getRuntime() - shotTempTime >= 0.1){
                     shotState = ShotState.INTAKE_TWO;
                     shotTempTime = getRuntime();

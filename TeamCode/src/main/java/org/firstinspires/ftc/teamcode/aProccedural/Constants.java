@@ -12,10 +12,8 @@ public class Constants {
     public static final double LAUNCH_THRESHOLD = 0.02; //todo tune
     public static final double LAUNCHED_THRESHOLD = 1; //todo tune
 
-    public static final double LEFT_LAUNCHER_HOLDER_HOLDING_POSITION = 0.7;
-    public static final double LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION = 0.4;
-    public static final double RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION = 0.3;
-    public static final double RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION = 0.6;
+    public static final double LAUNCHER_FINGER_UP_POS = 0.7;
+    public static final double LAUNCHER_FINGER_DOWN_POS = 0.4;
 
     /* FLAGS */
     public static boolean INTAKE_RUN;

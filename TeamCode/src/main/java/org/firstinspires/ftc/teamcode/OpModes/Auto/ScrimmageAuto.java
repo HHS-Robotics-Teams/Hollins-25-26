@@ -2,8 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftLauncherHolderServo;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightLauncherHolderServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
@@ -12,10 +11,8 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHED_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_HOLDING_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.numShot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -50,8 +47,7 @@ public class ScrimmageAuto extends OpMode {
     @Override
     public void start() {
         autostate = Autostate.SPIN_UP;
-        LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
-        RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
+        LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
     }
 
     double timeAtShot;
@@ -69,15 +65,13 @@ public class ScrimmageAuto extends OpMode {
                     autostate = Autostate.SHOOT_FIRST;
                     numShot++;
                     timeAtShot = getRuntime();
-                    LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                    RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
                 }
                 break;
             case SHOOT_FIRST:
                 LauncherMotor.setPower(.5);
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 IntakeMotor.setPower(0.95);
                 if(LauncherMotor.getVelocity(AngleUnit.RADIANS) <= LAUNCHED_THRESHOLD){
                     autostate = Autostate.RESET_SHOT;
@@ -87,14 +81,12 @@ public class ScrimmageAuto extends OpMode {
             case RESET_SHOT:
                 IntakeMotor.setPower(0);
                 LauncherMotor.setPower(.8);
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD){
                     autostate = Autostate.SHOOT_SECOND;
                     numShot++;
                     timeAtShot = getRuntime();
-                    LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                    RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 }
                 break;
             case SHOOT_SECOND:
@@ -109,8 +101,7 @@ public class ScrimmageAuto extends OpMode {
             case RESET_SECOND:
                 IntakeMotor.setPower(0);
                 LauncherMotor.setPower(1);
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET - 0.1) <= LAUNCH_THRESHOLD * 3){
                     autostate = Autostate.SHOOT_SECOND;
                     numShot++;
@@ -118,8 +109,7 @@ public class ScrimmageAuto extends OpMode {
                 }
                 break;
             case SHOOT_THIRD:
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 IntakeMotor.setPower(INTAKE_POWER);
                 if(getRuntime() - timeAtShot >= 1){
                     autostate = Autostate.DRIVE;

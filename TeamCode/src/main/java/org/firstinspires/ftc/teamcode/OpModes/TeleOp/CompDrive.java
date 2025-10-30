@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftLauncherHolderServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightLauncherHolderServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.ParkingStopServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightSideFeedRoller;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
@@ -16,11 +18,9 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOL
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN_THREE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_HOLDING_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
@@ -66,8 +66,9 @@ public class CompDrive extends OpMode {
     public void start() {
         LauncherMotor.setPower(LAUNCHER_IDLE);
         IntakeMotor.setPower(0);
-        LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
-        RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
+
+        LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+        ParkingStopServo.setPosition(0);
     }
 
     @Override
@@ -76,47 +77,60 @@ public class CompDrive extends OpMode {
 
         /* ---------- Launch ---------- */
         if (input.right_trigger.down()) {
-            LAUNCHER_RUN = !LAUNCHER_RUN;
-            state = LaunchState.SPIN_UP;
-        }
-        if(input.right_bumper.down()){
-            LAUNCHER_RUN_THREE = !LAUNCHER_RUN_THREE;
-        }
-        if (LAUNCHER_RUN) {
-            runLauncherOnce();
-        } else if(LAUNCHER_RUN_THREE) {
-            runLauncherThree();
-        } else {
-                LauncherMotor.setPower(LAUNCHER_IDLE);
+            LauncherMotor.setPower(.6);
+//            LAUNCHER_RUN = !LAUNCHER_RUN;
+//            state = LaunchState.SPIN_UP;
+            //       }
+//        if(input.right_bumper.down()){
+//            LAUNCHER_RUN_THREE = !LAUNCHER_RUN_THREE;
+//        }
+//        if (LAUNCHER_RUN) {
+//            runLauncherOnce();
+////        } else if(LAUNCHER_RUN_THREE) {
+////            runLauncherThree();
+        } else if (input.right_bumper.down()) {
+            LauncherMotor.setPower(LAUNCHER_IDLE);
         }
         /* ---------- LauncherHolders ---------- */
-        if (input.x.down()) {
-            LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
-            RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
+        if (input.x.held()) {
+            LauncherFingerServo.setPosition(0);
+        } else {
+            LauncherFingerServo.setPosition(1);
         }
-        if (input.y.down()) {
-            LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-            RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+        /* ---------- Side Feed Rollers ---------- */
+        if (input.left_bumper.held()) {
+            LeftSideFeedRoller.setPower(1);
+            RightSideFeedRoller.setPower(1);
+        } else {
+            LeftSideFeedRoller.setPower(0);
+            RightSideFeedRoller.setPower(0);
         }
 
         /* ---------- Intake ---------- */
-        if (input.b.down()) {
-            INTAKE_REVERSED = !INTAKE_REVERSED;
-            INTAKE_RUN = !INTAKE_RUN;
-        }
-        if (input.left_trigger.down()) {
-            INTAKE_RUN = !INTAKE_RUN;
-        }
-        if (INTAKE_RUN) {
-            if (!INTAKE_REVERSED) {
-                IntakeMotor.setPower(INTAKE_POWER);
-            } else {
-                IntakeMotor.setPower(-INTAKE_POWER);
-                LauncherMotor.setPower(-LauncherMotor.getPower());
-            }
+//        if (input.b.down()) {
+//            INTAKE_REVERSED = !INTAKE_REVERSED;
+//            INTAKE_RUN = !INTAKE_RUN;
+//        }
+        if (input.left_trigger.held()) {
+            IntakeMotor.setPower(1);
+//            INTAKE_RUN = !INTAKE_RUN;
         } else {
             IntakeMotor.setPower(0);
         }
+        if (input.start.down()) {
+            ParkingStopServo.setPosition(.5);
+        }
+
+//        if (INTAKE_RUN) {
+//            if (!INTAKE_REVERSED) {
+//                IntakeMotor.setPower(INTAKE_POWER);
+//            } else {
+//                IntakeMotor.setPower(-INTAKE_POWER);
+//                LauncherMotor.setPower(-LauncherMotor.getPower());
+//            }
+//        } else {
+//            IntakeMotor.setPower(0);
+//        }
 
         /* ---------- Drivetrain ---------- */
 
@@ -171,8 +185,7 @@ public class CompDrive extends OpMode {
             }
             break;
             case OPEN:
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 if(getRuntime() - timeAtLaunch >= 0.1){
                     INTAKE_RUN = true;
                     state = LaunchState.WAIT;
@@ -190,80 +203,76 @@ public class CompDrive extends OpMode {
                 break;
             case CLOSE:
                 state = LaunchState.SPIN_UP;
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 LAUNCHER_RUN = false;
                 break;
         }
     }
 
-    public void runLauncherThree() {
-        switch(state) {
-            case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
-                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD) {
-                    timeAtLaunch = getRuntime();
-                    state = LaunchState.OPEN;
-                }
-                break;
-            case OPEN:
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                if(getRuntime() - timeAtLaunch >= 0.1){
-                    INTAKE_RUN = true;
-                    state = LaunchState.WAIT;
-                    timeAtLaunch = getRuntime();
-                }
-                break;
-            case WAIT:
-                if(getRuntime() - timeAtLaunch >= 0.15){
-                    INTAKE_RUN = false;
-                }
-                if(getRuntime() - timeAtLaunch >= 0.4){
-
-                    state = LaunchState.CLOSE;
-                }
-                break;
-            case CLOSE:
-                state = LaunchState.SPIN_UP_TWO;
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_HOLDING_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_HOLDING_POSITION);
-                INTAKE_RUN = true;
-                timeAtLaunch = getRuntime();
-                break;
-            case SPIN_UP_TWO:
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
-                if(getRuntime() - timeAtLaunch >= 0.1){
-                    INTAKE_RUN = false;
-                }
-                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD) {
-                    timeAtLaunch = getRuntime();
-                    state = LaunchState.OPEN_TWO;
-                }
-                break;
-            case OPEN_TWO:
-                LeftLauncherHolderServo.setPosition(LEFT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                RightLauncherHolderServo.setPosition(RIGHT_LAUNCHER_HOLDER_LAUNCH_POSITION);
-                if(getRuntime() - timeAtLaunch >= 0.1){
-                    INTAKE_RUN = true;
-                    state = LaunchState.WAIT_TWO;
-                    timeAtLaunch = getRuntime();
-                }
-                break;
-            case WAIT_TWO:
-                if(getRuntime() - timeAtLaunch >= 0.15){
-                    INTAKE_RUN = false;
-                }
-                if(getRuntime() - timeAtLaunch >= 0.4){
-                    state = LaunchState.CLOSE_TWO;
-                }
-                break;
-            case CLOSE_TWO:
-                LAUNCHER_RUN_THREE = false;
-                LAUNCHER_RUN = true;
-                state = LaunchState.SPIN_UP;
-                break;
-        }
-    }
+//    public void runLauncherThree() {
+//        switch(state) {
+//            case SPIN_UP:
+//                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
+//                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD) {
+//                    timeAtLaunch = getRuntime();
+//                    state = LaunchState.OPEN;
+//                }
+//                break;
+//            case OPEN:
+//                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+//                if(getRuntime() - timeAtLaunch >= 0.1){
+//                    INTAKE_RUN = true;
+//                    state = LaunchState.WAIT;
+//                    timeAtLaunch = getRuntime();
+//                }
+//                break;
+//            case WAIT:
+//                if(getRuntime() - timeAtLaunch >= 0.15){
+//                    INTAKE_RUN = false;
+//                }
+//                if(getRuntime() - timeAtLaunch >= 0.4){
+//
+//                    state = LaunchState.CLOSE;
+//                }
+//                break;
+//            case CLOSE:
+//                state = LaunchState.SPIN_UP_TWO;
+//                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+//                INTAKE_RUN = true;
+//                timeAtLaunch = getRuntime();
+//                break;
+//            case SPIN_UP_TWO:
+//                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
+//                if(getRuntime() - timeAtLaunch >= 0.1){
+//                    INTAKE_RUN = false;
+//                }
+//                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD) {
+//                    timeAtLaunch = getRuntime();
+//                    state = LaunchState.OPEN_TWO;
+//                }
+//                break;
+//            case OPEN_TWO:
+//                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+//                if(getRuntime() - timeAtLaunch >= 0.1){
+//                    INTAKE_RUN = true;
+//                    state = LaunchState.WAIT_TWO;
+//                    timeAtLaunch = getRuntime();
+//                }
+//                break;
+//            case WAIT_TWO:
+//                if(getRuntime() - timeAtLaunch >= 0.15){
+//                    INTAKE_RUN = false;
+//                }
+//                if(getRuntime() - timeAtLaunch >= 0.4){
+//                    state = LaunchState.CLOSE_TWO;
+//                }
+//                break;
+//            case CLOSE_TWO:
+//                LAUNCHER_RUN_THREE = false;
+//                LAUNCHER_RUN = true;
+//                state = LaunchState.SPIN_UP;
+//                break;
+//        }
+//    }
 
 }

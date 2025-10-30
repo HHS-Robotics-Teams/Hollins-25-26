@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.aProccedural;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.openftc.easyopencv.OpenCvWebcam;
@@ -28,9 +27,11 @@ public class Components {
     public static DcMotor IntakeMotor;
 
     //Instantiate Servos
-    public static Servo LeftLauncherHolderServo;
-    public static Servo RightLauncherHolderServo;
+    public static Servo LauncherFingerServo;
     //public static Servo TopRampHolderServo;
+    public static CRServo LeftSideFeedRoller;
+    public static CRServo RightSideFeedRoller;
+    public static Servo ParkingStopServo;
 
     //todo public static imu;
     public static OpenCvWebcam webcam;
@@ -60,20 +61,24 @@ public class Components {
 
         //Initialize Launcher
         LauncherMotor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
-        LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LauncherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LauncherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         //todo this LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients());
 
         //Initialize Pivot Motor
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
-        IntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        IntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        IntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         IntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //Initialize Servos
-        LeftLauncherHolderServo = hardwareMap.get(Servo.class, "LeftLauncherHolderServo");
-        RightLauncherHolderServo = hardwareMap.get(Servo.class, "RightLauncherHolderServo");
-        //TopRampHolderServo = hardwareMap.get(Servo.class, "TopRampHolderServo");
+        LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
+        ParkingStopServo = hardwareMap.get(Servo.class, "ParkingStopServo");
+        LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
+        RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");
+        RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        webcam = hardwareMap.get(OpenCvWebcam.class, "webcam");
+        //webcam = hardwareMap.get(OpenCvWebcam.class, "webcam");
 
     }
 
