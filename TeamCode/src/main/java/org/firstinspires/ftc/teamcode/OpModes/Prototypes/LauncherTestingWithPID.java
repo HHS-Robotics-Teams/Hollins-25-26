@@ -6,7 +6,7 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMot
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightSideFeedRoller;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
 
@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.aProccedural.Input;
 @TeleOp
 public class LauncherTestingWithPID extends OpMode {
     Input input = new Input();
-    double targetVel = LAUNCHER_FAR_TARGET;
+    double targetVel = LAUNCHER_NEAR_TARGET;
     double delta = 0.1;
     @Override
     public void init() {

@@ -14,9 +14,11 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_REVERSED;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_ENABLE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN_THREE;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_FAR;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
@@ -28,6 +30,7 @@ import static java.lang.Math.max;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
@@ -40,6 +43,7 @@ public class CompDrive extends OpMode {
     Input input = new Input();
     //temp time used mainly in state machines
     static double timeAtLaunch;
+    ElapsedTime launchTimer = new ElapsedTime();
     //enum for launching state machines
     enum LaunchState{
         SPIN_UP,
@@ -68,10 +72,17 @@ public class CompDrive extends OpMode {
         INTAKE_RUN = false;
         LAUNCHER_RUN_THREE = false;
         LAUNCHER_RUN = false;
+        LAUNCH_FAR = false;
         state = LaunchState.SPIN_UP;
         LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
         ParkingStopServo.setPosition(0);
+    }
+
+    @Override
+    public void stop() {
+        LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LauncherMotor.setPower(0);
     }
 
     @Override
@@ -91,9 +102,13 @@ public class CompDrive extends OpMode {
         //while LAUNCHER_RUN_THREE flag is true, launch 3
         //otherwise let motor float
         if (LAUNCHER_RUN) {
-            runLauncherOnce();
+            if(LAUNCH_FAR){
+            } else {
+            runLauncherOnceNear(); }
         } else if(LAUNCHER_RUN_THREE) {
-            runLauncherThree();
+            if(LAUNCH_FAR){
+            } else { runLauncherThreeNear();
+        }
         } else {
             LauncherMotor.setPower(LAUNCHER_IDLE);
             /* ---------- Launcher Finger (Manual) ---------- */
@@ -102,6 +117,9 @@ public class CompDrive extends OpMode {
             } else {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             }
+        }
+        if(input.back.down()){
+            LAUNCH_FAR = !LAUNCH_FAR;
         }
 
         /* ---------- Intake ---------- */
@@ -113,10 +131,7 @@ public class CompDrive extends OpMode {
             //toggles intake on and off
             INTAKE_RUN = !INTAKE_RUN;
         }
-        if (input.start.down()) {
-            ParkingStopServo.setPosition(.5);
-            //dunno what this is but im leaving it
-        }
+
 
         if (INTAKE_RUN) {
             if (!INTAKE_REVERSED) {
@@ -129,7 +144,7 @@ public class CompDrive extends OpMode {
                 IntakeMotor.setPower(-INTAKE_POWER);
                 LeftSideFeedRoller.setPower(-1);
                 RightSideFeedRoller.setPower(-1);
-                LauncherMotor.setPower(-LauncherMotor.getPower());
+                //LauncherMotor.setPower(-LauncherMotor.getPower());
             }
         } else {
             //no intake
@@ -188,23 +203,25 @@ public class CompDrive extends OpMode {
         telemetry.addLine("");
     }
 
-    public void runLauncherOnce() {
+    public void runLauncherOnceNear() {
         switch(state) {
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
-                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD) {
+                LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
+                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD) {
                     timeAtLaunch = getRuntime();
+
                     state = LaunchState.UP;
                     INTAKE_RUN = false;
                 }
                 break;
             case UP:
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                launchTimer.reset();
                 state = LaunchState.WAIT;
                 timeAtLaunch = getRuntime();
                 break;
             case WAIT:
-                if(getRuntime() - timeAtLaunch >= 0.4){
+                if(launchTimer.seconds() >= 1){
                     state = LaunchState.DOWN;
                 }
                 break;
@@ -217,11 +234,11 @@ public class CompDrive extends OpMode {
         }
     }
 
-    public void runLauncherThree() {
+    public void runLauncherThreeNear() {
         switch(state) {
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
-                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD) {
+                LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
+                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD) {
                     timeAtLaunch = getRuntime();
                     state = LaunchState.UP;
                 }
@@ -232,23 +249,25 @@ public class CompDrive extends OpMode {
                 timeAtLaunch = getRuntime();
                 break;
             case WAIT:
-                if(getRuntime() - timeAtLaunch >= 0.4){
+                if(getRuntime() - timeAtLaunch >= 0.2){
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+                }
+                if(getRuntime() - timeAtLaunch >= 0.6){
                     state = LaunchState.DOWN;
                 }
                 break;
             case DOWN:
                 state = LaunchState.SPIN_UP_TWO;
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 timeAtLaunch = getRuntime();
                 break;
             case SPIN_UP_TWO:
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
+                LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
                 if(getRuntime() - timeAtLaunch >= 0.3){
                     INTAKE_RUN = false;
                 } else if(getRuntime() - timeAtLaunch >= 0.1){
                     INTAKE_RUN = true;
                 }
-                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD) {
+                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD) {
                     timeAtLaunch = getRuntime();
                     state = LaunchState.UP_TWO;
                 }
@@ -261,6 +280,7 @@ public class CompDrive extends OpMode {
             case WAIT_TWO:
                 if(getRuntime() - timeAtLaunch >= 0.4){
                     state = LaunchState.DOWN_TWO;
+                    timeAtLaunch = getRuntime();
                 }
                 break;
             case DOWN_TWO:
@@ -269,14 +289,11 @@ public class CompDrive extends OpMode {
                 timeAtLaunch = getRuntime();
                 INTAKE_RUN = true;
                 LAUNCHER_RUN = true;
-                state = LaunchState.SPIN_UP;
+                if(getRuntime() - timeAtLaunch >= 0.2){
+                    state = LaunchState.SPIN_UP;
+                }
                 break;
         }
-    }
-
-    @Override
-    public void stop() {
-        LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
 }

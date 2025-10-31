@@ -9,7 +9,7 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHED_THRESHOLD;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
@@ -61,7 +61,7 @@ public class ScrimmageAuto extends OpMode {
             case SPIN_UP:
                 LauncherMotor.setPower(1);
                 if(getRuntime() - timeAtShot >= shootTime * 2){IntakeMotor.setPower(0);}
-                if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD){
+                if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD){
                     autostate = Autostate.SHOOT_FIRST;
                     numShot++;
                     timeAtShot = getRuntime();
@@ -82,7 +82,7 @@ public class ScrimmageAuto extends OpMode {
                 IntakeMotor.setPower(0);
                 LauncherMotor.setPower(.8);
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD){
+                if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD){
                     autostate = Autostate.SHOOT_SECOND;
                     numShot++;
                     timeAtShot = getRuntime();
@@ -102,7 +102,7 @@ public class ScrimmageAuto extends OpMode {
                 IntakeMotor.setPower(0);
                 LauncherMotor.setPower(1);
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET - 0.1) <= LAUNCH_THRESHOLD * 3){
+                if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET - 0.1) <= LAUNCH_THRESHOLD * 3){
                     autostate = Autostate.SHOOT_SECOND;
                     numShot++;
                     timeAtShot = getRuntime();

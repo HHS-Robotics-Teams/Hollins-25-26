@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
 
 //testing opmode disabled
-//@Disabled
+@Disabled
 @TeleOp
 public class LauncherTesting extends OpMode {
 

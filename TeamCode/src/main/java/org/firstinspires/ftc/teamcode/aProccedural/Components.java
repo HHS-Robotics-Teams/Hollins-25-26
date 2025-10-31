@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -35,6 +36,7 @@ public class Components {
 
     //todo public static imu;
     public static OpenCvWebcam webcam;
+    public static DistanceSensor artifactCounterDistance;
 
 
     /*
@@ -79,6 +81,7 @@ public class Components {
         RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //webcam = hardwareMap.get(OpenCvWebcam.class, "webcam");
+        //artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
 
     }
 
