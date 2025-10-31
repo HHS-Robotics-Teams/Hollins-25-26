@@ -61,11 +61,11 @@ public class Components {
 
         //Initialize Launcher
         LauncherMotor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
-        LauncherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         LauncherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        //todo this LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients());
+        LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        //Initialize Pivot Motor
+        //Initialize Intake Motor
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
         IntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         IntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);

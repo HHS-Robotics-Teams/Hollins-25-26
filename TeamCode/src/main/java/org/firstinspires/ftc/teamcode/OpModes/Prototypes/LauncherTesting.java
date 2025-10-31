@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.ParkingStopServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -13,6 +16,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
 
+//testing opmode disabled
+//@Disabled
 @TeleOp
 public class LauncherTesting extends OpMode {
 
@@ -61,7 +66,6 @@ public class LauncherTesting extends OpMode {
         //run
         if(gamepad1.a){
             launcher_motor.setPower(power);
-
         } else {
             launcher_motor.setPower(0);
         }
@@ -75,17 +79,15 @@ public class LauncherTesting extends OpMode {
         if (gamepad1.right_trigger >= .3){
             LeftSideFeedRoller.setPower(1);
             RightSideFeedRoller.setPower(1);
-
-        }else {
+        } else {
             LeftSideFeedRoller.setPower(0);
             RightSideFeedRoller.setPower(0);
         }
         // Launcher Finger
         if (gamepad1.right_bumper){
-            LauncherFingerServo.setPosition(0);
-        }
-        else {
-            LauncherFingerServo.setPosition(1);
+            LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+        } else {
+            LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
         }
 
         //change power
