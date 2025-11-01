@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.aProccedural;
 
+import com.acmerobotics.roadrunner.ftc.LazyHardwareMapImu;
+import com.acmerobotics.roadrunner.ftc.LazyImu;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.openftc.easyopencv.OpenCvWebcam;
@@ -34,12 +38,12 @@ public class Components {
     public static CRServo RightSideFeedRoller;
     public static Servo ParkingStopServo;
 
-    //todo public static imu;
+    public static LazyImu imu;
     public static OpenCvWebcam webcam;
     public static DistanceSensor artifactCounterDistance;
 
 
-    /*
+    /**
         Method to initialize components
         param hardwareMap is hardwareMap
      */
@@ -80,6 +84,9 @@ public class Components {
         RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");
         RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        //Initialize Sensors
+        //imu = new LazyHardwareMapImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
+        //      RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
         //webcam = hardwareMap.get(OpenCvWebcam.class, "webcam");
         //artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
 

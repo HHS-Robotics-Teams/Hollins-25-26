@@ -17,6 +17,7 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FIN
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -24,8 +25,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 
+@Disabled
 @Autonomous
-public class BLUE_FarSensingStateAuto extends OpMode {
+public class OldBlueDoubleStateAuto extends OpMode {
 
     enum AutoState {
         ALIGN_AND_SPIN_UP,
