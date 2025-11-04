@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.Far;
 
-import static org.firstinspires.ftc.teamcode.Math.WebcamUtil.getTagYaw;
+import static org.firstinspires.ftc.teamcode.HollinsMadeUtil.WebcamUtil.getTagYaw;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;

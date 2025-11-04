@@ -1,5 +1,4 @@
-package org.firstinspires.ftc.teamcode.Math;
-//package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.HollinsMadeUtil;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -14,7 +13,6 @@ public class AprilTagHelper {
 
     public VisionPortal visionPortal;
     public AprilTagProcessor aprilTag;
-
 
     public AprilTagHelper(HardwareMap hardwareMap, String cameraName) {
         // Create AprilTag processor

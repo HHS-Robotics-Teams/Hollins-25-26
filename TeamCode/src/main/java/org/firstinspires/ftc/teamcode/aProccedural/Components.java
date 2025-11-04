@@ -1,18 +1,13 @@
 package org.firstinspires.ftc.teamcode.aProccedural;
 
-import com.acmerobotics.roadrunner.ftc.LazyHardwareMapImu;
 import com.acmerobotics.roadrunner.ftc.LazyImu;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.openftc.easyopencv.OpenCvWebcam;
 
 /**
  * File to store all hardware code
@@ -40,7 +35,7 @@ public class Components {
     public static Servo ParkingStopServo;
 
     public static LazyImu imu;
-    public static OpenCvWebcam webcam;
+    //public static OpenCvWebcam webcam;
     public static DistanceSensor artifactCounterDistance;
 
 
@@ -89,7 +84,7 @@ public class Components {
         //Initialize Sensors
         //imu = new LazyHardwareMapImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
         //      RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
-        //webcam = hardwareMap.get(OpenCvWebcam.class, "webcam"); todo fix is wrong class
+      //  webcam = hardwareMap.get(OpenCvWebcam.class, "Webcam");// todo fix is wrong class
         //artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
 
     }

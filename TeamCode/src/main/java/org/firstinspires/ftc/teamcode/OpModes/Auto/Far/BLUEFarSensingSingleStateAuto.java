@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.Far;
 
-import static org.firstinspires.ftc.teamcode.Math.WebcamUtil.aprilTagTelemetry;
-import static org.firstinspires.ftc.teamcode.Math.WebcamUtil.getTagYaw;
-import static org.firstinspires.ftc.teamcode.Math.WebcamUtil.initWebcamFinder;
+import static org.firstinspires.ftc.teamcode.HollinsMadeUtil.WebcamUtil.getTagYaw;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeSecondLevelServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
@@ -23,14 +21,12 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRES
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 
-import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 
 @Autonomous

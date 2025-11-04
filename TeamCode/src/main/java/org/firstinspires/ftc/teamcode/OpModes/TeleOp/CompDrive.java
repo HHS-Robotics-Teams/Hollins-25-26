@@ -5,27 +5,25 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeSecon
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.ParkingStopServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightSideFeedRoller;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_LEVEL_TWO_RUN;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_REVERSED;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_NEAR_TARGET;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_ENABLE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_IDLE;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_NEAR_TARGET;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN_THREE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_FAR;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN;
-
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
@@ -35,10 +33,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Math.AprilTagHelper;
+import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp
 public class CompDrive extends OpMode {
@@ -65,19 +62,20 @@ public class CompDrive extends OpMode {
     public void init() {
         //Initialize Components
         Components.initComponents(hardwareMap);
-
-        AprilTagDetection tag = tagHelper.getFirstTag(); // Call this every loop to get current detections
-        if (tag != null && tag.ftcPose != null) { // Added null check for ftcPose
-            telemetry.addData("Tag ID", tag.id);
-            telemetry.addData("Tag Name", tag.metadata != null ? tag.metadata.name : "N/A"); // Display name if available
-            telemetry.addData("X (in)", "%.2f", tag.ftcPose.x);
-            telemetry.addData("Y (in)", "%.2f", tag.ftcPose.y);
-            telemetry.addData("Z (in)", "%.2f", tag.ftcPose.z);
-            telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
-            telemetry.addData("Pitch (deg)", "%.2f", tag.ftcPose.pitch);
-            telemetry.addData("Roll (deg)", "%.2f", tag.ftcPose.roll);
-            telemetry.update();
-        }
+//        tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
+//
+//        AprilTagDetection tag = tagHelper.getFirstTag(); // Call this every loop to get current detections
+//        if (tag != null && tag.ftcPose != null) { // Added null check for ftcPose
+//            telemetry.addData("Tag ID", tag.id);
+//            telemetry.addData("Tag Name", tag.metadata != null ? tag.metadata.name : "N/A"); // Display name if available
+//            telemetry.addData("X (in)", "%.2f", tag.ftcPose.x);
+//            telemetry.addData("Y (in)", "%.2f", tag.ftcPose.y);
+//            telemetry.addData("Z (in)", "%.2f", tag.ftcPose.z);
+//            telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
+//            telemetry.addData("Pitch (deg)", "%.2f", tag.ftcPose.pitch);
+//            telemetry.addData("Roll (deg)", "%.2f", tag.ftcPose.roll);
+//            telemetry.update();
+//        }
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
     }
@@ -417,9 +415,7 @@ public class CompDrive extends OpMode {
                 timeAtLaunch = getRuntime();
                 INTAKE_LEVEL_TWO_RUN = true;
                 LAUNCHER_RUN = true;
-                if(getRuntime() - timeAtLaunch >= 0.2){
-                    state = LaunchState.SPIN_UP;
-                }
+                state = LaunchState.SPIN_UP;
                 break;
         }
     }
