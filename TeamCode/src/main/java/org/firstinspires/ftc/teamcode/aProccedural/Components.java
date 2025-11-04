@@ -36,6 +36,7 @@ public class Components {
     //public static Servo TopRampHolderServo;
     public static CRServo LeftSideFeedRoller;
     public static CRServo RightSideFeedRoller;
+    public static CRServo IntakeSecondLevelServo;
     public static Servo ParkingStopServo;
 
     public static LazyImu imu;
@@ -79,15 +80,16 @@ public class Components {
 
         //Initialize Servos
         LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
-        ParkingStopServo = hardwareMap.get(Servo.class, "ParkingStopServo");
         LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
         RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");
         RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+        IntakeSecondLevelServo = hardwareMap.get(CRServo.class, "IntakeSecondLevelServo");
+
 
         //Initialize Sensors
         //imu = new LazyHardwareMapImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
         //      RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
-        //webcam = hardwareMap.get(OpenCvWebcam.class, "webcam");
+        //webcam = hardwareMap.get(OpenCvWebcam.class, "webcam"); todo fix is wrong class
         //artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
 
     }

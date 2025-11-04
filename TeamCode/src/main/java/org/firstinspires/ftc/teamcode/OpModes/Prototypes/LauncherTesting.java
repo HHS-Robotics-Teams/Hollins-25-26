@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
 
 //testing opmode disabled
-@Disabled
+
 @TeleOp
 public class LauncherTesting extends OpMode {
 
@@ -27,6 +27,7 @@ public class LauncherTesting extends OpMode {
     private DcMotor intake_motor;
     public static CRServo LeftSideFeedRoller;
     public static CRServo RightSideFeedRoller;
+    public static  CRServo IntakeSecondLevelServo;
     private static Servo LauncherFingerServo;
     //power
     private double power = 0.25;
@@ -42,7 +43,8 @@ public class LauncherTesting extends OpMode {
         RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");
         LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
         RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
-        ParkingStopServo = hardwareMap.get(Servo.class,"ParkingStopServo");
+
+        IntakeSecondLevelServo = hardwareMap.get(CRServo.class, "IntakeSecondLevelServo");
 
         telemetry.addLine("WARNING: UPON START LAUNCHER AND INTAKE WILL START SPINNING");
     }
@@ -52,16 +54,12 @@ public class LauncherTesting extends OpMode {
         intake_motor.setPower(1);
         LeftSideFeedRoller.setPower(1);
         RightSideFeedRoller.setPower(1);
-        ParkingStopServo.setPosition(0);
+
     }
 
     @Override
     public void loop() {
-        if (gamepad1.start){
-            ParkingStopServo.setPosition(0);
-        } else {
-            ParkingStopServo.setPosition(.5);
-        }
+
 
         //run
         if(gamepad1.a){
@@ -79,9 +77,11 @@ public class LauncherTesting extends OpMode {
         if (gamepad1.right_trigger >= .3){
             LeftSideFeedRoller.setPower(1);
             RightSideFeedRoller.setPower(1);
+            IntakeSecondLevelServo.setPower(1);
         } else {
             LeftSideFeedRoller.setPower(0);
             RightSideFeedRoller.setPower(0);
+            IntakeSecondLevelServo.setPower(0);
         }
         // Launcher Finger
         if (gamepad1.right_bumper){

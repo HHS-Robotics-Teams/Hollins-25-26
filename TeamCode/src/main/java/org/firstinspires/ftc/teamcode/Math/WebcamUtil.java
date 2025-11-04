@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 import android.annotation.SuppressLint;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.List;
 
@@ -35,8 +37,8 @@ public class WebcamUtil {
 
         VisionPortal.Builder builder = new VisionPortal.Builder();
 
+        builder.setCamera((CameraName) hardwareMap.get(OpenCvWebcam.class, "webcam1"));
 
-        builder.setCamera(hardwareMap.get(WebcamName.class, "webcam"));
         builder.addProcessor(aprilTagProcessor);
         builder.enableLiveView(true);
         visionPortal = builder.build();
