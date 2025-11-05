@@ -66,7 +66,10 @@ public class Input {
     public ButtonState b = new ButtonState();
     public ButtonState x = new ButtonState();
     public ButtonState y = new ButtonState();
-
+    public ButtonState cross = new ButtonState();
+    public ButtonState square = new ButtonState();
+    public ButtonState triangle = new ButtonState();
+    public ButtonState circle = new ButtonState();
     public DisplacingButtonState left_trigger = new DisplacingButtonState();
     public DisplacingButtonState right_trigger = new DisplacingButtonState();
 
@@ -97,7 +100,10 @@ public class Input {
         updateState(b, gamepad.b);
         updateState(x, gamepad.x);
         updateState(y, gamepad.y);
-
+        updateState(cross, gamepad.cross);
+        updateState(square, gamepad.square);
+        updateState(triangle, gamepad.triangle);
+        updateState(circle, gamepad.circle);
         updateState(left_trigger, gamepad.left_trigger > 0.3, gamepad.left_trigger);
         updateState(right_trigger, gamepad.right_trigger > 0.3, gamepad.right_trigger);
 
