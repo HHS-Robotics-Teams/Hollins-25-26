@@ -27,7 +27,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Autonomous
 public class BLUEFarSensingSingleStateAuto extends OpMode {
@@ -66,7 +68,7 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
         END
     }
     AutoState autoState = AutoState.ALIGN_AND_SPIN_UP;
-
+    private AprilTagHelper tagHelper;
     //Pose2d startPose = new Pose2d(0,0,0);
     //MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
     ElapsedTime shotTimerOne = new ElapsedTime();
@@ -77,13 +79,32 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
         //initWebcamFinder("BLUE");
         Components.initComponents(hardwareMap);
         LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
         telemetry.addLine("READY TO START");
+
     }
 
     @Override
     public void init_loop() {
-        //aprilTagTelemetry(telemetry);
-        //telemetry.addData("Current YAW Value: ", getTagYaw());
+        // Call this every loop to get current detections
+        AprilTagDetection tag = tagHelper.getFirstTag();
+        if (tag != null && tag.ftcPose != null) { // Added null check for ftcPose
+            telemetry.addLine("--- AprilTag Detected! ---");
+            telemetry.addData("Tag ID", tag.id);
+            // Display name if available
+            telemetry.addData("Tag Name", tag.metadata != null ? tag.metadata.name : "N/A");
+            telemetry.addData("X (in)", "%.2f", tag.ftcPose.x);
+            telemetry.addLine("X = .27");
+            //telemetry.addData("Y (in)", "%.2f", tag.ftcPose.y);
+            //telemetry.addData("Z (in)", "%.2f", tag.ftcPose.z);
+            telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
+            telemetry.addLine("Yaw = -32");
+            //telemetry.addData("Pitch (deg)", "%.2f", tag.ftcPose.pitch);
+            //telemetry.addData("Roll (deg)", "%.2f", tag.ftcPose.roll);
+        } else {
+            telemetry.addLine("--- No AprilTag Detected ---");
+        }
+        telemetry.update();
     }
 
     double tempAutoTime;

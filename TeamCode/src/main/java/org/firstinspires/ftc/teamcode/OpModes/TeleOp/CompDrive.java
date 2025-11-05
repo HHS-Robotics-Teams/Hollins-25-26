@@ -36,6 +36,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp
 public class CompDrive extends OpMode {
@@ -62,22 +63,31 @@ public class CompDrive extends OpMode {
     public void init() {
         //Initialize Components
         Components.initComponents(hardwareMap);
-//        tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
-//
-//        AprilTagDetection tag = tagHelper.getFirstTag(); // Call this every loop to get current detections
-//        if (tag != null && tag.ftcPose != null) { // Added null check for ftcPose
-//            telemetry.addData("Tag ID", tag.id);
-//            telemetry.addData("Tag Name", tag.metadata != null ? tag.metadata.name : "N/A"); // Display name if available
-//            telemetry.addData("X (in)", "%.2f", tag.ftcPose.x);
-//            telemetry.addData("Y (in)", "%.2f", tag.ftcPose.y);
-//            telemetry.addData("Z (in)", "%.2f", tag.ftcPose.z);
-//            telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
-//            telemetry.addData("Pitch (deg)", "%.2f", tag.ftcPose.pitch);
-//            telemetry.addData("Roll (deg)", "%.2f", tag.ftcPose.roll);
-//            telemetry.update();
-//        }
+        tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
+
+
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
+    }
+    @Override
+    public void init_loop() {
+        // Call this every loop to get current detections
+        AprilTagDetection tag = tagHelper.getFirstTag();
+        if (tag != null && tag.ftcPose != null) { // Added null check for ftcPose
+            telemetry.addLine("--- AprilTag Detected! ---");
+            telemetry.addData("Tag ID", tag.id);
+            // Display name if available
+            telemetry.addData("Tag Name", tag.metadata != null ? tag.metadata.name : "N/A");
+            telemetry.addData("X (in)", "%.2f", tag.ftcPose.x);
+            telemetry.addData("Y (in)", "%.2f", tag.ftcPose.y);
+            telemetry.addData("Z (in)", "%.2f", tag.ftcPose.z);
+            telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
+            telemetry.addData("Pitch (deg)", "%.2f", tag.ftcPose.pitch);
+            telemetry.addData("Roll (deg)", "%.2f", tag.ftcPose.roll);
+        } else {
+            telemetry.addLine("--- No AprilTag Detected ---");
+        }
+        telemetry.update();
     }
 
     @Override
@@ -109,9 +119,9 @@ public class CompDrive extends OpMode {
            LAUNCHER_RUN = !LAUNCHER_RUN;
            state = LaunchState.SPIN_UP;
         }
-        if(input.right_bumper.down()){
-            LAUNCHER_RUN_THREE = !LAUNCHER_RUN_THREE;
-        }
+//        if(input.right_bumper.down()){
+//            LAUNCHER_RUN_THREE = !LAUNCHER_RUN_THREE;
+//        }
 
         //while LAUNCHER_RUN flag is true, launch one
         //while LAUNCHER_RUN_THREE flag is true, launch 3

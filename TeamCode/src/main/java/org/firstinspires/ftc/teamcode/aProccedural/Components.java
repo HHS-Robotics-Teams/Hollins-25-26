@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+
 /**
  * File to store all hardware code
  */
@@ -35,7 +37,7 @@ public class Components {
     public static Servo ParkingStopServo;
 
     public static LazyImu imu;
-    //public static OpenCvWebcam webcam;
+    public static WebcamName webcam;
     public static DistanceSensor artifactCounterDistance;
 
 
@@ -84,7 +86,7 @@ public class Components {
         //Initialize Sensors
         //imu = new LazyHardwareMapImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
         //      RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
-      //  webcam = hardwareMap.get(OpenCvWebcam.class, "Webcam");// todo fix is wrong class
+        webcam = hardwareMap.get(WebcamName.class, "Webcam");// todo fix is wrong class
         //artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
 
     }
