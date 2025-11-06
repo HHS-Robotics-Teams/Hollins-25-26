@@ -9,8 +9,8 @@ public class Constants {
 
     public static double LAUNCHER_NEAR_TARGET = 2;
     public static double LAUNCHER_FAR_TARGET = 2.5;
-    public static double LAUNCHER_FAR_TARGET_FIRST = 2.1;
-    public static double LAUNCHER_FAR_TARGET_THIRD = 2.5;
+    public static double LAUNCHER_FAR_TARGET_FIRST = 2.0;
+    public static double LAUNCHER_FAR_TARGET_THIRD = 2.6;
     public static final double LAUNCH_THRESHOLD = 0.03;
     public static final double LAUNCHED_THRESHOLD = 1;
 
@@ -24,8 +24,10 @@ public class Constants {
     public static boolean INTAKE_REVERSED = false;
     public static boolean LAUNCHER_HOLDER_ENABLE = true;
     public static boolean LAUNCHER_RUN = false;
+    public static boolean LAUNCHER_RUN_TWO = false;
     public static boolean LAUNCHER_RUN_THREE = false;
     public static boolean LAUNCH_FAR = true;
+    public static boolean DriveSlowdown = false;
 
     public static int numShot = 0;
 }

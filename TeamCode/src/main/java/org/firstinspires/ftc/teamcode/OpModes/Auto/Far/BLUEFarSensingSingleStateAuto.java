@@ -111,6 +111,9 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
 
     @Override
     public void start() {
+        if (tagHelper != null) {
+            tagHelper.stop();
+        }
         tempAutoTime = getRuntime();
         autoState = AutoState.ALIGN_AND_SPIN_UP;
     }
@@ -235,7 +238,7 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
                 LauncherMotor.setPower(LAUNCHER_IDLE);
                 shotTimerTwo.reset();
                 shotTimerOne.reset();
-                autoState = AutoState.END; //todo fix
+                autoState = AutoState.PARK; //todo fix
                 break;
             case PARK:
                 leftBack.setPower(.4);

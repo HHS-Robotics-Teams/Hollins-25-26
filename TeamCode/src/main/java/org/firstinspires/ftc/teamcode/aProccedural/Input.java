@@ -80,6 +80,9 @@ public class Input {
 
     public ButtonState back = new ButtonState();
     public ButtonState start = new ButtonState();
+    public ButtonState left_stick_button = new ButtonState();
+    public ButtonState right_stick_button = new ButtonState();
+
 
     /**
      * @see #pollGamepad(Gamepad)
@@ -111,6 +114,9 @@ public class Input {
 
         updateState(back, gamepad.back);
         updateState(start, gamepad.start);
+
+        updateState(left_stick_button,gamepad.left_stick_button);
+        updateState(right_stick_button,gamepad.right_stick_button);
     }
 
     private void updateState(ButtonState state, boolean heldNow) {

@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DriveSlowdown;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_LEVEL_TWO_RUN;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_REVERSED;
@@ -21,11 +22,9 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOL
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN_THREE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN_TWO;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_FAR;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DriveSlowdown;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
@@ -41,7 +40,7 @@ import org.firstinspires.ftc.teamcode.aProccedural.Input;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp
-public class CompDrive extends OpMode {
+public class CompDriveV2 extends OpMode {
     private AprilTagHelper tagHelper;
     //Instantiated new input
     Input input = new Input();
@@ -157,61 +156,50 @@ public class CompDrive extends OpMode {
 
         /* ---------- Intake ---------- */
         if (input.b.down()) {
-            //Reverses intake, side rollers, and launcher
+            // Reverses intake, side rollers, and launcher
             INTAKE_REVERSED = !INTAKE_REVERSED;
-            INTAKE_RUN = !INTAKE_RUN;
-            INTAKE_LEVEL_TWO_RUN = !INTAKE_LEVEL_TWO_RUN;
         }
+
+        // Hold left trigger to run the main intake motor
         if (input.left_trigger.held()) {
-            //toggles intake on and off
             INTAKE_RUN = true;
         } else {
             INTAKE_RUN = false;
         }
-        if (input.left_bumper.held()) {
-            //toggles second level on and off
-            INTAKE_LEVEL_TWO_RUN = true;
-        } else {
-            INTAKE_LEVEL_TWO_RUN = false;
+
+        // Press left bumper to TOGGLE the second level intake on/off
+        if (input.left_bumper.down()) {
+            INTAKE_LEVEL_TWO_RUN = !INTAKE_LEVEL_TWO_RUN;
         }
 
+        // --- Final Intake Motor Logic ---
 
+        // Control the main intake motor
         if (INTAKE_RUN) {
-            if (!INTAKE_REVERSED) {
-                //run intake & rollers
-                IntakeMotor.setPower(INTAKE_POWER);
-                LeftSideFeedRoller.setPower(1);
-                RightSideFeedRoller.setPower(1);
-                IntakeSecondLevelServo.setPower(1);
-            } else {
-                //run everything backwards
-                IntakeMotor.setPower(-INTAKE_POWER);
-                LeftSideFeedRoller.setPower(-1);
-                RightSideFeedRoller.setPower(-1);
-                IntakeSecondLevelServo.setPower(-1);
-            }
+            IntakeMotor.setPower(INTAKE_REVERSED ? -INTAKE_POWER : INTAKE_POWER);
         } else {
-            //no intake
             IntakeMotor.setPower(0);
         }
 
-        if (INTAKE_LEVEL_TWO_RUN) {
-            if (!INTAKE_REVERSED) {
-                //run rollers
-                LeftSideFeedRoller.setPower(1);
-                RightSideFeedRoller.setPower(1);
-                IntakeSecondLevelServo.setPower(1);
-            } else {
-                //run everything backwards
-                LeftSideFeedRoller.setPower(-1);
-                RightSideFeedRoller.setPower(-1);
-                IntakeSecondLevelServo.setPower(-1);
-            }
+        // Control the second level rollers and servo
+        // This runs if EITHER the manual toggle is on OR the main intake is running.
+        // This gives you both manual and automatic control.
+        if (INTAKE_LEVEL_TWO_RUN || INTAKE_RUN) {
+            double power = INTAKE_REVERSED ? -1 : 1;
+            LeftSideFeedRoller.setPower(power);
+            RightSideFeedRoller.setPower(power);
+            IntakeSecondLevelServo.setPower(power);
         } else {
             LeftSideFeedRoller.setPower(0);
             RightSideFeedRoller.setPower(0);
             IntakeSecondLevelServo.setPower(0);
         }
+
+        // Your state machine (runLauncherTwoNear) can now safely set
+        // INTAKE_RUN = true in the INTAKE state, and this logic will
+        // correctly turn on all the intake parts.
+
+// The old INTAKE_LEVEL_TWO_RUN block can be completely removed.
 
         /* ---------- Drivetrain ---------- */
 
@@ -234,7 +222,6 @@ public class CompDrive extends OpMode {
         // slow down
         if (input.left_stick_button.down() && input.right_stick_button.down()){
             DriveSlowdown = true;
-
         } else if (input.left_stick_button.down() || input.right_stick_button.down())
             DriveSlowdown = false;
         if (DriveSlowdown){
@@ -256,7 +243,7 @@ public class CompDrive extends OpMode {
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Comp Drive Running ---------");
-        telemetry.addData("Driveslowdown?", DriveSlowdown);
+        telemetry.addData("Drive Slowdown?", DriveSlowdown);
         telemetry.addData("Intake running? ", INTAKE_RUN);
         telemetry.addData("Intake second level running?", INTAKE_LEVEL_TWO_RUN);
         telemetry.addData("Intake reversed? ", INTAKE_REVERSED);
@@ -334,63 +321,74 @@ public class CompDrive extends OpMode {
     public void runLauncherTwoNear() {
         switch (state) {
             case SPIN_UP:
+                LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
+                // Ensure intake is off before the first shot
+                INTAKE_RUN = false;
+                INTAKE_LEVEL_TWO_RUN = false;
+
+                // Once motor is at speed, move to launch the first Ball
                 if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD * 2) {
-                    timeAtLaunch = getRuntime();
                     state = LaunchState.UP;
                 }
                 break;
             case UP:
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                launchTimer.reset();
                 state = LaunchState.WAIT;
-                timeAtLaunch = getRuntime();
                 break;
             case WAIT:
-                if(getRuntime() - timeAtLaunch >= 0.2){
-                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                }
-                if(getRuntime() - timeAtLaunch >= 0.6){
+                if (launchTimer.seconds() >= 0.5) { // A 0.5-second wait is usually enough
                     state = LaunchState.DOWN;
                 }
                 break;
             case DOWN:
-
-                IntakeTimer.reset();
-                timeAtLaunch = getRuntime();
-
+                // Retract the finger after the first launch
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+                launchTimer.reset();
+                // Transition to the INTAKE state to load the second Ball
                 state = LaunchState.INTAKE;
                 break;
-            case INTAKE:
-                LeftSideFeedRoller.setPower(1);
-                RightSideFeedRoller.setPower(1);
-                IntakeSecondLevelServo.setPower(1);
-                if (IntakeTimer.seconds() >=2){
-                    state = LaunchState.SPIN_UP_TWO;
 
+            case INTAKE:
+                // *** THIS IS THE KEY STEP ***
+                // Run the intake to load the second pixel
+                INTAKE_RUN = true;
+                INTAKE_LEVEL_TWO_RUN = true; // Run the second level as well
+
+                // Wait for a moment to ensure the pixel is loaded
+                if (launchTimer.seconds() >= 0.7) {
+                    // Stop the intake and prepare for the second shot
+                    INTAKE_RUN = false;
+                    INTAKE_LEVEL_TWO_RUN = false;
+                    state = LaunchState.SPIN_UP_TWO;
                 }
                 break;
             case SPIN_UP_TWO:
-                LeftSideFeedRoller.setPower(0);
-                RightSideFeedRoller.setPower(0);
-                IntakeSecondLevelServo.setPower(0);
+                // Re-verify motor speed for the second shot
                 LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
-                if(getRuntime() - timeAtLaunch >= 0.3){
-                    INTAKE_RUN = false;
-                    INTAKE_LEVEL_TWO_RUN = false;
-                } else if(getRuntime() - timeAtLaunch >= 0.1){
-                    INTAKE_RUN = true;
-                    INTAKE_LEVEL_TWO_RUN = true;
-                }
                 if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD * 2) {
-                    timeAtLaunch = getRuntime();
                     state = LaunchState.UP_TWO;
                 }
                 break;
             case UP_TWO:
+                // Push the second pixel into the launcher
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                state = LaunchState.SPIN_UP;
-                timeAtLaunch = getRuntime();
+                launchTimer.reset();
+                state = LaunchState.WAIT_TWO;
+                break;
+            case WAIT_TWO:
+                // Wait for the finger to move
+                if (launchTimer.seconds() >= 0.5) {
+                    state = LaunchState.DOWN_TWO;
+                }
                 break;
 
+            case DOWN_TWO:
+                // Retract the finger, completing the sequence
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+                LAUNCHER_RUN_TWO = false; // Turn off the launch flag
+                state = LaunchState.SPIN_UP; // Reset the state machine for the next command
+                break;
         }
     }
     public void runLauncherTwoFar() {
@@ -456,130 +454,7 @@ public class CompDrive extends OpMode {
                     timeAtLaunch = getRuntime();
                 }
                 break;
-
-//    public void runLauncherThreeNear() {
-//        switch(state) {
-//            case SPIN_UP:
-//                LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
-//                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD * 2) {
-//                    timeAtLaunch = getRuntime();
-//                    state = LaunchState.UP;
-//                }
-//                break;
-//            case UP:
-//                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-//                state = LaunchState.WAIT;
-//                timeAtLaunch = getRuntime();
-//                break;
-//            case WAIT:
-//                if(getRuntime() - timeAtLaunch >= 0.2){
-//                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-//                }
-//                if(getRuntime() - timeAtLaunch >= 0.6){
-//                    state = LaunchState.DOWN;
-//                }
-//                break;
-//            case DOWN:
-//                state = LaunchState.SPIN_UP_TWO;
-//                timeAtLaunch = getRuntime();
-//                break;
-//            case SPIN_UP_TWO:
-//                LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
-//                if(getRuntime() - timeAtLaunch >= 0.3){
-//                    INTAKE_RUN = false;
-//                    INTAKE_LEVEL_TWO_RUN = false;
-//                } else if(getRuntime() - timeAtLaunch >= 0.1){
-//                    INTAKE_RUN = true;
-//                    INTAKE_LEVEL_TWO_RUN = true;
-//                }
-//                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD * 2) {
-//                    timeAtLaunch = getRuntime();
-//                    state = LaunchState.UP_TWO;
-//                }
-//                break;
-//            case UP_TWO:
-//                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-//                state = LaunchState.WAIT_TWO;
-//                timeAtLaunch = getRuntime();
-//                break;
-//            case WAIT_TWO:
-//                if(getRuntime() - timeAtLaunch >= 0.4){
-//                    state = LaunchState.DOWN_TWO;
-//                    timeAtLaunch = getRuntime();
-//                }
-//                break;
-//            case DOWN_TWO:
-//                LAUNCHER_RUN_THREE = false;
-//                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-//                timeAtLaunch = getRuntime();
-//                INTAKE_LEVEL_TWO_RUN = true;
-//                LAUNCHER_RUN = true;
-//                if(getRuntime() - timeAtLaunch >= 0.2){
-//                    state = LaunchState.SPIN_UP;
-//                }
-//                break;
-//        }
-//    }
-//    public void runLauncherThreeFar() {
-//        switch(state) {
-//            case SPIN_UP:
-//                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
-//                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= 2*LAUNCH_THRESHOLD) {
-//                    timeAtLaunch = getRuntime();
-//                    state = LaunchState.UP;
-//                }
-//                break;
-//            case UP:
-//                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-//                state = LaunchState.WAIT;
-//                timeAtLaunch = getRuntime();
-//                break;
-//            case WAIT:
-//                if(getRuntime() - timeAtLaunch >= 0.2){
-//                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-//                }
-//                if(getRuntime() - timeAtLaunch >= 0.6){
-//                    state = LaunchState.DOWN;
-//                }
-//                break;
-//            case DOWN:
-//                state = LaunchState.SPIN_UP_TWO;
-//                timeAtLaunch = getRuntime();
-//                break;
-//            case SPIN_UP_TWO:
-//                LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
-//                if(getRuntime() - timeAtLaunch >= 0.3){
-//                    INTAKE_RUN = false;
-//                    INTAKE_LEVEL_TWO_RUN = false;
-//                } else if(getRuntime() - timeAtLaunch >= 0.1){
-//                    INTAKE_RUN = true;
-//                    INTAKE_LEVEL_TWO_RUN = true;
-//                }
-//                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD * 2) {
-//                    timeAtLaunch = getRuntime();
-//                    state = LaunchState.UP_TWO;
-//                }
-//                break;
-//            case UP_TWO:
-//                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-//                state = LaunchState.WAIT_TWO;
-//                timeAtLaunch = getRuntime();
-//                break;
-//            case WAIT_TWO:
-//                if(getRuntime() - timeAtLaunch >= 0.4){
-//                    state = LaunchState.DOWN_TWO;
-//                    timeAtLaunch = getRuntime();
-//                }
-//                break;
-//            case DOWN_TWO:
-//                LAUNCHER_RUN_THREE = false;
-//                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-//                timeAtLaunch = getRuntime();
-//                INTAKE_LEVEL_TWO_RUN = true;
-//                LAUNCHER_RUN = true;
-//                state = LaunchState.SPIN_UP;
-//                break;
-//        }
         }
     }
-    }
+
+}
