@@ -6,11 +6,13 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFin
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightSideFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.imu;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DriveSlowdown;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.HailMarry;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_LEVEL_TWO_RUN;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_REVERSED;
@@ -28,12 +30,16 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRES
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
@@ -101,6 +107,7 @@ public class CompDriveV2 extends OpMode {
         LAUNCHER_RUN_TWO = false;
         LAUNCHER_RUN = false;
         LAUNCH_FAR = false;
+        DriveSlowdown = false;
         state = LaunchState.SPIN_UP;
         LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
@@ -116,6 +123,11 @@ public class CompDriveV2 extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
+        if (input.a.held()){
+            LauncherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            LauncherMotor.setPower(1);
+            HailMarry = true;
+        }
 
 
         /* ---------- Launch ---------- */
@@ -144,8 +156,10 @@ public class CompDriveV2 extends OpMode {
         } else {
             LauncherMotor.setPower(LAUNCHER_IDLE);
             /* ---------- Launcher Finger (Manual) ---------- */
-            if (input.x.held()) {
+            if (input.x.held() && HailMarry) {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                HailMarry = false;
             } else {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             }
@@ -169,7 +183,9 @@ public class CompDriveV2 extends OpMode {
 
         // Press left bumper to TOGGLE the second level intake on/off
         if (input.left_bumper.down()) {
-            INTAKE_LEVEL_TWO_RUN = !INTAKE_LEVEL_TWO_RUN;
+            INTAKE_LEVEL_TWO_RUN = true;
+        } else {
+            INTAKE_LEVEL_TWO_RUN = false;
         }
 
         // --- Final Intake Motor Logic ---
@@ -203,6 +219,11 @@ public class CompDriveV2 extends OpMode {
 
         /* ---------- Drivetrain ---------- */
 
+        if(input.start.down()){
+            imu.resetYaw();
+            imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
+        }
+
 
         //Drivetrain movement values
         double forward = -gamepad1.left_stick_y  * 0.8;
@@ -220,10 +241,9 @@ public class CompDriveV2 extends OpMode {
             rotates = 0;
         }
         // slow down
-        if (input.left_stick_button.down() && input.right_stick_button.down()){
-            DriveSlowdown = true;
-        } else if (input.left_stick_button.down() || input.right_stick_button.down())
-            DriveSlowdown = false;
+        if (input.left_stick_button.down() || input.right_stick_button.down()){
+            DriveSlowdown = !DriveSlowdown;
+        }
         if (DriveSlowdown){
             rotates = rotates / 3;
             strafes = strafes / 3;
@@ -234,6 +254,10 @@ public class CompDriveV2 extends OpMode {
 
         //Power fixer
         double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 1);
+
+        if(abs(imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle) <= 30){
+            strafes = -strafes;
+        }
 
         //Setting Powers
         leftFront.setPower((forward + strafes + rotates) / denominator);
@@ -253,6 +277,7 @@ public class CompDriveV2 extends OpMode {
         telemetry.addData("Launcher Far?", LAUNCH_FAR);
         telemetry.addData("Launcher Velocity: ", LauncherMotor.getVelocity(AngleUnit.RADIANS));
         telemetry.addData("Launcher State: ", state);
+        telemetry.addData("ÏMU Z", abs(imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle));
         telemetry.addLine("");
     }
 
@@ -350,12 +375,10 @@ public class CompDriveV2 extends OpMode {
                 break;
 
             case INTAKE:
-                // *** THIS IS THE KEY STEP ***
-                // Run the intake to load the second pixel
                 INTAKE_RUN = true;
                 INTAKE_LEVEL_TWO_RUN = true; // Run the second level as well
 
-                // Wait for a moment to ensure the pixel is loaded
+
                 if (launchTimer.seconds() >= 0.7) {
                     // Stop the intake and prepare for the second shot
                     INTAKE_RUN = false;

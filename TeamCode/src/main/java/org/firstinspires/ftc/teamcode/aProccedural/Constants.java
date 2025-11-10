@@ -28,6 +28,7 @@ public class Constants {
     public static boolean LAUNCHER_RUN_THREE = false;
     public static boolean LAUNCH_FAR = true;
     public static boolean DriveSlowdown = false;
+    public static boolean HailMarry = false;
 
     public static int numShot = 0;
 }

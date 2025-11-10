@@ -1,8 +1,16 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.ParkingStopServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DriveSlowdown;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.max;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -20,6 +28,14 @@ import org.firstinspires.ftc.teamcode.aProccedural.Input;
 
 @TeleOp
 public class LauncherTesting extends OpMode {
+
+
+    //Instantiate Drive Motors
+    public static DcMotor leftFront;
+    public static DcMotor rightFront;
+    public static DcMotor leftBack;
+    public static DcMotor rightBack;
+
 
     //left
     private DcMotorEx launcher_motor;
@@ -43,6 +59,21 @@ public class LauncherTesting extends OpMode {
         RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");
         LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
         RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Initialize Drive Motors
+        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
+        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
+        leftBack = hardwareMap.get(DcMotor.class, "leftBack");
+        rightBack = hardwareMap.get(DcMotor.class, "rightBack");
+
+        //Reversing Motors
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //Drive Motor Settings
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         IntakeSecondLevelServo = hardwareMap.get(CRServo.class, "IntakeSecondLevelServo");
 
@@ -117,6 +148,45 @@ public class LauncherTesting extends OpMode {
         }
 
         input.pollGamepad(gamepad1);
+
+        /* ---------- Drivetrain ---------- */
+
+
+        //Drivetrain movement values
+        double forward = -gamepad1.left_stick_y  * 0.8;
+        double strafes =  gamepad1.left_stick_x  * 1;
+        double rotates = -gamepad1.right_stick_x * 0.6;
+
+
+        if (abs(forward) <= 0.15) {
+            forward = 0;
+        }
+        if (abs(strafes) <= 0.15) {
+            strafes = 0;
+        }
+        if (abs(rotates) <= 0.15) {
+            rotates = 0;
+        }
+        // slow down
+        if (input.left_stick_button.down() || input.right_stick_button.down()){
+            DriveSlowdown = !DriveSlowdown;
+        }
+        if (DriveSlowdown){
+            rotates = rotates / 3;
+            strafes = strafes / 3;
+            forward = forward / 3;
+        }
+
+
+
+        //Power fixer
+        double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 1);
+
+        //Setting Powers
+        leftFront.setPower((forward + strafes + rotates) / denominator);
+        rightFront.setPower((forward - strafes - rotates) / denominator);
+        leftBack.setPower((forward - strafes + rotates) / denominator);
+        rightBack.setPower((forward + strafes - rotates) / denominator);
 
         telemetry.addData("Current power: ", power);
         telemetry.addData("Current speed: ", launcher_motor.getVelocity(AngleUnit.RADIANS));

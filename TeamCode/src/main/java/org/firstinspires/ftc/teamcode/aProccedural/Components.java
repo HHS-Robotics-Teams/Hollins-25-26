@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.aProccedural;
 
 import com.acmerobotics.roadrunner.ftc.LazyImu;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -36,7 +38,7 @@ public class Components {
     public static CRServo IntakeSecondLevelServo;
     public static Servo ParkingStopServo;
 
-    public static LazyImu imu;
+    public static IMU imu;
     public static WebcamName webcam;
     public static DistanceSensor artifactCounterDistance;
 
@@ -84,8 +86,8 @@ public class Components {
 
 
         //Initialize Sensors
-        //imu = new LazyHardwareMapImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
-        //      RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        imu = hardwareMap.get(IMU.class, "imu");
+        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
         webcam = hardwareMap.get(WebcamName.class, "Webcam");// todo fix is wrong class
         //artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
 

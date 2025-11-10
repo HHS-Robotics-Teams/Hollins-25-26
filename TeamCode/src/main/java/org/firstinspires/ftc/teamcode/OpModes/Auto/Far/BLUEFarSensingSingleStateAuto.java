@@ -248,13 +248,18 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
                 shotTimerTwo.reset();
                 shotTimerOne.reset();
                 tempAutoTime = getRuntime();
+                autoState = AutoState.END;
                 break;
             case END:
-                if(shotTimerOne.seconds() >= .2){
+                if(shotTimerOne.seconds() >= .67){
                     leftBack.setPower(0);
                     rightBack.setPower(0);
                     leftFront.setPower(0);
                     rightFront.setPower(0);
+                    leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     requestOpModeStop();
                 }
                 break;
