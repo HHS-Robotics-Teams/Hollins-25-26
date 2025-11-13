@@ -79,9 +79,6 @@ public class Components {
 
         //Initialize Servos
         LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
-        LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
-        RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");
-        RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
         IntakeSecondLevelServo = hardwareMap.get(CRServo.class, "IntakeSecondLevelServo");
 
 

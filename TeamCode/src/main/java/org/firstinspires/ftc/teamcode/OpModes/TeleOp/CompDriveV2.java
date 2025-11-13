@@ -12,7 +12,6 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DriveSlowdown;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.HailMarry;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_LEVEL_TWO_RUN;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_REVERSED;
@@ -123,12 +122,6 @@ public class CompDriveV2 extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
-        if (input.a.held()){
-            LauncherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            LauncherMotor.setPower(1);
-            HailMarry = true;
-        }
-
 
         /* ---------- Launch ---------- */
         if (input.right_trigger.down()) {
@@ -156,10 +149,9 @@ public class CompDriveV2 extends OpMode {
         } else {
             LauncherMotor.setPower(LAUNCHER_IDLE);
             /* ---------- Launcher Finger (Manual) ---------- */
-            if (input.x.held() && HailMarry) {
+            if (input.x.held()) {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                HailMarry = false;
             } else {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             }
@@ -197,9 +189,6 @@ public class CompDriveV2 extends OpMode {
             IntakeMotor.setPower(0);
         }
 
-        // Control the second level rollers and servo
-        // This runs if EITHER the manual toggle is on OR the main intake is running.
-        // This gives you both manual and automatic control.
         if (INTAKE_LEVEL_TWO_RUN || INTAKE_RUN) {
             double power = INTAKE_REVERSED ? -1 : 1;
             LeftSideFeedRoller.setPower(power);
@@ -210,12 +199,6 @@ public class CompDriveV2 extends OpMode {
             RightSideFeedRoller.setPower(0);
             IntakeSecondLevelServo.setPower(0);
         }
-
-        // Your state machine (runLauncherTwoNear) can now safely set
-        // INTAKE_RUN = true in the INTAKE state, and this logic will
-        // correctly turn on all the intake parts.
-
-// The old INTAKE_LEVEL_TWO_RUN block can be completely removed.
 
         /* ---------- Drivetrain ---------- */
 
