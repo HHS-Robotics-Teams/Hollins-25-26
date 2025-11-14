@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode.aProccedural;
+package org.firstinspires.ftc.teamcode._Proccedural;
 
 public class Constants {
 
     /* Constants */
     public static double INTAKE_POWER = 1;
-
     public static final double LAUNCHER_IDLE = 0.25;
+
+    public static final double INTAKE_PPR = 537.7;
+    public static final double INTAKE_HOLD_POS = 0;
 
     public static double LAUNCHER_NEAR_TARGET = 2;
     public static double LAUNCHER_FAR_TARGET = 2.5;

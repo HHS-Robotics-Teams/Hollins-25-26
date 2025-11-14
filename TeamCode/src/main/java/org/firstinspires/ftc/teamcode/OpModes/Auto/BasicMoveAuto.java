@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.aProccedural.Components;
+import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
 public class BasicMoveAuto extends OpMode {

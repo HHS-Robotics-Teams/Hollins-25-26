@@ -1,22 +1,21 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_NEAR_TARGET;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.aProccedural.Components;
-import org.firstinspires.ftc.teamcode.aProccedural.Input;
+import org.firstinspires.ftc.teamcode._Proccedural.Components;
+import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 
 @TeleOp

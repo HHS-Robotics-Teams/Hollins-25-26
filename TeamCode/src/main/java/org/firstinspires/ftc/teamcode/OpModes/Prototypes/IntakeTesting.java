@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.aProccedural.Input;
+import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 //testing opmode disabled
 @Disabled

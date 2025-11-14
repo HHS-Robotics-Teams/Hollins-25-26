@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.aProccedural.Components;
-import org.firstinspires.ftc.teamcode.aProccedural.Input;
+import org.firstinspires.ftc.teamcode._Proccedural.Components;
+import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 //testing opmode disabled
 @Disabled

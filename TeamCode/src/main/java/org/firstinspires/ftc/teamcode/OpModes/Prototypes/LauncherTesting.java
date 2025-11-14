@@ -1,18 +1,13 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DriveSlowdown;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.DriveSlowdown;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -22,7 +17,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.aProccedural.Input;
+import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 //testing opmode disabled
 

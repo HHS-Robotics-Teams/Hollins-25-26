@@ -1,25 +1,22 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.Far;
 
-import static org.firstinspires.ftc.teamcode.HollinsMadeUtil.WebcamUtil.getTagYaw;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
-
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
-
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.FINGER_UP_TIME;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET_FIRST;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET_THIRD;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_IDLE;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.FINGER_UP_TIME;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET_FIRST;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET_THIRD;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_THRESHOLD;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -28,7 +25,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
-import org.firstinspires.ftc.teamcode.aProccedural.Components;
+import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Autonomous
@@ -271,50 +268,5 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
     public void stop() {
         LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LauncherMotor.setPower(0);
-    }
-    public static boolean alignWithWebcam(String color) {
-        switch (color){
-            case("BLUE"):
-                if(getTagYaw() >= 20){
-                    leftBack.setPower(0.4);
-                    rightBack.setPower(-0.4);
-                    leftFront.setPower(0.4);
-                    rightFront.setPower(-0.4);
-                    return false;
-                } else if(getTagYaw() <= -20){
-                    leftBack.setPower(-0.4);
-                    rightBack.setPower(0.4);
-                    leftFront.setPower(-0.4);
-                    rightFront.setPower(0.4);
-                    return false;
-                } else {
-                    leftBack.setPower(0);
-                    rightBack.setPower(0);
-                    leftFront.setPower(0);
-                    rightFront.setPower(0);
-                    return true;
-                }
-            case("RED"):
-                if(getTagYaw() <= -20){
-                    leftBack.setPower(0.4);
-                    rightBack.setPower(-0.4);
-                    leftFront.setPower(0.4);
-                    rightFront.setPower(-0.4);
-                    return false;
-                } else if(getTagYaw() >= 20){
-                    leftBack.setPower(-0.4);
-                    rightBack.setPower(0.4);
-                    leftFront.setPower(-0.4);
-                    rightFront.setPower(0.4);
-                    return false;
-                } else {
-                    leftBack.setPower(0);
-                    rightBack.setPower(0);
-                    leftFront.setPower(0);
-                    rightFront.setPower(0);
-                    return true;
-                }
-        }
-        return false;
     }
 }

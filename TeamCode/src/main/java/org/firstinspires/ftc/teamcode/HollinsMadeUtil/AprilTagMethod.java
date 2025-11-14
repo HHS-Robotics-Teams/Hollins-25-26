@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.HollinsMadeUtil;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.tagHelper;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.tagHelper;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;

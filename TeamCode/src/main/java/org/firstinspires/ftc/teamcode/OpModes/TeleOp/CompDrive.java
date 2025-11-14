@@ -1,32 +1,30 @@
 package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
-import static org.firstinspires.ftc.teamcode.OpModes.TeleOp.CompDrive.LaunchState.*;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_LEVEL_TWO_RUN;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_REVERSED;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_RUN;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FAR_TARGET;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_UP_POS;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOLDER_ENABLE;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_IDLE;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_NEAR_TARGET;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN_THREE;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN_TWO;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_FAR;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DriveSlowdown;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_LEVEL_TWO_RUN;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_REVERSED;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_RUN;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_HOLDER_ENABLE;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN_TWO;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_FAR;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_THRESHOLD;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.DriveSlowdown;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
@@ -38,8 +36,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
-import org.firstinspires.ftc.teamcode.aProccedural.Components;
-import org.firstinspires.ftc.teamcode.aProccedural.Input;
+import org.firstinspires.ftc.teamcode._Proccedural.Components;
+import org.firstinspires.ftc.teamcode._Proccedural.Input;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 @Disabled
 @Deprecated

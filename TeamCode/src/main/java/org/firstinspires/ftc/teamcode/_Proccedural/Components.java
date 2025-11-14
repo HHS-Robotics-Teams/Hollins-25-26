@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.aProccedural;
+package org.firstinspires.ftc.teamcode._Proccedural;
 
-import com.acmerobotics.roadrunner.ftc.LazyImu;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -59,7 +58,7 @@ public class Components {
 
         //Reversing Motors
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Drive Motor Settings
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -76,12 +75,13 @@ public class Components {
         //Initialize Intake Motor
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
         IntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        IntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        IntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         IntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //Initialize Servos
         LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
         LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
+        LeftSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
         //RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");
         //RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
         //IntakeSecondLevelServo = hardwareMap.get(CRServo.class, "IntakeSecondLevelServo");
