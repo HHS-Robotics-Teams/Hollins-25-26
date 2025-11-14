@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.aProccedural;
 
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,7 +18,7 @@ public class Components {
     public static DcMotor rightFront;
     public static DcMotor leftRear;
     public static DcMotor rightRear;
-    public static DcMotor LauncherMotor;
+    public static DcMotorEx LauncherMotor;
     public static Servo holderServo;
 
 
@@ -32,7 +33,7 @@ public class Components {
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         leftRear = hardwareMap.get(DcMotor.class, "leftRear");
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
-        LauncherMotor = hardwareMap.get(DcMotor.class, "LauncherMotor");
+        LauncherMotor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
         holderServo = hardwareMap.get(Servo.class, "holderServo");
 
 

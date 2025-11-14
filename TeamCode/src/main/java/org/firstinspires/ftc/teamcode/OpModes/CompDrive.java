@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.holderServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.initComponents;
@@ -10,12 +7,13 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightRear;
-
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.holding;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.shooting;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.shootingClose;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.shootingFar;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
 
@@ -67,6 +65,7 @@ public class CompDrive extends OpMode {
         rightRear.setPower(forward + strafes - rotates);
 
         telemetry.addData("Shooter Power:", LauncherMotor.getPower());
+        telemetry.addData("Launcher Velocity: ", LauncherMotor.getVelocity());
         telemetry.addData("Holder Servo Position:", holderServo.getPosition());
         telemetry.update();
 
