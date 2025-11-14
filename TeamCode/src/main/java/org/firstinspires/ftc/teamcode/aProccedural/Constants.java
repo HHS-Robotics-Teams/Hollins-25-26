@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.aProccedural;
 public class Constants {
 
     /* Constants */
-    public static double INTAKE_POWER = .525;
+    public static double INTAKE_POWER = 1;
 
     public static final double LAUNCHER_IDLE = 0.25;
 
@@ -17,6 +17,9 @@ public class Constants {
     public static final double LAUNCHER_FINGER_UP_POS = 0.6;
     public static final double LAUNCHER_FINGER_DOWN_POS = 1;
     public static final double FINGER_UP_TIME = 0.75;
+    /* Timings */
+    public static double DWELL_TIME = 2.0;
+    public static double LAUNCHING_TIME = 1.0;
 
     /* FLAGS */
     public static boolean INTAKE_RUN;

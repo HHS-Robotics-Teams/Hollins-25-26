@@ -5,7 +5,7 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightSideFeedRoller;
+
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
@@ -153,7 +153,7 @@ public class OldBlueDoubleStateAuto extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 if(shotTimerTwo.seconds() >= 0.1){
                     LeftSideFeedRoller.setPower(1);
-                    RightSideFeedRoller.setPower(1);
+
                 }
                 if(shotTimerTwo.seconds() >= 0.2) {
                     shotState = ShotState.INTAKE_RESET;
@@ -170,7 +170,7 @@ public class OldBlueDoubleStateAuto extends OpMode {
             case END:
                 IntakeMotor.setPower(0);
                 LeftSideFeedRoller.setPower(0);
-                RightSideFeedRoller.setPower(0);
+
                 shotState = ShotState.SPIN_UP;
                 shotTimerTwo.reset();
                 shotTimerOne.reset();

@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.OpModes.TeleOp.CompDrive.LaunchState.*;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeSecondLevelServo;
+
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightSideFeedRoller;
+
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
@@ -29,6 +30,7 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DriveSlowdow
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -39,7 +41,8 @@ import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-
+@Disabled
+@Deprecated
 @TeleOp
 public class CompDrive extends OpMode {
     private AprilTagHelper tagHelper;
@@ -67,7 +70,7 @@ public class CompDrive extends OpMode {
     public void init() {
         //Initialize Components
         Components.initComponents(hardwareMap);
-        tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
+        //tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
 
 
         /* ---------- Telemetry ---------- */
@@ -162,18 +165,10 @@ public class CompDrive extends OpMode {
             INTAKE_RUN = !INTAKE_RUN;
             INTAKE_LEVEL_TWO_RUN = !INTAKE_LEVEL_TWO_RUN;
         }
-        if (input.left_trigger.held()) {
-            //toggles intake on and off
-            INTAKE_RUN = true;
-        } else {
-            INTAKE_RUN = false;
-        }
-        if (input.left_bumper.held()) {
-            //toggles second level on and off
-            INTAKE_LEVEL_TWO_RUN = true;
-        } else {
-            INTAKE_LEVEL_TWO_RUN = false;
-        }
+        //toggles intake on and off
+        INTAKE_RUN = input.left_trigger.held();
+        //toggles second level on and off
+        INTAKE_LEVEL_TWO_RUN = input.left_bumper.held();
 
 
         if (INTAKE_RUN) {
@@ -181,14 +176,12 @@ public class CompDrive extends OpMode {
                 //run intake & rollers
                 IntakeMotor.setPower(INTAKE_POWER);
                 LeftSideFeedRoller.setPower(1);
-                RightSideFeedRoller.setPower(1);
-                IntakeSecondLevelServo.setPower(1);
+
             } else {
                 //run everything backwards
                 IntakeMotor.setPower(-INTAKE_POWER);
                 LeftSideFeedRoller.setPower(-1);
-                RightSideFeedRoller.setPower(-1);
-                IntakeSecondLevelServo.setPower(-1);
+
             }
         } else {
             //no intake
@@ -199,18 +192,15 @@ public class CompDrive extends OpMode {
             if (!INTAKE_REVERSED) {
                 //run rollers
                 LeftSideFeedRoller.setPower(1);
-                RightSideFeedRoller.setPower(1);
-                IntakeSecondLevelServo.setPower(1);
+
             } else {
                 //run everything backwards
                 LeftSideFeedRoller.setPower(-1);
-                RightSideFeedRoller.setPower(-1);
-                IntakeSecondLevelServo.setPower(-1);
+
             }
         } else {
             LeftSideFeedRoller.setPower(0);
-            RightSideFeedRoller.setPower(0);
-            IntakeSecondLevelServo.setPower(0);
+
         }
 
         /* ---------- Drivetrain ---------- */
@@ -361,8 +351,8 @@ public class CompDrive extends OpMode {
                 break;
             case INTAKE:
                 LeftSideFeedRoller.setPower(1);
-                RightSideFeedRoller.setPower(1);
-                IntakeSecondLevelServo.setPower(1);
+
+
                 if (IntakeTimer.seconds() >=2){
                     state = LaunchState.SPIN_UP_TWO;
 
@@ -370,8 +360,8 @@ public class CompDrive extends OpMode {
                 break;
             case SPIN_UP_TWO:
                 LeftSideFeedRoller.setPower(0);
-                RightSideFeedRoller.setPower(0);
-                IntakeSecondLevelServo.setPower(0);
+
+
                 LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
                 if(getRuntime() - timeAtLaunch >= 0.3){
                     INTAKE_RUN = false;
@@ -422,16 +412,16 @@ public class CompDrive extends OpMode {
                 break;
             case INTAKE:
                 LeftSideFeedRoller.setPower(1);
-                RightSideFeedRoller.setPower(1);
-                IntakeSecondLevelServo.setPower(1);
+
+
                 if (IntakeTimer.seconds() >=2){
                     state = LaunchState.SPIN_UP_TWO;
                 }
                 break;
             case SPIN_UP_TWO:
                 LeftSideFeedRoller.setPower(0);
-                RightSideFeedRoller.setPower(0);
-                IntakeSecondLevelServo.setPower(0);
+
+
                 LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
                 if (getRuntime() - timeAtLaunch >= 0.3) {
                     INTAKE_RUN = false;

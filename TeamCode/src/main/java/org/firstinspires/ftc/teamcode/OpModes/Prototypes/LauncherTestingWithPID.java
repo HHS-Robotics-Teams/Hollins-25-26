@@ -4,7 +4,7 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightSideFeedRoller;
+
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
 
-@Disabled
+
 @TeleOp
 public class LauncherTestingWithPID extends OpMode {
     Input input = new Input();
@@ -49,11 +49,11 @@ public class LauncherTestingWithPID extends OpMode {
         if(input.b.held()){
             IntakeMotor.setPower(INTAKE_POWER);
             LeftSideFeedRoller.setPower(1);
-            RightSideFeedRoller.setPower(1);
+
         } else {
             IntakeMotor.setPower(0);
             LeftSideFeedRoller.setPower(0);
-            RightSideFeedRoller.setPower(0);
+
         }
         telemetry.addLine("dpad up to increase delta,\ndpad down to decrease delta");
         telemetry.addData("Current delta: ", delta);

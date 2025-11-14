@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
 
 /**
  * File to store all hardware code
@@ -34,12 +35,13 @@ public class Components {
     public static Servo LauncherFingerServo;
     //public static Servo TopRampHolderServo;
     public static CRServo LeftSideFeedRoller;
-    public static CRServo RightSideFeedRoller;
-    public static CRServo IntakeSecondLevelServo;
-    public static Servo ParkingStopServo;
+    //public static CRServo RightSideFeedRoller;
+    //public static CRServo IntakeSecondLevelServo;
+    //public static Servo ParkingStopServo;
 
     public static IMU imu;
     public static WebcamName webcam;
+    public static AprilTagHelper tagHelper;
     public static DistanceSensor artifactCounterDistance;
 
 
@@ -79,13 +81,17 @@ public class Components {
 
         //Initialize Servos
         LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
-        IntakeSecondLevelServo = hardwareMap.get(CRServo.class, "IntakeSecondLevelServo");
+        LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
+        //RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");
+        //RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+        //IntakeSecondLevelServo = hardwareMap.get(CRServo.class, "IntakeSecondLevelServo");
 
 
         //Initialize Sensors
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
         webcam = hardwareMap.get(WebcamName.class, "Webcam");// todo fix is wrong class
+        tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
         //artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
 
     }

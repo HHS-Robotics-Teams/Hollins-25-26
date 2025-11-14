@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.ParkingStopServo;
+
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
@@ -42,8 +42,8 @@ public class LauncherTesting extends OpMode {
     //right
     private DcMotor intake_motor;
     public static CRServo LeftSideFeedRoller;
-    public static CRServo RightSideFeedRoller;
-    public static  CRServo IntakeSecondLevelServo;
+    //public static CRServo RightSideFeedRoller;
+    //public static  CRServo IntakeSecondLevelServo;
     private static Servo LauncherFingerServo;
     //power
     private double power = 0.25;
@@ -56,9 +56,10 @@ public class LauncherTesting extends OpMode {
         intake_motor = hardwareMap.get(DcMotor.class, "IntakeMotor");
         intake_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
-        RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");
+        LeftSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+        //RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");
         LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
-        RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+        //RightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
         //Initialize Drive Motors
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
@@ -75,7 +76,7 @@ public class LauncherTesting extends OpMode {
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        IntakeSecondLevelServo = hardwareMap.get(CRServo.class, "IntakeSecondLevelServo");
+        //IntakeSecondLevelServo = hardwareMap.get(CRServo.class, "IntakeSecondLevelServo");
 
         telemetry.addLine("WARNING: UPON START LAUNCHER AND INTAKE WILL START SPINNING");
     }
@@ -84,7 +85,7 @@ public class LauncherTesting extends OpMode {
         launcher_motor.setPower(power);
         intake_motor.setPower(1);
         LeftSideFeedRoller.setPower(1);
-        RightSideFeedRoller.setPower(1);
+        //RightSideFeedRoller.setPower(1);
 
     }
 
@@ -107,12 +108,12 @@ public class LauncherTesting extends OpMode {
         // Feed Rollers
         if (gamepad1.right_trigger >= .3){
             LeftSideFeedRoller.setPower(1);
-            RightSideFeedRoller.setPower(1);
-            IntakeSecondLevelServo.setPower(1);
+            //RightSideFeedRoller.setPower(1);
+            //IntakeSecondLevelServo.setPower(1);
         } else {
             LeftSideFeedRoller.setPower(0);
-            RightSideFeedRoller.setPower(0);
-            IntakeSecondLevelServo.setPower(0);
+            //RightSideFeedRoller.setPower(0);
+            //IntakeSecondLevelServo.setPower(0);
         }
         // Launcher Finger
         if (gamepad1.right_bumper){

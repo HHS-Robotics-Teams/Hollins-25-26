@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto.Far;
 
 import static org.firstinspires.ftc.teamcode.HollinsMadeUtil.WebcamUtil.getTagYaw;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeSecondLevelServo;
+
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightSideFeedRoller;
+
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
@@ -141,11 +141,11 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
                 if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET_FIRST - .2 ) <= LAUNCH_THRESHOLD){
                     autoState = AutoState.UP;
                     shotTimerOne.reset();
-                    IntakeSecondLevelServo.setPower(1);
+
                 }
                 break;
             case UP:
-                IntakeSecondLevelServo.setPower(0);
+
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 if(shotTimerOne.seconds() >= FINGER_UP_TIME){
                     autoState = AutoState.DOWN;
@@ -155,8 +155,7 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
             case DOWN:
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(1);
-                RightSideFeedRoller.setPower(1);
-                IntakeSecondLevelServo.setPower(1);
+
                 if(shotTimerTwo.seconds() >= 0.2) {
                     autoState = AutoState.INTAKE_RESET;
                     shotTimerOne.reset();
@@ -170,8 +169,8 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
                 break;
             case SPIN_UP_TWO:
                 LeftSideFeedRoller.setPower(0);
-                RightSideFeedRoller.setPower(0);
-                IntakeSecondLevelServo.setPower(0);
+
+
                 LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
                 if(Math.abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD && shotTimerTwo.seconds() >= 1){
                     shotTimerOne.reset();
@@ -191,8 +190,8 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 if(shotTimerTwo.seconds() >= 0.1){
                     LeftSideFeedRoller.setPower(1);
-                    RightSideFeedRoller.setPower(1);
-                    IntakeSecondLevelServo.setPower(1);
+
+
                 }
                 if(shotTimerTwo.seconds() >= 0.2) {
                     shotTimerOne.reset();
@@ -234,7 +233,7 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
             case END_SHOT_SEQ_ONE:
                 IntakeMotor.setPower(0);
                 LeftSideFeedRoller.setPower(0);
-                RightSideFeedRoller.setPower(0);
+
                 LauncherMotor.setPower(LAUNCHER_IDLE);
                 shotTimerTwo.reset();
                 shotTimerOne.reset();

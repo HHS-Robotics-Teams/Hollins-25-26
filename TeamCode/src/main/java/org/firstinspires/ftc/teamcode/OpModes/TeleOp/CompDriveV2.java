@@ -1,16 +1,19 @@
 package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
+import static com.sun.tools.javac.main.Option.D;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.IntakeSecondLevelServo;
+
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.RightSideFeedRoller;
+
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.imu;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.tagHelper;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DWELL_TIME;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DriveSlowdown;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_LEVEL_TWO_RUN;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.INTAKE_POWER;
@@ -23,7 +26,9 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_HOL
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN_THREE;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_RUN_TWO;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHING_TIME;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_FAR;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCH_THRESHOLD;
 import static java.lang.Math.abs;
@@ -39,16 +44,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
+import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagMethod;
 import org.firstinspires.ftc.teamcode.aProccedural.Components;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp
 public class CompDriveV2 extends OpMode {
-    private AprilTagHelper tagHelper;
     //Instantiated new input
     Input input = new Input();
+    AprilTagMethod aprilTagDetector;
     //temp time used mainly in state machines
     static double timeAtLaunch;
     ElapsedTime launchTimer = new ElapsedTime();
@@ -59,11 +64,17 @@ public class CompDriveV2 extends OpMode {
         UP,
         WAIT,
         DOWN,
-        INTAKE,
+        INTAKE_SECOND,
         SPIN_UP_TWO,
         UP_TWO,
         WAIT_TWO,
-        DOWN_TWO
+        DOWN_TWO,
+        INTAKE_THIRD,
+        SPIN_UP_THREE,
+        UP_THREE,
+        WAIT_THREE,
+        DOWN_THREE,
+
     }
     static LaunchState state = LaunchState.SPIN_UP;
 
@@ -71,31 +82,15 @@ public class CompDriveV2 extends OpMode {
     public void init() {
         //Initialize Components
         Components.initComponents(hardwareMap);
-        tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
-
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
     }
     @Override
     public void init_loop() {
-        // Call this every loop to get current detections
-        AprilTagDetection tag = tagHelper.getFirstTag();
-        if (tag != null && tag.ftcPose != null) { // Added null check for ftcPose
-            telemetry.addLine("--- AprilTag Detected! ---");
-            telemetry.addData("Tag ID", tag.id);
-            // Display name if available
-            telemetry.addData("Tag Name", tag.metadata != null ? tag.metadata.name : "N/A");
-            telemetry.addData("X (in)", "%.2f", tag.ftcPose.x);
-            telemetry.addData("Y (in)", "%.2f", tag.ftcPose.y);
-            telemetry.addData("Z (in)", "%.2f", tag.ftcPose.z);
-            telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
-            telemetry.addData("Pitch (deg)", "%.2f", tag.ftcPose.pitch);
-            telemetry.addData("Roll (deg)", "%.2f", tag.ftcPose.roll);
-        } else {
-            telemetry.addLine("--- No AprilTag Detected ---");
-        }
-        telemetry.update();
+        // April Tag Detector
+        aprilTagDetector = new AprilTagMethod();
+        aprilTagDetector.updateAndShowTelemetry(telemetry);
     }
 
     @Override
@@ -126,10 +121,13 @@ public class CompDriveV2 extends OpMode {
         /* ---------- Launch ---------- */
         if (input.right_trigger.down()) {
            LAUNCHER_RUN = !LAUNCHER_RUN;
+            INTAKE_REVERSED = false;
            state = LaunchState.SPIN_UP;
         }
         if(input.right_bumper.down()){
-            LAUNCHER_RUN_TWO = !LAUNCHER_RUN_TWO;
+            LAUNCHER_RUN_THREE = !LAUNCHER_RUN_THREE;
+            INTAKE_REVERSED = false;
+            state = LaunchState.SPIN_UP;
         }
 
         //while LAUNCHER_RUN flag is true, launch one
@@ -140,11 +138,11 @@ public class CompDriveV2 extends OpMode {
                 runLauncherOnceFar();
             } else {
                 runLauncherOnceNear(); }
-        } else if(LAUNCHER_RUN_TWO) {
+        } else if(LAUNCHER_RUN_THREE) {
             if(LAUNCH_FAR){
-                runLauncherTwoFar();
+                runLauncherThreeFar();
             } else {
-                runLauncherTwoNear();
+                runLauncherThreeNear();
         }
         } else {
             LauncherMotor.setPower(LAUNCHER_IDLE);
@@ -162,23 +160,15 @@ public class CompDriveV2 extends OpMode {
 
         /* ---------- Intake ---------- */
         if (input.b.down()) {
-            // Reverses intake, side rollers, and launcher
+            // Reverses intake
             INTAKE_REVERSED = !INTAKE_REVERSED;
         }
 
         // Hold left trigger to run the main intake motor
-        if (input.left_trigger.held()) {
-            INTAKE_RUN = true;
-        } else {
-            INTAKE_RUN = false;
-        }
+        INTAKE_RUN = input.left_trigger.held();
 
         // Press left bumper to TOGGLE the second level intake on/off
-        if (input.left_bumper.down()) {
-            INTAKE_LEVEL_TWO_RUN = true;
-        } else {
-            INTAKE_LEVEL_TWO_RUN = false;
-        }
+        INTAKE_LEVEL_TWO_RUN = input.left_bumper.held();
 
         // --- Final Intake Motor Logic ---
 
@@ -189,15 +179,13 @@ public class CompDriveV2 extends OpMode {
             IntakeMotor.setPower(0);
         }
 
-        if (INTAKE_LEVEL_TWO_RUN || INTAKE_RUN) {
+        if (INTAKE_LEVEL_TWO_RUN) {
             double power = INTAKE_REVERSED ? -1 : 1;
             LeftSideFeedRoller.setPower(power);
-            RightSideFeedRoller.setPower(power);
-            IntakeSecondLevelServo.setPower(power);
+
         } else {
             LeftSideFeedRoller.setPower(0);
-            RightSideFeedRoller.setPower(0);
-            IntakeSecondLevelServo.setPower(0);
+
         }
 
         /* ---------- Drivetrain ---------- */
@@ -211,7 +199,7 @@ public class CompDriveV2 extends OpMode {
         //Drivetrain movement values
         double forward = -gamepad1.left_stick_y  * 0.8;
         double strafes =  gamepad1.left_stick_x  * 1;
-        double rotates = -gamepad1.right_stick_x * 0.6;
+        double rotates = gamepad1.right_stick_x * 0.6;
 
 
         if (abs(forward) <= 0.15) {
@@ -250,17 +238,19 @@ public class CompDriveV2 extends OpMode {
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Comp Drive Running ---------");
+        telemetry.addData("ÏMU Z", abs(imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle));
         telemetry.addData("Drive Slowdown?", DriveSlowdown);
         telemetry.addData("Intake running? ", INTAKE_RUN);
         telemetry.addData("Intake second level running?", INTAKE_LEVEL_TWO_RUN);
         telemetry.addData("Intake reversed? ", INTAKE_REVERSED);
         telemetry.addData("Launcher holders holding? ", LAUNCHER_HOLDER_ENABLE);
         telemetry.addData("Launcher running? ", LAUNCHER_RUN);
-        telemetry.addData("Launcher running Two? ", LAUNCHER_RUN_TWO);
+        telemetry.addData("Launcher running Three? ", LAUNCHER_RUN_THREE);
         telemetry.addData("Launcher Far?", LAUNCH_FAR);
         telemetry.addData("Launcher Velocity: ", LauncherMotor.getVelocity(AngleUnit.RADIANS));
         telemetry.addData("Launcher State: ", state);
-        telemetry.addData("ÏMU Z", abs(imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle));
+        telemetry.addData("Launcher time" ,launchTimer.seconds());
+        telemetry.addData("Intake time", IntakeTimer.seconds());
         telemetry.addLine("");
     }
 
@@ -269,28 +259,29 @@ public class CompDriveV2 extends OpMode {
             case SPIN_UP:
                 LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
                 if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD*2) {
-                    timeAtLaunch = getRuntime();
-
-                    state = LaunchState.UP;
                     INTAKE_RUN = false;
                     INTAKE_LEVEL_TWO_RUN = false;
+                    state = LaunchState.UP;
                 }
                 break;
             case UP:
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                INTAKE_LEVEL_TWO_RUN = true;
+                //INTAKE_RUN = true;
                 launchTimer.reset();
                 state = LaunchState.WAIT;
-                timeAtLaunch = getRuntime();
                 break;
+
             case WAIT:
-                if(launchTimer.seconds() >= 1){
+                if(launchTimer.seconds() >= DWELL_TIME){ //Todo Change Time
+                    INTAKE_LEVEL_TWO_RUN = false;
                     state = LaunchState.DOWN;
                 }
                 break;
+
             case DOWN:
                 state = LaunchState.SPIN_UP;
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                timeAtLaunch = getRuntime();
                 LAUNCHER_RUN = false;
                 break;
         }
@@ -300,11 +291,10 @@ public class CompDriveV2 extends OpMode {
             case SPIN_UP:
                 LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
                 if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD*2) {
-                    timeAtLaunch = getRuntime();
 
                     state = LaunchState.UP;
                     INTAKE_RUN = false;
-                    INTAKE_LEVEL_TWO_RUN = false;
+
                 }
                 break;
             case UP:
@@ -326,14 +316,13 @@ public class CompDriveV2 extends OpMode {
                 break;
         }
     }
-    public void runLauncherTwoNear() {
+    public void runLauncherThreeNear() {
         switch (state) {
             case SPIN_UP:
                 LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
                 // Ensure intake is off before the first shot
                 INTAKE_RUN = false;
                 INTAKE_LEVEL_TWO_RUN = false;
-
                 // Once motor is at speed, move to launch the first Ball
                 if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD * 2) {
                     state = LaunchState.UP;
@@ -341,11 +330,13 @@ public class CompDriveV2 extends OpMode {
                 break;
             case UP:
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                INTAKE_LEVEL_TWO_RUN = true;
                 launchTimer.reset();
                 state = LaunchState.WAIT;
                 break;
             case WAIT:
-                if (launchTimer.seconds() >= 0.5) { // A 0.5-second wait is usually enough
+                if (launchTimer.seconds() >= DWELL_TIME) { // Todo Change Time
+                    INTAKE_LEVEL_TWO_RUN = false;
                     state = LaunchState.DOWN;
                 }
                 break;
@@ -354,15 +345,13 @@ public class CompDriveV2 extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 launchTimer.reset();
                 // Transition to the INTAKE state to load the second Ball
-                state = LaunchState.INTAKE;
+                state = LaunchState.INTAKE_SECOND;
                 break;
 
-            case INTAKE:
+            case INTAKE_SECOND:
                 INTAKE_RUN = true;
                 INTAKE_LEVEL_TWO_RUN = true; // Run the second level as well
-
-
-                if (launchTimer.seconds() >= 0.7) {
+                if (launchTimer.seconds() >= LAUNCHING_TIME) { // todo Change Time
                     // Stop the intake and prepare for the second shot
                     INTAKE_RUN = false;
                     INTAKE_LEVEL_TWO_RUN = false;
@@ -377,14 +366,16 @@ public class CompDriveV2 extends OpMode {
                 }
                 break;
             case UP_TWO:
-                // Push the second pixel into the launcher
+                // Push the second ball into the launcher
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                INTAKE_LEVEL_TWO_RUN = true;
                 launchTimer.reset();
                 state = LaunchState.WAIT_TWO;
                 break;
             case WAIT_TWO:
                 // Wait for the finger to move
-                if (launchTimer.seconds() >= 0.5) {
+                if (launchTimer.seconds() >= DWELL_TIME) { //Todo Change Time
+                    INTAKE_LEVEL_TWO_RUN = false;
                     state = LaunchState.DOWN_TWO;
                 }
                 break;
@@ -392,12 +383,48 @@ public class CompDriveV2 extends OpMode {
             case DOWN_TWO:
                 // Retract the finger, completing the sequence
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+                state = LaunchState.INTAKE_THIRD; // Reset the state machine for the next command
+                break;
+            case INTAKE_THIRD:
+                INTAKE_RUN = true;
+                INTAKE_LEVEL_TWO_RUN = true; // Run the second level as well
+                if (launchTimer.seconds() >= LAUNCHING_TIME) { // todo Change Time
+                    // Stop the intake and prepare for the second shot
+                    INTAKE_RUN = false;
+                    INTAKE_LEVEL_TWO_RUN = false;
+                    state = LaunchState.SPIN_UP_THREE;
+                }
+            case SPIN_UP_THREE:
+                // Re-verify motor speed for the second shot
+                LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
+                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD * 2) {
+                    state = LaunchState.UP_THREE;
+                }
+                break;
+            case UP_THREE:
+                // Push the third ball into the launcher
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                INTAKE_LEVEL_TWO_RUN = true;
+                launchTimer.reset();
+                state = LaunchState.WAIT_THREE;
+                break;
+            case WAIT_THREE:
+                // Wait for the finger to move
+                if (launchTimer.seconds() >= DWELL_TIME) { //Todo Change Time
+                    INTAKE_LEVEL_TWO_RUN = false;
+                    state = LaunchState.DOWN_THREE;
+                }
+                break;
+            case DOWN_THREE:
+                // Retract the finger, completing the sequence
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LAUNCHER_RUN_TWO = false; // Turn off the launch flag
-                state = LaunchState.SPIN_UP; // Reset the state machine for the next command
+                state = LaunchState.INTAKE_THIRD; // Reset the state machine for the next command
                 break;
         }
+
     }
-    public void runLauncherTwoFar() {
+    public void runLauncherThreeFar() {
         switch (state) {
             case SPIN_UP:
                 LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
@@ -422,20 +449,18 @@ public class CompDriveV2 extends OpMode {
             case DOWN:
                 IntakeTimer.reset();
                 timeAtLaunch = getRuntime();
-                state = LaunchState.INTAKE;
+                state = LaunchState.INTAKE_SECOND;
                 break;
-            case INTAKE:
+            case INTAKE_SECOND:
                 LeftSideFeedRoller.setPower(1);
-                RightSideFeedRoller.setPower(1);
-                IntakeSecondLevelServo.setPower(1);
+
                 if (IntakeTimer.seconds() >=2){
                     state = LaunchState.SPIN_UP_TWO;
                 }
                 break;
             case SPIN_UP_TWO:
                 LeftSideFeedRoller.setPower(0);
-                RightSideFeedRoller.setPower(0);
-                IntakeSecondLevelServo.setPower(0);
+
                 LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
                 if (getRuntime() - timeAtLaunch >= 0.3) {
                     INTAKE_RUN = false;
