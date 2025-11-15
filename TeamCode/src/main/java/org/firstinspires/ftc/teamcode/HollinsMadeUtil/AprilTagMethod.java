@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.tagHelper;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
+import java.util.Objects;
+
 public class AprilTagMethod {
 
     private AprilTagDetection lastDetectedTag = null;
@@ -65,4 +67,14 @@ public class AprilTagMethod {
     public boolean isTagVisible() {
         return tagHelper.getFirstTag() != null;
     }
+    public boolean tagMatchesAlliance(String allianceColor){
+        if(Objects.equals(allianceColor, "RED") && tagHelper.getFirstTag().metadata.id == 24){
+            return true;
+        }
+        return Objects.equals(allianceColor, "BLUE") && tagHelper.getFirstTag().metadata.id == 20;
+    }
+
+    public double getTagDistance() { return tagHelper.getFirstTag().ftcPose.range;}
+    public double getTagYaw() { return tagHelper.getFirstTag().ftcPose.yaw;}
+    public double getTagX() {return tagHelper.getFirstTag().ftcPose.x;}
 }

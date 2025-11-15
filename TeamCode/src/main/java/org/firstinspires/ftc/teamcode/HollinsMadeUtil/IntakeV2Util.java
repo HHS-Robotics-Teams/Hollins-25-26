@@ -7,7 +7,7 @@ import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class IntakeV2 {
+public class IntakeV2Util {
 
     static int interval = 100;
     public static void initIntake() {
