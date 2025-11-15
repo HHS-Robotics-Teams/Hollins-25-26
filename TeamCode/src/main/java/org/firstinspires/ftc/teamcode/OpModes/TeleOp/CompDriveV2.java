@@ -417,8 +417,8 @@ public class CompDriveV2 extends OpMode {
             case DOWN_THREE:
                 // Retract the finger, completing the sequence
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                LAUNCHER_RUN_TWO = false; // Turn off the launch flag
-                state = LaunchState.INTAKE_THIRD; // Reset the state machine for the next command
+                LAUNCHER_RUN_THREE = false; // Turn off the launch flag
+                state = LaunchState.SPIN_UP; // Reset the state machine for the next command
                 break;
         }
 

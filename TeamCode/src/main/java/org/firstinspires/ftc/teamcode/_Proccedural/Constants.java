@@ -13,7 +13,7 @@ public class Constants {
     public static double LAUNCHER_FAR_TARGET = 2.5;
     public static double LAUNCHER_FAR_TARGET_FIRST = 2.0;
     public static double LAUNCHER_FAR_TARGET_THIRD = 2.6;
-    public static final double LAUNCH_THRESHOLD = 0.03;
+    public static final double LAUNCH_THRESHOLD = .03;
     public static final double LAUNCHED_THRESHOLD = 1;
 
     public static final double LAUNCHER_FINGER_UP_POS = 0.6;
