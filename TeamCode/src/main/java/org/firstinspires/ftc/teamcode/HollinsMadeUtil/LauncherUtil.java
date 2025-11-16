@@ -14,6 +14,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
 
 import java.util.Objects;
 
@@ -39,6 +40,7 @@ public class LauncherUtil {
     }
     LAUNCH_LOCS location;
     TrajectoryActionBuilder near;
+    PathFactory factory;
     double target;
     String color;
     MecanumDrive drive;
@@ -53,6 +55,7 @@ public class LauncherUtil {
         location = LAUNCH_LOCS.nearest;
         this.color = color;
         this.drive = drive;
+        factory = new PathFactory(drive);
     }
     public String runLauncher() {
         if(!aprilTagMethod.isTagVisible() ){
@@ -117,15 +120,11 @@ public class LauncherUtil {
                         location = LAUNCH_LOCS.moving_block;
                         break;
                     case mid_field:
-                        near = drive.actionBuilder(currentPos)
-                                .splineToSplineHeading(new Pose2d(-16, -10, Math.toRadians(-135)), Math.toRadians(-135));
-                        trajectory = near.build();
+                        trajectory = factory.blueNearLaunchPath(currentPos);
                         location = LAUNCH_LOCS.moving_block;
                         break;
                     case far:
-                        near = drive.actionBuilder(currentPos)
-                                .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(-140)), Math.toRadians(-105));
-                        trajectory = near.build();
+                        trajectory = factory.blueFarLaunchPath(currentPos);
                         location = LAUNCH_LOCS.moving_block;
                         break;
                     case far_across:
@@ -152,15 +151,11 @@ public class LauncherUtil {
                         location = LAUNCH_LOCS.moving_block;
                         break;
                     case mid_field:
-                        near = drive.actionBuilder(currentPos)
-                                .splineToLinearHeading(new Pose2d(-15,5,Math.toRadians(135)),Math.toRadians(105));
-                        trajectory = near.build();
+                        trajectory = factory.redNearLaunchPath(currentPos);
                         location = LAUNCH_LOCS.moving_block;
                         break;
                     case far:
-                        near = drive.actionBuilder(currentPos)
-                                .splineToLinearHeading(new Pose2d(50,10,Math.toRadians(150)),Math.toRadians(105));
-                        trajectory = near.build();
+                        trajectory = factory.redFarLaunchPath(currentPos);
                         location = LAUNCH_LOCS.moving_block;
                         break;
                     case far_across:
