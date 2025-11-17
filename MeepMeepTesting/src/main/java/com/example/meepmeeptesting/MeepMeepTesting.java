@@ -28,20 +28,12 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(startPos)
-                .lineToX(55)
-                .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(-157)), Math.toRadians(-175))
-                .waitSeconds(launchWaitTime)
-                .splineToSplineHeading(new Pose2d(11.75+24,-30,Math.toRadians(-90)),Math.toRadians(-105))
-                .waitSeconds(intakeWaitTime)
-                .lineToY(-52)
-                .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(-157)), Math.toRadians(-140))
-                .waitSeconds(launchWaitTime)
-                .splineToSplineHeading(new Pose2d(11.75,-30,Math.toRadians(-90)),Math.toRadians(-105))
-                .waitSeconds(intakeWaitTime)
+                .splineToSplineHeading(new Pose2d(11.75+24,-30,Math.toRadians(-90)),Math.toRadians(-45))
+                .waitSeconds(.2)
                 .lineToY(-48)
-                .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(-157)), Math.toRadians(-140))
-                .waitSeconds(launchWaitTime)
-                .lineToX(40)
+                .waitSeconds(.1)
+                .lineToY(-30)
+                .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(startPose.heading.minus(Rotation2d.exp(0))))
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_JUICE_BLACK)

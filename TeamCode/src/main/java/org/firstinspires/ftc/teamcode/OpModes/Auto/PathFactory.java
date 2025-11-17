@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
@@ -25,6 +26,10 @@ public class PathFactory {
             LeftSideFeedRoller.setPower(0);
         }
     });
+    public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-157));
+    double intakeDriveY = 46;
+
+
     public PathFactory(MecanumDrive drive){
         this.drive = drive;
     }
@@ -35,7 +40,7 @@ public class PathFactory {
     }
     public Action blueFarLaunchPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(-157)), Math.toRadians(-140))
+                .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(startPose.heading.minus(Rotation2d.exp(0))))
                 .build();
     }
     public Action bluePPGPickupPath(Pose2d startPose){
@@ -43,7 +48,7 @@ public class PathFactory {
                 .splineToSplineHeading(new Pose2d(-11.75,-30,Math.toRadians(-90)),Math.toRadians(-45))
                 .afterDisp(5, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(-52)
+                .lineToY(-intakeDriveY)
                 .build();
     }
     public Action bluePGPPickupPath(Pose2d startPose){
@@ -51,7 +56,7 @@ public class PathFactory {
                 .splineToSplineHeading(new Pose2d(11.75,-30,Math.toRadians(-90)),Math.toRadians(-45))
                 .afterDisp(5, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(-48)
+                .lineToY(-intakeDriveY)
                 .build();
     }
     public Action blueGPPPickupPath(Pose2d startPose){
@@ -59,14 +64,16 @@ public class PathFactory {
                 .splineToSplineHeading(new Pose2d(11.75+24,-30,Math.toRadians(-90)),Math.toRadians(-45))
                 .afterDisp(5, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(-52)
+                .lineToY(-intakeDriveY)
+                .waitSeconds(.1)
+                .lineToY(-30)
                 .build();
     }public Action redPPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
                 .splineToSplineHeading(new Pose2d(-11.75,30,Math.toRadians(90)),Math.toRadians(45))
                 .afterDisp(5, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(52)
+                .lineToY(intakeDriveY)
                 .build();
     }
     public Action redPGPPickupPath(Pose2d startPose){
@@ -74,7 +81,7 @@ public class PathFactory {
                 .splineToSplineHeading(new Pose2d(11.75,30,Math.toRadians(90)),Math.toRadians(45))
                 .afterDisp(5, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(48)
+                .lineToY(intakeDriveY)
                 .build();
     }
     public Action redGPPPickupPath(Pose2d startPose){
@@ -82,7 +89,7 @@ public class PathFactory {
                 .splineToSplineHeading(new Pose2d(11.75+24,30,Math.toRadians(90)),Math.toRadians(45))
                 .afterDisp(5, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(52)
+                .lineToY(intakeDriveY)
                 .build();
     }
     public Action redNearLaunchPath(Pose2d startPose){
