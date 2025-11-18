@@ -118,7 +118,7 @@ public class CompDriveV2 extends OpMode {
         /* ---------- Launch ---------- */
         if (input.right_trigger.down()) {
            LAUNCHER_RUN = !LAUNCHER_RUN;
-            INTAKE_REVERSED = false;
+           INTAKE_REVERSED = false;
            state = LaunchState.SPIN_UP;
         }
         if(input.right_bumper.down()){

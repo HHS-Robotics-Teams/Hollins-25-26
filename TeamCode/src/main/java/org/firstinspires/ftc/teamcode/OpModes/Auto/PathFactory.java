@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
@@ -24,7 +23,6 @@ public class PathFactory {
             IntakeMotor.setPower(INTAKE_POWER);
             LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             LeftSideFeedRoller.setPower(0);
-            telemetry.addLine("runIntakeWorked");
         }
     });
     public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-157));
@@ -67,7 +65,7 @@ public class PathFactory {
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-intakeDriveY)
                 .waitSeconds(.1)
-                .lineToY(-30)
+                .lineToY(-10)
                 .build();
     }public Action redPPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
