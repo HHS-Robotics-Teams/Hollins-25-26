@@ -21,6 +21,7 @@ public class MeepMeepTesting {
         Pose2d blueFarStartPos = new Pose2d(72-(17/2), -(12/2), Math.toRadians(180));
         Pose2d blueNearStartPose = new Pose2d(-65,-36,Math.toRadians(45));
         Pose2d redNearStartPose = new Pose2d(-65,36,Math.toRadians(-45));
+        Pose2d redFarStartPose = new Pose2d(72-(17/2), (12/2), Math.toRadians(180));
 
         Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-157));
         Pose2d blueNearLaunchPose = new Pose2d(-16, -16, Math.toRadians(-135));
@@ -110,7 +111,10 @@ public class MeepMeepTesting {
                 .waitSeconds(launchWaitTime)
                 .lineToX(-38)
                 .build());
-        redFar.runAction(redFar.getDrive().actionBuilder(redFarLaunchPose)
+        redFar.runAction(redFar.getDrive().actionBuilder(redFarStartPose)
+                .lineToX(55)
+                .splineToLinearHeading(redFarLaunchPose, Math.toRadians(-175))
+                .waitSeconds(launchWaitTime)
                 .splineToSplineHeading(redGPPPickupStartPose,redFarLaunchPose.heading)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(intakeDriveY)

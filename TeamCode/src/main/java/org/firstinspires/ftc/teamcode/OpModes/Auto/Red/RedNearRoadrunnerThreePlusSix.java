@@ -1,18 +1,21 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue;
+package org.firstinspires.ftc.teamcode.OpModes.Auto.Red;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueFarLaunchPose;
-import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueGPPPickupStartPose;
+import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueNearLaunchPose;
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.bluePGPPickupStartPose;
+import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.bluePPGPickupStartPose;
+import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.redNearLaunchPose;
+import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.redPGPPickupStartPose;
+import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.redPPGPickupStartPose;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_THRESHOLD;
-
 import static java.lang.Math.abs;
 
 import com.acmerobotics.roadrunner.Action;
@@ -25,13 +28,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagMethod;
-import org.firstinspires.ftc.teamcode.HollinsMadeUtil.LauncherUtil;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
-public class BlueFarRoadrunnerThreePlusSix extends OpMode {
+public class RedNearRoadrunnerThreePlusSix extends OpMode {
 
     MecanumDrive drive;
 
@@ -81,21 +83,18 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72-(17/2), -(12/2), Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(-65,36,Math.toRadians(-45)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72-(17/2), -(12/2), Math.toRadians(180)))
-                .lineToX(55)
-                .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
-                .build();
-        driveToIntakeOne = factory.blueGPPPickupPath(blueFarLaunchPose);
+        turnToLaunch = factory.redNearLaunchPath(new Pose2d(-65,36,Math.toRadians(-45)));
+        driveToIntakeOne = factory.redPPGPickupPath(redNearLaunchPose);
         telemetry.addLine("Trajectory 1 built");
-        driveToLaunchOne = factory.blueFarLaunchPath(blueGPPPickupStartPose);
+        driveToLaunchOne = factory.redNearLaunchPath(redPPGPickupStartPose);
         telemetry.addLine("Trajectory 2 built");
-        driveToIntakeTwo = factory.bluePGPPickupPath(blueFarLaunchPose);
+        driveToIntakeTwo = factory.redPGPPickupPath(redNearLaunchPose);
         telemetry.addLine("Trajectory 3 built");
-        driveToLaunchThree = factory.blueFarLaunchPath(bluePGPPickupStartPose);
+        driveToLaunchThree = factory.redNearLaunchPath(redPGPPickupStartPose);
         telemetry.addLine("Trajectory 4 built");
         telemetry.addLine("Ready to Start");
     }
@@ -110,12 +109,12 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
         telemetry.addData("State:", state);
         switch (state){
             case START:
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
+                LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
                 Actions.runBlocking(turnToLaunch);
                 state = AutoState.SPIN_UP;
                 break;
             case SPIN_UP:
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD){
                     state = AutoState.LAUNCH_ONE;
                     launchTimer.reset();
                 }
@@ -132,7 +131,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
                     state = AutoState.LAUNCH_TWO;
                     launchTimer.reset();
                 }
@@ -149,7 +148,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() > .5){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() > .5){
                     state = AutoState.LAUNCH_THREE;
                     launchTimer.reset();
                 }
@@ -182,7 +181,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 state = AutoState.SPIN_UP_TWO;
                 break;
             case SPIN_UP_TWO:
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
                     state = AutoState.LAUNCH_FOUR;
                     launchTimer.reset();
                 }
@@ -199,7 +198,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
                     state = AutoState.LAUNCH_FIVE;
                     launchTimer.reset();
                 }
@@ -216,7 +215,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
                     state = AutoState.LAUNCH_SIX;
                     launchTimer.reset();
                 }
@@ -250,7 +249,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 state = AutoState.SPIN_UP_THREE;
                 break;
             case SPIN_UP_THREE:
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
                     state = AutoState.LAUNCH_SEVEN;
                     launchTimer.reset();
                 }
@@ -268,7 +267,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
                     state = AutoState.LAUNCH_EIGHT;
                     launchTimer.reset();
                 }
@@ -286,7 +285,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= .6){
                     state = AutoState.LAUNCH_NINE;
                     launchTimer.reset();
                 }

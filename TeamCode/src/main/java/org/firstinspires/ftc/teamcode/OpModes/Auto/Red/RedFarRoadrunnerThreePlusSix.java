@@ -1,8 +1,11 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue;
+package org.firstinspires.ftc.teamcode.OpModes.Auto.Red;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueFarLaunchPose;
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueGPPPickupStartPose;
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.bluePGPPickupStartPose;
+import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.redFarLaunchPose;
+import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.redGPPPickupStartPose;
+import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.redPGPPickupStartPose;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
@@ -12,7 +15,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_THRESHOLD;
-
 import static java.lang.Math.abs;
 
 import com.acmerobotics.roadrunner.Action;
@@ -25,13 +27,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagMethod;
-import org.firstinspires.ftc.teamcode.HollinsMadeUtil.LauncherUtil;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
-public class BlueFarRoadrunnerThreePlusSix extends OpMode {
+public class RedFarRoadrunnerThreePlusSix extends OpMode {
 
     MecanumDrive drive;
 
@@ -81,21 +82,21 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72-(17/2), -(12/2), Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(72-(17/2), (12/2), Math.toRadians(180)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72-(17/2), -(12/2), Math.toRadians(180)))
+        turnToLaunch = drive.actionBuilder(new Pose2d(72-(17/2), (12/2), Math.toRadians(180)))
                 .lineToX(55)
-                .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
+                .splineToLinearHeading(redFarLaunchPose, Math.toRadians(-175))
                 .build();
-        driveToIntakeOne = factory.blueGPPPickupPath(blueFarLaunchPose);
+        driveToIntakeOne = factory.redGPPPickupPath(redFarLaunchPose);
         telemetry.addLine("Trajectory 1 built");
-        driveToLaunchOne = factory.blueFarLaunchPath(blueGPPPickupStartPose);
+        driveToLaunchOne = factory.redFarLaunchPath(redGPPPickupStartPose);
         telemetry.addLine("Trajectory 2 built");
-        driveToIntakeTwo = factory.bluePGPPickupPath(blueFarLaunchPose);
+        driveToIntakeTwo = factory.redPGPPickupPath(redFarLaunchPose);
         telemetry.addLine("Trajectory 3 built");
-        driveToLaunchThree = factory.blueFarLaunchPath(bluePGPPickupStartPose);
+        driveToLaunchThree = factory.redFarLaunchPath(redPGPPickupStartPose);
         telemetry.addLine("Trajectory 4 built");
         telemetry.addLine("Ready to Start");
     }
