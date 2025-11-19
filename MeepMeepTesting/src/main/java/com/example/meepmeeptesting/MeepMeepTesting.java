@@ -74,7 +74,10 @@ public class MeepMeepTesting {
                 .setColorScheme(new ColorSchemeRedDark())
                 .build();
 
-        blueFar.runAction(blueFar.getDrive().actionBuilder(blueFarLaunchPose)
+        blueFar.runAction(blueFar.getDrive().actionBuilder(blueFarStartPos)
+                .lineToX(55)
+                .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
+                .waitSeconds(launchWaitTime)
                 .splineToSplineHeading(blueGPPPickupStartPose,blueFarLaunchPose.heading)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-intakeDriveY)
