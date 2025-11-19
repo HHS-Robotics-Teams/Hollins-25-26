@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueFarLaunchPose;
+import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueGPPPickupStartPose;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
@@ -85,7 +86,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
                 .build();
         driveToIntakeOne = factory.blueGPPPickupPath(blueFarLaunchPose);
-        driveToLaunchOne = factory.blueFarLaunchPath(new Pose2d(11.75+24,-52,Math.toRadians(-90)));
+        driveToLaunchOne = factory.blueFarLaunchPath(blueGPPPickupStartPose);
         driveToIntakeTwo = factory.bluePGPPickupPath(blueFarLaunchPose);
 
     }
