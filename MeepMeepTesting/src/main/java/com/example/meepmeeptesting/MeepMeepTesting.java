@@ -91,7 +91,7 @@ public class MeepMeepTesting {
                 .waitSeconds(.1)
                 .lineToY(-30)
                 .splineToLinearHeading(blueFarLaunchPose,bluePGPPickupStartPose.heading.minus(Rotation2d.exp(Math.PI)))
-                .waitSeconds(launchWaitTime)
+                .waitSeconds(launchWaitTime)    
                 .lineToX(38)
                 .build());
 
