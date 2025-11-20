@@ -27,7 +27,6 @@ public class PathFactory {
     });
     public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-153));
     double intakeDriveY = 48;
-    public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-157));
     public static Pose2d blueNearLaunchPose = new Pose2d(-16, -16, Math.toRadians(-135));
     public static Pose2d redFarLaunchPose = new Pose2d(50, 10, Math.toRadians(157));
     public static Pose2d redNearLaunchPose = new Pose2d(-16, 16, Math.toRadians(135));
@@ -37,7 +36,6 @@ public class PathFactory {
     public static Pose2d redPPGPickupStartPose = new Pose2d(-11.75,30,Math.toRadians(90));
     public static Pose2d redPGPPickupStartPose = new Pose2d(11.75,30,Math.toRadians(90));
     public static Pose2d redGPPPickupStartPose = new Pose2d(11.75+24,30,Math.toRadians(90));
-    public static final double intakeDriveY = 46;
     public static final double intakeFinalY = 30;
 
     public PathFactory(MecanumDrive drive){
@@ -84,8 +82,6 @@ public class PathFactory {
                 .lineToY(-42)
                 .build();
 
-    }
-    public Action redPPGPickupPath(Pose2d startPose){
     }
     public Action redPPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
