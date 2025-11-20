@@ -90,9 +90,9 @@ public class Components {
         //Initialize Sensors
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
-        webcam = hardwareMap.get(WebcamName.class, "Webcam");// todo fix is wrong class
+        webcam = hardwareMap.get(WebcamName.class, "Webcam");
         tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
-        //artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
+        artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
 
     }
 
