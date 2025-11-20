@@ -39,6 +39,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
         SPIN_UP,
         LAUNCH_ONE,
         RESET_ONE,
+        FEED_ONE,
         LAUNCH_TWO,
         RESET_TWO,
         LAUNCH_THREE,
@@ -76,7 +77,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
 
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
-    ElapsedTime SpecialTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
+    ElapsedTime specialTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     @Override
     public void init() {
@@ -108,68 +109,73 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
         switch (state){
             case START:
                 //LauncherMotor.setPower(1);
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET_FIRST, AngleUnit.RADIANS);
+                LauncherMotor.setVelocity(2.3, AngleUnit.RADIANS);
                 Actions.runBlocking(turnToLaunch);
                 state = AutoState.SPIN_UP;
                 break;
             case SPIN_UP:
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET_FIRST) <= LAUNCH_THRESHOLD){
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.3) <= LAUNCH_THRESHOLD){
+                    LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_ONE;
                     launchTimer.reset();
                 }
                 break;
             case LAUNCH_ONE:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                LeftSideFeedRoller.setPower(1);
-                if(launchTimer.seconds() >= 1.75){
+                if(launchTimer.seconds() >= 1.0){
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+                    LeftSideFeedRoller.setPower(0);
                     state = AutoState.RESET_ONE;
                     intakeTimer.reset();
                 }
                 break;
             case RESET_ONE:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET_SECOND, AngleUnit.RADIANS); // todo #1 checkwith full battery
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET_SECOND) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= 0.5){
-                    state = AutoState.LAUNCH_TWO;
-                    IntakeMotor.setPower(0);
-                    launchTimer.reset();
+                if (intakeTimer.seconds() >= 1.0){
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                    LauncherMotor.setVelocity(2.5, AngleUnit.RADIANS);
+                    if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.5) <= LAUNCH_THRESHOLD){
+                        LeftSideFeedRoller.setPower(1);
+                        state = AutoState.LAUNCH_TWO;
+
+                        launchTimer.reset();
+                    }
                 }
                 break;
             case LAUNCH_TWO:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                LeftSideFeedRoller.setPower(1);
-                IntakeMotor.setPower(0);
-                if(launchTimer.seconds() >= 1.65){
+                if(launchTimer.seconds() >= 1.0){
+                    IntakeMotor.setPower(0);
+                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     state = AutoState.RESET_TWO;
+                    specialTimer.reset();
                     intakeTimer.reset();
-                    SpecialTimer.reset();
                 }
                 break;
-            case RESET_TWO: // Todo Figure out why this doesnt work properly takes too long to go to next state velocity check is sus
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET_THIRD, AngleUnit.RADIANS);
-                LeftSideFeedRoller.setPower(0);
-                IntakeMotor.setPower(INTAKE_POWER);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET_THIRD) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= 0.75){
-                    state = AutoState.LAUNCH_THREE;
-                    launchTimer.reset();
+            case RESET_TWO: // Todo Find better soulution to not feeding 3rd ball
+                if (specialTimer.seconds() >= 1.0) {
+                    IntakeMotor.setPower(INTAKE_POWER);
+                    LauncherMotor.setVelocity(2.5, AngleUnit.RADIANS);
+                    if (intakeTimer.seconds() >= 1.75) {
+                        LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                        if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.5) <= LAUNCH_THRESHOLD) {
+                            LeftSideFeedRoller.setPower(1);
+                            state = AutoState.LAUNCH_THREE;
+                            launchTimer.reset();
+                        }
+                    }
                 }
                 break;
             case LAUNCH_THREE:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                IntakeMotor.setPower(0);
-                LeftSideFeedRoller.setPower(1);
-                if(launchTimer.seconds() >= 1.65){
-                    state = AutoState.RESET_THREE;
+                if(launchTimer.seconds() >= 1.0){
+                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(0);
                     intakeTimer.reset();
+                    state = AutoState.RESET_THREE;
                 }
                 break;
             case RESET_THREE:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
                 state = AutoState.DRIVE_TO_INTAKE_ONE;
                 launchTimer.reset();
@@ -189,63 +195,65 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 break;
             case SPIN_UP_TWO:
                 IntakeMotor.setPower(0);
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET_THIRD, AngleUnit.RADIANS);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET_THIRD) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= 0.75){
-                    state = AutoState.LAUNCH_FOUR;
-                    launchTimer.reset();
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                LauncherMotor.setVelocity(2.3, AngleUnit.RADIANS);
+                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.3) <= LAUNCH_THRESHOLD) {
+                        LeftSideFeedRoller.setPower(1);
+                        state = AutoState.LAUNCH_FOUR;
+                        launchTimer.reset();
                 }
                 break;
             case LAUNCH_FOUR:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                LeftSideFeedRoller.setPower(1);
-                if(launchTimer.seconds() >= 1.75){
+                if(launchTimer.seconds() >= 1.0){
+                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     state = AutoState.RESET_FOUR;
                     intakeTimer.reset();
                 }
                 break;
             case RESET_FOUR:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET_SECOND, AngleUnit.RADIANS);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET_SECOND) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= 0.75){
-
-                    state = AutoState.LAUNCH_FIVE;
-                    launchTimer.reset();
+                if (intakeTimer.seconds() >= 1.0) {
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                    LauncherMotor.setVelocity(2.5, AngleUnit.RADIANS);
+                    if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - (2.5)) <= LAUNCH_THRESHOLD) {
+                        LeftSideFeedRoller.setPower(1);
+                        state = AutoState.LAUNCH_FIVE;
+                        launchTimer.reset();
+                    }
                 }
                 break;
             case LAUNCH_FIVE:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 IntakeMotor.setPower(0);
-                LeftSideFeedRoller.setPower(1);
-                if(launchTimer.seconds() >= 1.5){
+                if(launchTimer.seconds() >= 1.0){
+                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     state = AutoState.RESET_FIVE;
                     intakeTimer.reset();
                 }
                 break;
             case RESET_FIVE:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET_SECOND, AngleUnit.RADIANS);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET_SECOND) <= LAUNCH_THRESHOLD && intakeTimer.seconds() >= 0.75){
-                    state = AutoState.LAUNCH_SIX;
-                    launchTimer.reset();
+                if (intakeTimer.seconds() >= 1.0) {
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                    LauncherMotor.setVelocity(2.5, AngleUnit.RADIANS);
+                    if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.5) <= LAUNCH_THRESHOLD ) {
+                        LeftSideFeedRoller.setPower(1);
+                        state = AutoState.LAUNCH_SIX;
+                        launchTimer.reset();
+                    }
                 }
                 break;
             case LAUNCH_SIX:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                LeftSideFeedRoller.setPower(1);
                 IntakeMotor.setPower(0);
-                if(launchTimer.seconds() >= 1.5){
+                if(launchTimer.seconds() >= 1.0){
+                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     state = AutoState.RESET_SIX;
                     intakeTimer.reset();
                 }
                 break;
             case RESET_SIX:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                LeftSideFeedRoller.setPower(0);
-                IntakeMotor.setPower(INTAKE_POWER);
                 state = AutoState.END;
                 launchTimer.reset();
                 intakeTimer.reset();

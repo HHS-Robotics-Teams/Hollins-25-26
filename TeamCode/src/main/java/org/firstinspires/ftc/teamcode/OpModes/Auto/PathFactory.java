@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -13,6 +15,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 public class PathFactory {
@@ -21,6 +24,7 @@ public class PathFactory {
     InstantAction runIntake = new InstantAction(new InstantFunction() {
         @Override
         public void run() {
+            LauncherMotor.setVelocity(1.8, AngleUnit.RADIANS);
             IntakeMotor.setPower(INTAKE_POWER);
             LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             LeftSideFeedRoller.setPower(0);
