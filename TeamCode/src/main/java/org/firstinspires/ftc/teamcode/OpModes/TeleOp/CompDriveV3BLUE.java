@@ -25,6 +25,9 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_FAR;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -42,39 +45,21 @@ import org.firstinspires.ftc.teamcode.HollinsMadeUtil.LauncherUtil;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
+import org.firstinspires.ftc.vision.VisionPortal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Disabled
 @TeleOp
 public class CompDriveV3BLUE extends OpMode {
+
+    private FtcDashboard dash = FtcDashboard.getInstance();
+    private List<Action> runningActions = new ArrayList<>();
     //Instantiated new input
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
-    //temp time used mainly in state machines
-    static double timeAtLaunch;
-    ElapsedTime launchTimer = new ElapsedTime();
-    ElapsedTime IntakeTimer = new ElapsedTime();
-
-    //enum for launching state machines
-    enum LaunchState {
-        SPIN_UP,
-        UP,
-        WAIT,
-        DOWN,
-        INTAKE_SECOND,
-        SPIN_UP_TWO,
-        UP_TWO,
-        WAIT_TWO,
-        DOWN_TWO,
-        INTAKE_THIRD,
-        SPIN_UP_THREE,
-        UP_THREE,
-        WAIT_THREE,
-        DOWN_THREE,
-
-    }
     LauncherUtil launcherUtil;
-
-    static LaunchState state = LaunchState.SPIN_UP;
 
     @Override
     public void init() {
@@ -95,11 +80,6 @@ public class CompDriveV3BLUE extends OpMode {
     }
 
     @Override
-    public void start() {
-
-    }
-
-    @Override
     public void stop() {
         LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LauncherMotor.setPower(0);
@@ -107,18 +87,30 @@ public class CompDriveV3BLUE extends OpMode {
 
     @Override
     public void loop() {
+
+        TelemetryPacket packet = new TelemetryPacket();
+
+        // updated based on gamepads
+
+        // update running actions
+        List<Action> newActions = new ArrayList<>();
+        for (Action action : runningActions) {
+            action.preview(packet.fieldOverlay());
+            if (action.run(packet)) {
+                newActions.add(action);
+            }
+        }
+        runningActions = newActions;
+
+        dash.sendTelemetryPacket(packet);
+
+
         input.pollGamepad(gamepad1);
 
         /* ---------- Launch ---------- */
         if (input.right_trigger.down()) {
             LAUNCHER_RUN = !LAUNCHER_RUN;
             INTAKE_REVERSED = false;
-            state = LaunchState.SPIN_UP;
-        }
-        if (input.right_bumper.down()) {
-            LAUNCHER_RUN_THREE = !LAUNCHER_RUN_THREE;
-            INTAKE_REVERSED = false;
-            state = LaunchState.SPIN_UP;
         }
 
         //while LAUNCHER_RUN flag is true, launch one
@@ -137,9 +129,6 @@ public class CompDriveV3BLUE extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             }
         }
-        if (input.back.down()) {
-            LAUNCH_FAR = !LAUNCH_FAR;
-        }
 
         /* ---------- Intake ---------- */
         if (input.b.down()) {
@@ -153,37 +142,24 @@ public class CompDriveV3BLUE extends OpMode {
         // Press left bumper to TOGGLE the second level intake on/off
         if (!LAUNCHER_RUN && !LAUNCHER_RUN_THREE) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held();
 
-        // --- Final Intake Motor Logic ---
-
-        // Control the main intake motor
-        if (INTAKE_RUN) {
-            IntakeMotor.setPower(INTAKE_REVERSED ? -INTAKE_POWER : INTAKE_POWER);
-        } else {
-            IntakeMotor.setPower(0);
-        }
-
         if (INTAKE_LEVEL_TWO_RUN) {
             double power = INTAKE_REVERSED ? -1 : 1;
             LeftSideFeedRoller.setPower(power);
-
         } else {
             LeftSideFeedRoller.setPower(0);
-
         }
 
         updateIntake(INTAKE_RUN, INTAKE_REVERSED);
 
         /* ---------- Drivetrain ---------- */
-
         if (input.start.down()) {
             imu.resetYaw();
             imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
         }
 
-
         //Drivetrain movement values
         double forward = -gamepad1.left_stick_y * 0.8;
-        double strafes = gamepad1.left_stick_x * 1;
+        double strafes = gamepad1.left_stick_x  * 1.0;
         double rotates = gamepad1.right_stick_x * 0.6;
 
 
@@ -196,6 +172,7 @@ public class CompDriveV3BLUE extends OpMode {
         if (abs(rotates) <= 0.15) {
             rotates = 0;
         }
+
         // slow down
         if (input.left_stick_button.down() || input.right_stick_button.down()) {
             DriveSlowdown = !DriveSlowdown;
@@ -215,24 +192,24 @@ public class CompDriveV3BLUE extends OpMode {
         }
 
         //Setting Powers
-        leftFront.setPower((forward + strafes + rotates) / denominator);
+        leftFront.setPower ((forward + strafes + rotates) / denominator);
         rightFront.setPower((forward - strafes - rotates) / denominator);
-        leftBack.setPower((forward - strafes + rotates) / denominator);
-        rightBack.setPower((forward + strafes - rotates) / denominator);
+        leftBack.setPower  ((forward - strafes + rotates) / denominator);
+        rightBack.setPower ((forward + strafes - rotates) / denominator);
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Comp Drive Running ---------");
-        telemetry.addData("IMU Z", abs(imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle));
+        //telemetry.addData("IMU Z", abs(imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle));
         telemetry.addData("Drive Slowdown?", DriveSlowdown);
         telemetry.addData("Intake running? ", INTAKE_RUN);
         telemetry.addData("Intake reversed? ", INTAKE_REVERSED);
         telemetry.addData("Launcher running? ", LAUNCHER_RUN);
-        telemetry.addData("Launcher running Three? ", LAUNCHER_RUN_THREE);
-        telemetry.addData("Launcher Velocity: ", LauncherMotor.getVelocity(AngleUnit.RADIANS));
-        telemetry.addData("Launcher State: ", state);
-        telemetry.addData("Launcher time", launchTimer.seconds());
-        telemetry.addData("Intake time", IntakeTimer.seconds());
-        telemetry.addLine("");
+        //telemetry.addData("Launcher running Three? ", LAUNCHER_RUN_THREE);
+        //telemetry.addData("Launcher Velocity: ", LauncherMotor.getVelocity(AngleUnit.RADIANS));
+        //telemetry.addData("Launcher State: ", state);
+        //telemetry.addData("Launcher time", launchTimer.seconds());
+        //telemetry.addData("Intake time", IntakeTimer.seconds());
+        //telemetry.addLine("");
     }
 
 }
