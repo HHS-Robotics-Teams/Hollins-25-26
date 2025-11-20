@@ -139,7 +139,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= LAUNCH_THRESHOLD && intakeTimer.seconds() > .5){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET - .12) <= LAUNCH_THRESHOLD && intakeTimer.seconds() > .5){
                     state = AutoState.LAUNCH_THREE;
                     launchTimer.reset();
                 }
