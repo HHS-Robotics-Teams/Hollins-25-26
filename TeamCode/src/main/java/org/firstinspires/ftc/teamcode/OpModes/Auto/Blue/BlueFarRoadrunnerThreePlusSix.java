@@ -29,6 +29,8 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
+//TODO always tune for 13.7V battery
+
 @Autonomous
 public class BlueFarRoadrunnerThreePlusSix extends OpMode {
 
@@ -97,6 +99,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
 
     @Override
     public void start(){
+        LauncherMotor.setVelocity(2.2, AngleUnit.RADIANS);
     }
 
     @Override
@@ -109,13 +112,13 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
         switch (state){
             case START:
                 //LauncherMotor.setPower(1);
-                LauncherMotor.setVelocity(2.3, AngleUnit.RADIANS);
+                LauncherMotor.setVelocity(2.2, AngleUnit.RADIANS);
                 Actions.runBlocking(turnToLaunch);
                 state = AutoState.SPIN_UP;
                 break;
             case SPIN_UP:
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.3) <= LAUNCH_THRESHOLD){
+                if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.2) <= LAUNCH_THRESHOLD){
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_ONE;
                     launchTimer.reset();
@@ -133,7 +136,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 IntakeMotor.setPower(INTAKE_POWER);
                 if (intakeTimer.seconds() >= 1.0){
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                    LauncherMotor.setVelocity(2.5, AngleUnit.RADIANS);
+                    LauncherMotor.setVelocity(2.50, AngleUnit.RADIANS);
                     if(abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.5) <= LAUNCH_THRESHOLD){
                         LeftSideFeedRoller.setPower(1);
                         state = AutoState.LAUNCH_TWO;
@@ -143,8 +146,8 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 }
                 break;
             case LAUNCH_TWO:
+                IntakeMotor.setPower(0);
                 if(launchTimer.seconds() >= 1.0){
-                    IntakeMotor.setPower(0);
                     LeftSideFeedRoller.setPower(0);
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     state = AutoState.RESET_TWO;
@@ -152,7 +155,7 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                     intakeTimer.reset();
                 }
                 break;
-            case RESET_TWO: // Todo Find better soulution to not feeding 3rd ball
+            case RESET_TWO: // Todo Find better solution to not feeding 3rd ball probable mechanical
                 if (specialTimer.seconds() >= 1.0) {
                     IntakeMotor.setPower(INTAKE_POWER);
                     LauncherMotor.setVelocity(2.5, AngleUnit.RADIANS);
@@ -196,8 +199,8 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
             case SPIN_UP_TWO:
                 IntakeMotor.setPower(0);
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                LauncherMotor.setVelocity(2.3, AngleUnit.RADIANS);
-                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.3) <= LAUNCH_THRESHOLD) {
+                LauncherMotor.setVelocity(2.2, AngleUnit.RADIANS);
+                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.2) <= LAUNCH_THRESHOLD) {
                         LeftSideFeedRoller.setPower(1);
                         state = AutoState.LAUNCH_FOUR;
                         launchTimer.reset();
@@ -215,8 +218,8 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                 IntakeMotor.setPower(INTAKE_POWER);
                 if (intakeTimer.seconds() >= 1.0) {
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                    LauncherMotor.setVelocity(2.5, AngleUnit.RADIANS);
-                    if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - (2.5)) <= LAUNCH_THRESHOLD) {
+                    LauncherMotor.setVelocity(2.4, AngleUnit.RADIANS);
+                    if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - (2.4)) <= LAUNCH_THRESHOLD) {
                         LeftSideFeedRoller.setPower(1);
                         state = AutoState.LAUNCH_FIVE;
                         launchTimer.reset();
@@ -229,18 +232,21 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
                     LeftSideFeedRoller.setPower(0);
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     state = AutoState.RESET_FIVE;
+                    specialTimer.reset();
                     intakeTimer.reset();
                 }
                 break;
             case RESET_FIVE:
-                IntakeMotor.setPower(INTAKE_POWER);
-                if (intakeTimer.seconds() >= 1.0) {
-                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                    LauncherMotor.setVelocity(2.5, AngleUnit.RADIANS);
-                    if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.5) <= LAUNCH_THRESHOLD ) {
-                        LeftSideFeedRoller.setPower(1);
-                        state = AutoState.LAUNCH_SIX;
-                        launchTimer.reset();
+                if (specialTimer.seconds() >= 0.4) {
+                    IntakeMotor.setPower(INTAKE_POWER);
+                    if (intakeTimer.seconds() >= 1.0) {
+                        LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                        LauncherMotor.setVelocity(2.4, AngleUnit.RADIANS);
+                        if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - 2.4) <= LAUNCH_THRESHOLD) {
+                            LeftSideFeedRoller.setPower(1);
+                            state = AutoState.LAUNCH_SIX;
+                            launchTimer.reset();
+                        }
                     }
                 }
                 break;

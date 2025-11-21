@@ -93,10 +93,14 @@ public class PathFactory {
     }
     public Action redGPPPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(11.75+24,30,Math.toRadians(90)),Math.toRadians(45))
-                .afterDisp(5, runIntake)
+                .splineToSplineHeading(new Pose2d(11.75+24+3,30,Math.toRadians(90)),Math.toRadians(45))
+                .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(intakeDriveY)
+                .lineToY(35)
+                .waitSeconds(.3)
+                .lineToY(39)
+                .waitSeconds(.3)
+                .lineToY(42)
                 .build();
     }
     public Action redNearLaunchPath(Pose2d startPose){
