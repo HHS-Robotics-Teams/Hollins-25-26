@@ -6,10 +6,12 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
-
+@Disabled
+@Deprecated
 @Autonomous
 public class BasicMoveAuto extends OpMode {
     double timeAtStart;
