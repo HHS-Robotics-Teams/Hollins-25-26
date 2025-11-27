@@ -14,14 +14,23 @@ public class Constants {
     public static double LAUNCHER_FAR_TARGET_FIRST = 2.05;
     public static double LAUNCHER_FAR_TARGET_SECOND = 2.3;
     public static double LAUNCHER_FAR_TARGET_THIRD = 2.45;
-    public static final double LAUNCH_THRESHOLD = .022;
+    public static final double LAUNCH_THRESHOLD = .021;
+    public static final double LAUNCH_THRESHOLD_TICKS = 50;
+    public static final double LAUNCH_TICK_VELOCITY_NEAR = 2781;
+    public static final double LAUNCH_TICK_VELOCITY_FAR = 2781;
     public static final double LAUNCHED_THRESHOLD = 1;
 
+    public static final double LAUNCHER_FINGER_LOADED_POS = 0.7;
+    public static final double LAUNCHER_FINGER_FIRING_POS = 0.5;
+
     public static final double LAUNCHER_FINGER_UP_POS = 0.6;
+
     public static final double LAUNCHER_FINGER_DOWN_POS = 1;
+    public static final double SAFETY_HOLDING = 0.9;
+    public static final double SAFTEY_FIRING = 0.3;
     public static final double FINGER_UP_TIME = 0.75;
     /* Timings */
-    public static double DWELL_TIME = 2.0;
+    public static double DWELL_TIME = 1.5;
     public static double LAUNCHING_TIME = 1.0;
 
     /* FLAGS */

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.Far;
+package org.firstinspires.ftc.teamcode.OpModes.Auto.OldAutos;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;

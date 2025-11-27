@@ -43,7 +43,6 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
-@Disabled
 @TeleOp
 public class CompDriveV3BLUE extends OpMode {
     //Instantiated new input

@@ -10,14 +10,16 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEA
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
-
+@Disabled
 @TeleOp
 public class LauncherTestingWithPID extends OpMode {
     Input input = new Input();
@@ -30,7 +32,9 @@ public class LauncherTestingWithPID extends OpMode {
 
     @Override
     public void loop() {
+        input.pollGamepad(gamepad1);
         LauncherMotor.setVelocity(targetVel);
+
         telemetry.addData("Target Velocity:", targetVel);
         telemetry.addData("Actual Velocity:", LauncherMotor.getVelocity(AngleUnit.RADIANS));
         telemetry.addLine("X to increase vel,\nY to decrease vel,\nA to raise finger,\nB to toggle intake");

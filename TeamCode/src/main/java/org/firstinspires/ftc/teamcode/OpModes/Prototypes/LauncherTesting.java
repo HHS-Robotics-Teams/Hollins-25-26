@@ -48,8 +48,10 @@ public class LauncherTesting extends OpMode {
     public void init() {
         launcher_motor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
         launcher_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        launcher_motor.setDirection(DcMotorSimple.Direction.REVERSE);
         intake_motor = hardwareMap.get(DcMotor.class, "IntakeMotor");
         intake_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
         LeftSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
         //RightSideFeedRoller = hardwareMap.get(CRServo.class, "RightSideFeedRoller");

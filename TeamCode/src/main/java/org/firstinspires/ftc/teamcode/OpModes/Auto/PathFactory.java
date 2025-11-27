@@ -3,10 +3,14 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
+
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -24,14 +28,23 @@ public class PathFactory {
     InstantAction runIntake = new InstantAction(new InstantFunction() {
         @Override
         public void run() {
-            LauncherMotor.setVelocity(1.8, AngleUnit.RADIANS);
+            LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
             IntakeMotor.setPower(INTAKE_POWER);
             LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             LeftSideFeedRoller.setPower(0);
         }
     });
+    InstantAction runLauncher = new InstantAction(new InstantFunction() {
+        @Override
+        public void run() {
+            LauncherMotor.setPower(0.8); // Todo Tune
+            LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+            LeftSideFeedRoller.setPower(0);
+            LauncherSafetyServo.setPosition(SAFETY_HOLDING);
+        }
+    });
     public static Pose2d blueFarLaunchPose = new Pose2d(50, 10, Math.toRadians(-153));
-    public static Pose2d blueNearLaunchPose = new Pose2d(-12,-12,Math.toRadians(-135));
+    public static Pose2d blueNearLaunchPose = new Pose2d(-24,-24,Math.toRadians(-131.5));
     public static Pose2d bluePPGPickupStartPose = new Pose2d(-11.75,-30,Math.toRadians(-90));
     public static Pose2d bluePGPPickupStartPose = new Pose2d(11.75,-30,Math.toRadians(-90));
     double intakeDriveY = 48;
@@ -42,24 +55,25 @@ public class PathFactory {
     }
     public Action blueNearLaunchPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                    .splineToLinearHeading(new Pose2d(-12,-12,Math.toRadians(-135)),Math.toRadians(-105))
+                    .splineToLinearHeading(new Pose2d(-24,-24,Math.toRadians(-131.5)),Math.toRadians(-105))
                     .build();
     }
     public Action blueFarLaunchPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
                 .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(startPose.heading.minus(Rotation2d.exp(0))))
+                .afterDisp(1,runLauncher)
                 .build();
     }
     public Action bluePPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(-11.75,-30,Math.toRadians(-90)),Math.toRadians(-45))
+                .splineToSplineHeading(new Pose2d(-11,-30,Math.toRadians(-90)),Math.toRadians(-45))
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(-38)
+                .lineToY(-36)
                 .waitSeconds(.3)
-                .lineToY(-39)
+                .lineToY(-40)
                 .waitSeconds(.3)
-                .lineToY(-42)
+                .lineToY(-46)
                 .build();
     }
     public Action bluePGPPickupPath(Pose2d startPose){
@@ -71,7 +85,7 @@ public class PathFactory {
                 .waitSeconds(.3)
                 .lineToY(-39)
                 .waitSeconds(.3)
-                .lineToY(-45)
+                .lineToY(-47)
                 .build();
     }
     public Action blueGPPPickupPath(Pose2d startPose){
