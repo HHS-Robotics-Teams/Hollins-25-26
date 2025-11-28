@@ -98,23 +98,31 @@ public class PathFactory {
 
     }public Action redPPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(-11.75,30,Math.toRadians(90)),Math.toRadians(45))
-                .afterDisp(5, runIntake)
+                .splineToSplineHeading(new Pose2d(-11.75,30,Math.toRadians(90)),Math.toRadians(90))
+                .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(intakeDriveY)
+                .lineToY(38)
+                .waitSeconds(.3)
+                .lineToY(39)
+                .waitSeconds(.3)
+                .lineToY(47)
                 .build();
     }
     public Action redPGPPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(11.75,30,Math.toRadians(90)),Math.toRadians(45))
-                .afterDisp(5, runIntake)
+                .splineToSplineHeading(new Pose2d(11.75,30,Math.toRadians(90)),Math.toRadians(90))
+                .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(intakeDriveY)
+                .lineToY(38)
+                .waitSeconds(.3)
+                .lineToY(39)
+                .waitSeconds(.3)
+                .lineToY(47)
                 .build();
     }
     public Action redGPPPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(11.75+24+3,30,Math.toRadians(90)),Math.toRadians(45))
+                .splineToSplineHeading(new Pose2d(36,30,Math.toRadians(90)),Math.toRadians(45))
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(35)
