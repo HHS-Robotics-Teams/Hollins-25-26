@@ -7,19 +7,15 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSaf
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
-
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Rotation2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 public class PathFactory {
@@ -43,7 +39,7 @@ public class PathFactory {
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
         }
     });
-    public static Pose2d blueFarLaunchPose = new Pose2d(50, 10, Math.toRadians(-153));
+    public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-153));
     public static Pose2d blueNearLaunchPose = new Pose2d(-24,-24,Math.toRadians(-131.5));
     public static Pose2d bluePPGPickupStartPose = new Pose2d(-11.75,-30,Math.toRadians(-90));
     public static Pose2d bluePGPPickupStartPose = new Pose2d(11.75,-30,Math.toRadians(-90));
@@ -55,7 +51,7 @@ public class PathFactory {
     }
     public Action blueNearLaunchPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                    .splineToLinearHeading(new Pose2d(-24,-24,Math.toRadians(-131.5)),Math.toRadians(-105))
+                    .splineToLinearHeading(new Pose2d(-24,-20,Math.toRadians(-131.5)),Math.toRadians(-90))
                     .build();
     }
     public Action blueFarLaunchPath(Pose2d startPose){
@@ -66,7 +62,7 @@ public class PathFactory {
     }
     public Action bluePPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(-11,-30,Math.toRadians(-90)),Math.toRadians(-45))
+                .splineToSplineHeading(new Pose2d(-11,-30,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-36)
@@ -78,7 +74,7 @@ public class PathFactory {
     }
     public Action bluePGPPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(11.75,-30,Math.toRadians(-90)),Math.toRadians(-45))
+                .splineToSplineHeading(new Pose2d(10.5,-30,Math.toRadians(-90)),Math.toRadians(90))
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-38)

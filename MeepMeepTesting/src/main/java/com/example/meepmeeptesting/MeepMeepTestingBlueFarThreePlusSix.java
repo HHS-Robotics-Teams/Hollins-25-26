@@ -5,8 +5,8 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.DriveTrainType;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
-
-public class MeepMeepTesting {
+// tuned pathing seems to work well
+public class MeepMeepTestingBlueFarThreePlusSix {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(600);
 
@@ -24,7 +24,6 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(startPos)
-                //.lineToX(55)
                 .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
                 .waitSeconds(4)
                 .splineToSplineHeading(new Pose2d(36,-30,Math.toRadians(-90)),Math.toRadians(-90))

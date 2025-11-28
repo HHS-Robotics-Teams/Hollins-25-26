@@ -9,10 +9,8 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFee
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_THRESHOLD;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
-import static java.lang.Math.abs;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -23,7 +21,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagMethod;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
@@ -32,7 +29,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 
 @Autonomous
-public class RpmBlueFarRoadrunnerThreePlusThree extends OpMode {
+public class RpmBlueFarThreePlusThree extends OpMode {
 
     MecanumDrive drive;
     InstantAction runIntake = new InstantAction(new InstantFunction() {
@@ -92,11 +89,11 @@ public class RpmBlueFarRoadrunnerThreePlusThree extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72-(17/2), -(12/2), Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(63.5, -6, Math.toRadians(180)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72-(17/2), -(12/2), Math.toRadians(180)))
+        turnToLaunch = drive.actionBuilder(new Pose2d(63.5, -6, Math.toRadians(180)))
                 .afterDisp(1, runIntake)
                 .lineToX(55)
                 .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
