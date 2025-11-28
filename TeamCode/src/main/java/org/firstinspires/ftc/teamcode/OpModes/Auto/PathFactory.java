@@ -40,7 +40,7 @@ public class PathFactory {
         }
     });
     public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-153));
-    public static Pose2d blueNearLaunchPose = new Pose2d(-24,-24,Math.toRadians(-131.5));
+    public static Pose2d blueNearLaunchPose = new Pose2d(-24,-20,Math.toRadians(-131.5));
     public static Pose2d bluePPGPickupStartPose = new Pose2d(-11.75,-30,Math.toRadians(-90));
     public static Pose2d bluePGPPickupStartPose = new Pose2d(11.75,-30,Math.toRadians(-90));
     double intakeDriveY = 48;
@@ -62,7 +62,7 @@ public class PathFactory {
     }
     public Action bluePPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(-11,-30,Math.toRadians(-90)),Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(-11,-30,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-36)
@@ -74,7 +74,7 @@ public class PathFactory {
     }
     public Action bluePGPPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(10.5,-30,Math.toRadians(-90)),Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(10.5,-30,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-38)
@@ -86,7 +86,7 @@ public class PathFactory {
     }
     public Action blueGPPPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(11.75+24+3,-30,Math.toRadians(-90)),Math.toRadians(-45))
+                .splineToLinearHeading(new Pose2d(36,-30,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-38)
@@ -98,19 +98,19 @@ public class PathFactory {
 
     }public Action redPPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(-11.75,30,Math.toRadians(90)),Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-11.75,30,Math.toRadians(90)),Math.toRadians(90))
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(38)
+                .lineToY(36)
                 .waitSeconds(.3)
-                .lineToY(39)
+                .lineToY(40)
                 .waitSeconds(.3)
-                .lineToY(47)
+                .lineToY(46)
                 .build();
     }
     public Action redPGPPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(11.75,30,Math.toRadians(90)),Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(11.75,30,Math.toRadians(90)),Math.toRadians(90))
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(38)
@@ -122,7 +122,7 @@ public class PathFactory {
     }
     public Action redGPPPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToSplineHeading(new Pose2d(36,30,Math.toRadians(90)),Math.toRadians(45))
+                .splineToLinearHeading(new Pose2d(36,30,Math.toRadians(90)),Math.toRadians(90))
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(35)
@@ -134,7 +134,7 @@ public class PathFactory {
     }
     public Action redNearLaunchPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(-16,16,Math.toRadians(135)),Math.toRadians(105))
+                .splineToLinearHeading(new Pose2d(-24,20,Math.toRadians(131.5)),Math.toRadians(90))
                 .build();
     }
     public Action redFarLaunchPath(Pose2d startPose){

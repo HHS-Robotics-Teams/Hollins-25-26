@@ -6,14 +6,9 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFin
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET_FIRST;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET_SECOND;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET_THIRD;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_THRESHOLD;
-
 import static java.lang.Math.abs;
 
 import com.acmerobotics.roadrunner.Action;
@@ -83,12 +78,12 @@ public class BlueFarRoadrunnerThreePlusSix extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72-(17/2), -(12/2), Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(63.5, -6, Math.toRadians(180)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72-(17/2), -(12/2), Math.toRadians(180)))
-                .lineToX(55)
+        turnToLaunch = drive.actionBuilder(new Pose2d(63.5, -6, Math.toRadians(180)))
+                //.lineToX(55)
                 .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
                 .build();
         driveToIntakeOne = factory.blueGPPPickupPath(blueFarLaunchPose);
