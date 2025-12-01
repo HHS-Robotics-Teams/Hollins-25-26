@@ -7,7 +7,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSaf
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 
 import com.acmerobotics.roadrunner.Action;
@@ -20,7 +19,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 public class PathFactory {
     MecanumDrive drive;
-    double intakeWaitTime = 0.2;
+    public static double intakeWaitTime = 0.2;
     InstantAction runIntake = new InstantAction(new InstantFunction() {
         @Override
         public void run() {
@@ -38,7 +37,7 @@ public class PathFactory {
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
         }
     });
-    public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-153));
+    public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-157));
     public static Pose2d blueNearLaunchPose = new Pose2d(-24,-20,Math.toRadians(-130));
     public static Pose2d bluePPGPickupStartPose = new Pose2d(-11.75,-30,Math.toRadians(-90));
     public static Pose2d bluePGPPickupStartPose = new Pose2d(11.75,-30,Math.toRadians(-90));
@@ -61,7 +60,7 @@ public class PathFactory {
     }
     public Action bluePPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(-11.5,-32,Math.toRadians(-90)),Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(-13,-32,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(1, runIntake)
                 .waitSeconds(intakeWaitTime)
 //                .lineToY(-34)

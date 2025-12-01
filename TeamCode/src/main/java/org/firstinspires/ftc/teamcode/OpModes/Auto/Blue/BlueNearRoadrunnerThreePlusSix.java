@@ -22,6 +22,7 @@ import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -34,6 +35,8 @@ import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
+@Deprecated
+@Disabled
 public class BlueNearRoadrunnerThreePlusSix extends OpMode {
     MecanumDrive drive;
     InstantAction runIntake = new InstantAction(new InstantFunction() {

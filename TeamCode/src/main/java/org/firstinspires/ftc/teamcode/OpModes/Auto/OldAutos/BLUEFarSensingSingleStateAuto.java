@@ -19,6 +19,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDL
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_THRESHOLD;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -29,6 +30,8 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Autonomous
+@Deprecated
+@Disabled
 public class BLUEFarSensingSingleStateAuto extends OpMode {
 
     enum AutoState {

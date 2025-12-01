@@ -15,6 +15,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -27,6 +28,8 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 //TODO always tune for 13.7V battery
 
 @Autonomous
+@Deprecated
+@Disabled
 public class BlueFarRoadrunnerThreePlusSix extends OpMode {
 
     MecanumDrive drive;

@@ -15,6 +15,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FIN
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_THRESHOLD;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -23,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Deprecated
-
+@Disabled
 @Autonomous
 public class OldBlueDoubleStateAuto extends OpMode {
 

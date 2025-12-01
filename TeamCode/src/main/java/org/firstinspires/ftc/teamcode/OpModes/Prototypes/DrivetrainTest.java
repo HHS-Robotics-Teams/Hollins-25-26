@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 //testing opmode disabled
 @Disabled
+@Deprecated
 @TeleOp
 public class DrivetrainTest extends OpMode {
 

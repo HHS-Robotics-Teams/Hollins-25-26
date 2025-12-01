@@ -2,12 +2,15 @@
 
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagMethod;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
+@Disabled
+@Deprecated
 @TeleOp(name = "AprilTag TeleOp Example")
 public class AprilTagTeleOpExample extends LinearOpMode {
 

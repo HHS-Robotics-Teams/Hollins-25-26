@@ -4,16 +4,14 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
@@ -21,6 +19,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @Disabled
 @TeleOp
+@Deprecated
 public class LauncherTestingWithPID extends OpMode {
     Input input = new Input();
     double targetVel = LAUNCHER_NEAR_TARGET;

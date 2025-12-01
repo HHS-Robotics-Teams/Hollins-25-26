@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @TeleOp
 @Disabled
+@Deprecated
 public class IntakeV2Testing extends OpMode {
     Input input = new Input();
     boolean a = false;

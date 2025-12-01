@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.DriveSlowdown;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
-
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
@@ -16,7 +15,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 //testing opmode disabled
@@ -187,7 +185,7 @@ public class LauncherTesting extends OpMode {
         rightBack.setPower((forward + strafes - rotates) / denominator);
 
         telemetry.addData("Current power: ", power);
-        telemetry.addData("Current speed: ", launcher_motor.getVelocity(AngleUnit.RADIANS));
+        telemetry.addData("Current speed: ", launcher_motor.getVelocity());
         telemetry.addData("Current delta: ", delta);
         telemetry.addLine();
         telemetry.addLine("dpad up to increase delta\ndpad down to decrease delta\na to toggle on/off\nx to increase power by delta\ny to decrease power by delta\nb to reverse");

@@ -16,8 +16,8 @@ public class Constants {
     public static double LAUNCHER_FAR_TARGET_THIRD = 2.45;
     public static final double LAUNCH_THRESHOLD = .021;
     public static final double LAUNCH_THRESHOLD_TICKS = 50;
-    public static final double LAUNCH_TICK_VELOCITY_NEAR = 2781;
-    public static final double LAUNCH_TICK_VELOCITY_FAR = 2781;
+    public static final double LAUNCH_TICK_VELOCITY_NEAR = 800;
+    public static final double LAUNCH_TICK_VELOCITY_FAR = 1000;
     public static final double LAUNCHED_THRESHOLD = 1;
 
     public static final double LAUNCHER_FINGER_LOADED_POS = 0.7;

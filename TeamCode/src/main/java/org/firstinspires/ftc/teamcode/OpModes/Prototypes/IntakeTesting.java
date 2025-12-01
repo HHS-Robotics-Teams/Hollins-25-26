@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @Disabled
 @TeleOp
+@Deprecated
 public class IntakeTesting extends OpMode {
 
     //left

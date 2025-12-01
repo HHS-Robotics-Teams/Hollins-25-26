@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 //testing opmode disabled
 @Disabled
 @TeleOp
+@Deprecated
 public class LauncherFingerServoTesting extends OpMode {
 
     Input input = new Input();

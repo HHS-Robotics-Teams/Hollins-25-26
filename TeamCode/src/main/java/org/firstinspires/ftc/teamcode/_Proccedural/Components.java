@@ -8,7 +8,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
@@ -69,6 +71,10 @@ public class Components {
         LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         LauncherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        MotorConfigurationType type = LauncherMotor.getMotorType().clone(); //DO NOT TOUCH
+        type.setAchieveableMaxRPMFraction(1.0); //DO NOT TOUCH
+        LauncherMotor.setMotorType(type); //DO NOT TOUCH
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75,0.25,10,20)); //DO NOT TOUCH
 
         //Initialize Intake Motor
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");

@@ -13,6 +13,7 @@ public class IntakeV2Util {
     public static void initIntake() {
         IntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         IntakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        IntakeMotor.setTargetPosition(IntakeMotor.getCurrentPosition());
     }
     public static void updateIntake(boolean on, boolean reversed){
         if(on){
