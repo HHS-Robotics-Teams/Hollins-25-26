@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueFarLaunchPose;
-import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.intakeWaitTime;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
@@ -103,27 +102,23 @@ public class RpmBlueFarThreePlusSix extends OpMode {
                 .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
                 .build();
         driveToIntakeOne = drive.actionBuilder(blueFarLaunchPose)
-                .splineToLinearHeading(new Pose2d(36,-30,Math.toRadians(-90)),Math.toRadians(-90))
-                .afterDisp(2, runIntake)
-                .waitSeconds(intakeWaitTime)
-                .lineToY(-38)
+                .splineToSplineHeading(new Pose2d(36,-30,Math.toRadians(-90)),Math.toRadians(-90))
+                .lineToY(-36)
                 .waitSeconds(.3)
-                .lineToY(-39)
+                .lineToY(-40)
                 .waitSeconds(.3)
-                .lineToY(-45)
+                .lineToY(-46)
                 .build();
-        driveToLaunchOne = factory.blueFarLaunchPath(new Pose2d(11.75+24+3,-42,Math.toRadians(-90)));
+        driveToLaunchOne = factory.blueFarLaunchPath(new Pose2d(36,-46,Math.toRadians(-90)));
         driveToIntakeTwo = drive.actionBuilder(blueFarLaunchPose)
-                .splineToLinearHeading(new Pose2d(10,-32,Math.toRadians(-90)),Math.toRadians(-90))
-                .afterDisp(1, runIntake)
-                .waitSeconds(intakeWaitTime)
-//                .lineToY(-34)
-//                .waitSeconds(.3)
-                .lineToY(-41)
-//                .waitSeconds(.35)
-                .lineToY(-56)
+                .splineToSplineHeading(new Pose2d(12,-30,Math.toRadians(-90)),Math.toRadians(-90))
+                .lineToY(-36)
+                .waitSeconds(.3)
+                .lineToY(-40)
+                .waitSeconds(.3)
+                .lineToY(-46)
                 .build();
-        driveToLaunchThree = factory.blueFarLaunchPath(new Pose2d(10,-56,Math.toRadians(-90)));
+        driveToLaunchThree = factory.blueFarLaunchPath(new Pose2d(12,-46,Math.toRadians(-90)));
     }
 
     @Override
@@ -387,7 +382,10 @@ public class RpmBlueFarThreePlusSix extends OpMode {
                 }
                 break;
             case PARK:
-                Actions.runBlocking(drive.actionBuilder(blueFarLaunchPose).lineToX(10).build());
+                LauncherMotor.setPower(0);
+                LeftSideFeedRoller.setPower(0);
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+                Actions.runBlocking(drive.actionBuilder(blueFarLaunchPose).lineToX(30).build());
                 state = AutoState.END;
                 break;
             case END:
