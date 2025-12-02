@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagHelper;
+import org.firstinspires.ftc.teamcode.Util.AprilTagHelper;
 
 /**
  * File to store all hardware code
@@ -45,10 +45,10 @@ public class Components {
 
 
     /**
-        Method to initialize components
-        param hardwareMap is hardwareMap
+     * Method to initialize components
+     * param hardwareMap is hardwareMap
      */
-    public static void initComponents(HardwareMap hardwareMap){
+    public static void initComponents(HardwareMap hardwareMap) {
 
         //Initialize Drive Motors
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
@@ -74,7 +74,7 @@ public class Components {
         MotorConfigurationType type = LauncherMotor.getMotorType().clone(); //DO NOT TOUCH
         type.setAchieveableMaxRPMFraction(1.0); //DO NOT TOUCH
         LauncherMotor.setMotorType(type); //DO NOT TOUCH
-        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75,0.25,10,20)); //DO NOT TOUCH
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 0.25, 10, 20)); //DO NOT TOUCH
 
         //Initialize Intake Motor
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
@@ -93,9 +93,8 @@ public class Components {
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
         webcam = hardwareMap.get(WebcamName.class, "Webcam");
         tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
-        //artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
+        artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
 
     }
-
 
 }

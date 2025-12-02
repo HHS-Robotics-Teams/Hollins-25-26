@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.HollinsMadeUtil;
+package org.firstinspires.ftc.teamcode.Util;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_HOLD_POS;
@@ -8,7 +8,6 @@ import static java.lang.Math.abs;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class IntakeV2Util {
-
     static int interval = 100;
     public static void initIntake() {
         IntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

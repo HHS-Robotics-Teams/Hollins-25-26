@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 
-import static org.firstinspires.ftc.teamcode.HollinsMadeUtil.IntakeV2Util.initIntake;
-import static org.firstinspires.ftc.teamcode.HollinsMadeUtil.IntakeV2Util.updateIntake;
+import static org.firstinspires.ftc.teamcode.Util.IntakeV2Util.initIntake;
+import static org.firstinspires.ftc.teamcode.Util.IntakeV2Util.updateIntake;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
@@ -20,60 +20,30 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FIN
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN_THREE;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_FAR;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.HollinsMadeUtil.AprilTagMethod;
-import org.firstinspires.ftc.teamcode.HollinsMadeUtil.LauncherUtil;
+import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
+import org.firstinspires.ftc.teamcode.Util.LauncherUtil;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @TeleOp
 public class CompDriveV3BLUE extends OpMode {
-    //Instantiated new input
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
-    //temp time used mainly in state machines
-    static double timeAtLaunch;
-    ElapsedTime launchTimer = new ElapsedTime();
-    ElapsedTime IntakeTimer = new ElapsedTime();
-
-    //enum for launching state machines
-    enum LaunchState {
-        SPIN_UP,
-        UP,
-        WAIT,
-        DOWN,
-        INTAKE_SECOND,
-        SPIN_UP_TWO,
-        UP_TWO,
-        WAIT_TWO,
-        DOWN_TWO,
-        INTAKE_THIRD,
-        SPIN_UP_THREE,
-        UP_THREE,
-        WAIT_THREE,
-        DOWN_THREE,
-
-    }
     LauncherUtil launcherUtil;
-
-    static LaunchState state = LaunchState.SPIN_UP;
 
     @Override
     public void init() {
@@ -82,7 +52,6 @@ public class CompDriveV3BLUE extends OpMode {
         initIntake();
         aprilTagDetector = new AprilTagMethod();
         launcherUtil = new LauncherUtil(aprilTagDetector, "BLUE", new MecanumDrive(hardwareMap, new Pose2d(0,0,0)));
-
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
     }
@@ -91,11 +60,6 @@ public class CompDriveV3BLUE extends OpMode {
     public void init_loop() {
         // April Tag Detector
         aprilTagDetector.updateAndShowTelemetry(telemetry);
-    }
-
-    @Override
-    public void start() {
-
     }
 
     @Override
@@ -112,12 +76,10 @@ public class CompDriveV3BLUE extends OpMode {
         if (input.right_trigger.down()) {
             LAUNCHER_RUN = !LAUNCHER_RUN;
             INTAKE_REVERSED = false;
-            state = LaunchState.SPIN_UP;
         }
         if (input.right_bumper.down()) {
-            LAUNCHER_RUN_THREE = !LAUNCHER_RUN_THREE;
+            LAUNCHER_RUN = !LAUNCHER_RUN;
             INTAKE_REVERSED = false;
-            state = LaunchState.SPIN_UP;
         }
 
         //while LAUNCHER_RUN flag is true, launch one
@@ -126,18 +88,15 @@ public class CompDriveV3BLUE extends OpMode {
         if (LAUNCHER_RUN) {
             telemetry.addData("Launcher Output:", launcherUtil.runLauncher());
             telemetry.addData("Launch State: ", launcherUtil.getLaunchState());
+            telemetry.addData("Launch Location: ", launcherUtil.getLaunchLocation());
         } else {
             LauncherMotor.setPower(LAUNCHER_IDLE);
             /* ---------- Launcher Finger (Manual) ---------- */
             if (input.x.held()) {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             } else {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             }
-        }
-        if (input.back.down()) {
-            LAUNCH_FAR = !LAUNCH_FAR;
         }
 
         /* ---------- Intake ---------- */
@@ -147,10 +106,10 @@ public class CompDriveV3BLUE extends OpMode {
         }
 
         // Hold left trigger to run the main intake motor
-        if (!LAUNCHER_RUN && !LAUNCHER_RUN_THREE) INTAKE_RUN = input.left_trigger.held();
+        if (!LAUNCHER_RUN) INTAKE_RUN = input.left_trigger.held();
 
         // Press left bumper to TOGGLE the second level intake on/off
-        if (!LAUNCHER_RUN && !LAUNCHER_RUN_THREE) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held();
+        if (!LAUNCHER_RUN) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held();
 
         // --- Final Intake Motor Logic ---
 
@@ -226,12 +185,7 @@ public class CompDriveV3BLUE extends OpMode {
         telemetry.addData("Intake running? ", INTAKE_RUN);
         telemetry.addData("Intake reversed? ", INTAKE_REVERSED);
         telemetry.addData("Launcher running? ", LAUNCHER_RUN);
-        telemetry.addData("Launcher running Three? ", LAUNCHER_RUN_THREE);
-        telemetry.addData("Launcher Velocity: ", LauncherMotor.getVelocity(AngleUnit.RADIANS));
-        telemetry.addData("Launcher State: ", state);
-        telemetry.addData("Launcher time", launchTimer.seconds());
-        telemetry.addData("Intake time", IntakeTimer.seconds());
-        telemetry.addLine("");
+        telemetry.addData("Launcher Velocity: ", LauncherMotor.getVelocity());
     }
 
 }
