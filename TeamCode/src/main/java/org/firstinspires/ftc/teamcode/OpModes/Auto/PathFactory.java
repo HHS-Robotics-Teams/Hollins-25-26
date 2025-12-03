@@ -37,7 +37,7 @@ public class PathFactory {
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
         }
     });
-    public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-157));
+    public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-155));
     public static Pose2d blueNearLaunchPose = new Pose2d(-24,-20,Math.toRadians(-130));
     public static Pose2d bluePPGPickupStartPose = new Pose2d(-11.75,-30,Math.toRadians(-90));
     public static Pose2d bluePGPPickupStartPose = new Pose2d(11.75,-30,Math.toRadians(-90));
@@ -72,7 +72,7 @@ public class PathFactory {
     }
     public Action bluePGPPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(10,-32,Math.toRadians(-90)),Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(12,-32,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(1, runIntake)
                 .waitSeconds(intakeWaitTime)
 //                .lineToY(-34)

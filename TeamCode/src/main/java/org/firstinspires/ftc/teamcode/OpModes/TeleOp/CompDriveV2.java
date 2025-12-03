@@ -387,7 +387,7 @@ public class CompDriveV2 extends OpMode {
             case INTAKE_THIRD:
                 INTAKE_RUN = true;
                 INTAKE_LEVEL_TWO_RUN = true; // Run the second level as well
-                if (launchTimer.seconds() >= LAUNCHING_TIME) { // todo Change Time
+                if (launchTimer.seconds() >= (LAUNCHING_TIME + 0.5 )) { // todo Change Time
                     // Stop the intake and prepare for the second shot
                     INTAKE_RUN = false;
                     INTAKE_LEVEL_TWO_RUN = false;
@@ -410,6 +410,7 @@ public class CompDriveV2 extends OpMode {
             case WAIT_THREE:
                 // Wait for the finger to move
                 if (launchTimer.seconds() >= DWELL_TIME) { //Todo Change Time
+                    INTAKE_RUN = false;
                     INTAKE_LEVEL_TWO_RUN = false;
                     state = LaunchState.DOWN_THREE;
                 }

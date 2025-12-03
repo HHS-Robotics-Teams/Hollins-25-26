@@ -30,7 +30,7 @@ public class Constants {
     public static final double SAFTEY_FIRING = 0.3;
     public static final double FINGER_UP_TIME = 0.75;
     /* Timings */
-    public static double DWELL_TIME = 1.5;
+    public static double DWELL_TIME = 0.5;
     public static double LAUNCHING_TIME = 1.0;
 
     /* FLAGS */

@@ -6,27 +6,23 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFin
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.artifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_FAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VEL_THRESHOLD;
 import static java.lang.Math.abs;
 
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
-
-import java.util.Objects;
 
 public class LauncherUtil {
     AprilTagMethod aprilTagMethod;
@@ -40,35 +36,23 @@ public class LauncherUtil {
         EXIT
     }
     private LaunchState launchState;
-
-    private enum LAUNCH_LOCS{
-        nearest,
-        near,
-        mid_field,
-        far,
-        far_across,
-        moving_block
-    }
-    private LAUNCH_LOCS location;
-    TrajectoryActionBuilder near;
-    PathFactory factory;
     double target;
     String color;
-    MecanumDrive drive;
 
-    ElapsedTime timer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
+    ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
+    ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
+    ElapsedTime resetTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     /** @noinspection ClassEscapesDefinedScope*/
     public LaunchState getLaunchState()    {return launchState;}
-    /** @noinspection ClassEscapesDefinedScope*/
-    public LAUNCH_LOCS getLaunchLocation() {return location;}
 
-    public LauncherUtil(AprilTagMethod aprilTagMethod, String color, MecanumDrive drive){
-        this.aprilTagMethod = aprilTagMethod;
+    public LauncherUtil(AprilTagMethod aprilTagMethod, String color){
+        this.aprilTagMethod = new AprilTagMethod();
         launchState = LaunchState.FIND_TAG;
-        location = LAUNCH_LOCS.nearest;
         this.color = color;
-        this.drive = drive;
-        factory = new PathFactory(drive);
+    }
+    public void cancelLaunch(){
+        launchState = LaunchState.FIND_TAG;
+        LauncherMotor.setPower(LAUNCHER_IDLE);
     }
     public String runLauncher() {
         if(!aprilTagMethod.isTagVisible() ){
@@ -78,31 +62,25 @@ public class LauncherUtil {
             case EXIT:
                 launchState = LaunchState.FIND_TAG;
                 LauncherMotor.setPower(LAUNCHER_IDLE);
+                LAUNCHER_RUN = false;
                 break;
             case FIND_TAG:
                 if(aprilTagMethod.isTagVisible() && aprilTagMethod.tagMatchesAlliance(color)){
                     launchState = LaunchState.SPIN_UP_AND_MOVE;
-                     if(aprilTagMethod.getTagDistance() <= 60) {
-                        location = LAUNCH_LOCS.mid_field;
-                    } else if(aprilTagMethod.getTagDistance() <= 80) {
-                        location = LAUNCH_LOCS.far;
-                    } else {
-                        location = LAUNCH_LOCS.far_across;
-                    }
                 }
                 break;
             case SPIN_UP_AND_MOVE:
-                moveToLaunch();
-                if(isSpunUp()){
+                if(moveToLaunch()&&isSpunUp()){
                     launchState = LaunchState.LAUNCH;
+                    launchTimer.reset();
                 }
                 break;
             case LAUNCH:
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 LeftSideFeedRoller.setPower(1);
-                if(timer.seconds() >= 0.8){
+                if(launchTimer.seconds() >= 0.8){
                     launchState = LaunchState.RESET_SHOT;
-                    timer.reset();
+                    resetTimer.reset();
                 }
                 break;
             case RESET_SHOT:
@@ -110,92 +88,73 @@ public class LauncherUtil {
                 LeftSideFeedRoller.setPower(0);
                 if(artifactCounterDistance.getDistance(DistanceUnit.INCH) >= 8){
                     launchState = LaunchState.EXIT;
-                } else {
-                    timer.reset();
+                } else if (resetTimer.seconds() >= 0.25) {
+                    intakeTimer.reset();
                     launchState = LaunchState.INTAKE;
                 }
                 break;
             case INTAKE:
                 IntakeMotor.setPower(INTAKE_POWER);
-                if(timer.seconds() >= .75){
+                if(intakeTimer.seconds() >= .75){
                     launchState = LaunchState.FINAL_CHECK;
                 }
                 break;
             case FINAL_CHECK:
                 IntakeMotor.setPower(0);
-                if(isSpunUp()){
+                if(moveToLaunch()&&isSpunUp()){
                     launchState = LaunchState.LAUNCH;
+                    launchTimer.reset();
+                    intakeTimer.reset();
                 }
                 break;
         }
-        return "Launch In Progress";
+        return "Launch In Progress, current state: " + launchState
+                + "\n" + "PHI: " + phi
+                + "\n" + "Theta: " + theta;
     }
-
-    Action trajectory = null;
-    Pose2d currentPos;
-    private void moveToLaunch() {
-        if(location != LAUNCH_LOCS.moving_block){
-            double theta = Math.toRadians(90 - (abs(aprilTagMethod.getTagBearing()) + abs(aprilTagMethod.getTagYaw())));
-            double xOffset = (aprilTagMethod.getTagDistance() * Math.sin(theta)) + aprilTagMethod.getTagXPos();
-            double yOffset = (aprilTagMethod.getTagDistance() * Math.cos(theta)) + aprilTagMethod.getTagYPos();
-            double heading = 0;
-            if(color.equals("BLUE")){
-                heading = Math.toRadians(-90 - theta);
+    double theta;
+    double range;
+    double phi;
+    private boolean moveToLaunch() {
+        theta = aprilTagMethod.getTagBearing();
+        range = aprilTagMethod.getTagDistance()+2;
+        double margin = 3;
+        if(range >= 75){
+            target = LAUNCH_TICK_VELOCITY_FAR + 125;
+            phi = 3;
+            if(color == "RED"){
+                phi = 2.5;
             }
-            if(color.equals("RED")){
-                heading = Math.toRadians( 90 + theta);
-                yOffset = -yOffset;
+            margin = 3;
+        } else {
+            target = LAUNCH_TICK_VELOCITY_NEAR + 75;
+            phi = 0;
+            if(color == "RED"){
+              phi = 1;
             }
-            currentPos = new Pose2d(xOffset,yOffset,heading);
-            if(Objects.equals(color, "BLUE")) {
-                switch (location) {
-                    case mid_field:
-                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-                        trajectory = factory.blueNearLaunchPath(currentPos);
-                        location = LAUNCH_LOCS.moving_block;
-                        break;
-                    case far:
-                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-                        trajectory = factory.blueFarLaunchPath(currentPos);
-                        location = LAUNCH_LOCS.moving_block;
-                        break;
-                    case far_across:
-                        LauncherMotor.setVelocity(1100);
-                        near = drive.actionBuilder(currentPos)
-                                .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(-150)), Math.toRadians(-105));
-                        trajectory = near.build();
-                        location = LAUNCH_LOCS.moving_block;
-                        break;
-                    case moving_block:
-                        break;
-                }
-            } else {
-                switch (location) {
-                    case mid_field:
-                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-                        trajectory = factory.redNearLaunchPath(currentPos);
-                        location = LAUNCH_LOCS.moving_block;
-                        break;
-                    case far:
-                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-                        trajectory = factory.redFarLaunchPath(currentPos);
-                        location = LAUNCH_LOCS.moving_block;
-                        break;
-                    case far_across:
-                        LauncherMotor.setVelocity(1100);
-                        near = drive.actionBuilder(currentPos)
-                                .splineToLinearHeading(new Pose2d(50,-10,Math.toRadians(140)),Math.toRadians(105));
-                        trajectory = near.build();
-                        location = LAUNCH_LOCS.moving_block;
-                        break;
-                    case moving_block:
-                        break;
-                }
-            }
+            margin = 6;
         }
-       Actions.runBlocking(new ParallelAction(trajectory) );
+        if(theta >= phi + 2) {
+            leftFront.setPower (-0.35);
+            rightBack.setPower ( 0.35);
+            leftBack.setPower  (-0.35);
+            rightFront.setPower( 0.35);
+        } else if (theta <= phi - 2) {
+            leftFront.setPower ( 0.35);
+            rightBack.setPower (-0.35);
+            leftBack.setPower  ( 0.35);
+            rightFront.setPower(-0.35);
+        } else {
+            leftFront.setPower (0);
+            rightBack.setPower (0);
+            leftBack.setPower  (0);
+            rightFront.setPower(0);
+            return true;
+        }
+        return abs(theta - phi) <= margin;
     }
     private boolean isSpunUp() {
+        LauncherMotor.setVelocity(target);
         return abs(LauncherMotor.getVelocity() - target) <= LAUNCH_TICK_VEL_THRESHOLD;
     }
 }

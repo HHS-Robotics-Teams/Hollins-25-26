@@ -36,7 +36,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @TeleOp
-public class CompDriveV3BLUE extends OpMode {
+public class CompDriveV3RED extends OpMode {
     //Instantiated new input
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
@@ -47,7 +47,7 @@ public class CompDriveV3BLUE extends OpMode {
         //Initialize Components
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
-        launcherUtil = new LauncherUtil(aprilTagDetector, "BLUE");
+        launcherUtil = new LauncherUtil(aprilTagDetector, "RED");
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
@@ -131,7 +131,6 @@ public class CompDriveV3BLUE extends OpMode {
             INTAKE_REVERSED = false;
         }
 
-
         /* ---------- Intake ---------- */
         if (input.b.down()) {
             // Reverses intake
@@ -165,7 +164,6 @@ public class CompDriveV3BLUE extends OpMode {
         if (input.start.down()) {
             imu.resetYaw();
         }
-
 
         //while LAUNCHER_RUN flag is true launch
         if (LAUNCHER_RUN) {
