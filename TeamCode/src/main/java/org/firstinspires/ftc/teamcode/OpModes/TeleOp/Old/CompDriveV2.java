@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
+package org.firstinspires.ftc.teamcode.OpModes.TeleOp.Old;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 
@@ -20,7 +20,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_HOLDER_ENABLE;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
@@ -240,7 +239,6 @@ public class CompDriveV2 extends OpMode {
         telemetry.addData("Intake running? ", INTAKE_RUN);
         telemetry.addData("Intake second level running?", INTAKE_LEVEL_TWO_RUN);
         telemetry.addData("Intake reversed? ", INTAKE_REVERSED);
-        telemetry.addData("Launcher holders holding? ", LAUNCHER_HOLDER_ENABLE);
         telemetry.addData("Launcher running? ", LAUNCHER_RUN);
         telemetry.addData("Launcher running Three? ", LAUNCHER_RUN_THREE);
         telemetry.addData("Launcher Far?", LAUNCH_FAR);

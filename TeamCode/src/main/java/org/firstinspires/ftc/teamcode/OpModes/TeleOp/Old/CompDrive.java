@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
+package org.firstinspires.ftc.teamcode.OpModes.TeleOp.Old;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 
@@ -17,7 +17,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_HOLDER_ENABLE;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
@@ -248,7 +247,6 @@ public class CompDrive extends OpMode {
         telemetry.addData("Intake running? ", INTAKE_RUN);
         telemetry.addData("Intake second level running?", INTAKE_LEVEL_TWO_RUN);
         telemetry.addData("Intake reversed? ", INTAKE_REVERSED);
-        telemetry.addData("Launcher holders holding? ", LAUNCHER_HOLDER_ENABLE);
         telemetry.addData("Launcher running? ", LAUNCHER_RUN);
         telemetry.addData("Launcher running Two? ", LAUNCHER_RUN_TWO);
         telemetry.addData("Launcher Far?", LAUNCH_FAR);
@@ -451,12 +449,12 @@ public class CompDrive extends OpMode {
 //                LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET, AngleUnit.RADIANS);
 //                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD * 2) {
 //                    timeAtLaunch = getRuntime();
-//                    state = LaunchState.UP;
+//                    state = LaunchState_V2.UP;
 //                }
 //                break;
 //            case UP:
 //                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-//                state = LaunchState.WAIT;
+//                state = LaunchState_V2.WAIT;
 //                timeAtLaunch = getRuntime();
 //                break;
 //            case WAIT:
@@ -464,11 +462,11 @@ public class CompDrive extends OpMode {
 //                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
 //                }
 //                if(getRuntime() - timeAtLaunch >= 0.6){
-//                    state = LaunchState.DOWN;
+//                    state = LaunchState_V2.DOWN;
 //                }
 //                break;
 //            case DOWN:
-//                state = LaunchState.SPIN_UP_TWO;
+//                state = LaunchState_V2.SPIN_UP_TWO;
 //                timeAtLaunch = getRuntime();
 //                break;
 //            case SPIN_UP_TWO:
@@ -482,17 +480,17 @@ public class CompDrive extends OpMode {
 //                }
 //                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD * 2) {
 //                    timeAtLaunch = getRuntime();
-//                    state = LaunchState.UP_TWO;
+//                    state = LaunchState_V2.UP_TWO;
 //                }
 //                break;
 //            case UP_TWO:
 //                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-//                state = LaunchState.WAIT_TWO;
+//                state = LaunchState_V2.WAIT_TWO;
 //                timeAtLaunch = getRuntime();
 //                break;
 //            case WAIT_TWO:
 //                if(getRuntime() - timeAtLaunch >= 0.4){
-//                    state = LaunchState.DOWN_TWO;
+//                    state = LaunchState_V2.DOWN_TWO;
 //                    timeAtLaunch = getRuntime();
 //                }
 //                break;
@@ -503,7 +501,7 @@ public class CompDrive extends OpMode {
 //                INTAKE_LEVEL_TWO_RUN = true;
 //                LAUNCHER_RUN = true;
 //                if(getRuntime() - timeAtLaunch >= 0.2){
-//                    state = LaunchState.SPIN_UP;
+//                    state = LaunchState_V2.SPIN_UP;
 //                }
 //                break;
 //        }
@@ -514,12 +512,12 @@ public class CompDrive extends OpMode {
 //                LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET, AngleUnit.RADIANS);
 //                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_FAR_TARGET) <= 2*LAUNCH_THRESHOLD) {
 //                    timeAtLaunch = getRuntime();
-//                    state = LaunchState.UP;
+//                    state = LaunchState_V2.UP;
 //                }
 //                break;
 //            case UP:
 //                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-//                state = LaunchState.WAIT;
+//                state = LaunchState_V2.WAIT;
 //                timeAtLaunch = getRuntime();
 //                break;
 //            case WAIT:
@@ -527,11 +525,11 @@ public class CompDrive extends OpMode {
 //                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
 //                }
 //                if(getRuntime() - timeAtLaunch >= 0.6){
-//                    state = LaunchState.DOWN;
+//                    state = LaunchState_V2.DOWN;
 //                }
 //                break;
 //            case DOWN:
-//                state = LaunchState.SPIN_UP_TWO;
+//                state = LaunchState_V2.SPIN_UP_TWO;
 //                timeAtLaunch = getRuntime();
 //                break;
 //            case SPIN_UP_TWO:
@@ -545,17 +543,17 @@ public class CompDrive extends OpMode {
 //                }
 //                if (abs(LauncherMotor.getVelocity(AngleUnit.RADIANS) - LAUNCHER_NEAR_TARGET) <= LAUNCH_THRESHOLD * 2) {
 //                    timeAtLaunch = getRuntime();
-//                    state = LaunchState.UP_TWO;
+//                    state = LaunchState_V2.UP_TWO;
 //                }
 //                break;
 //            case UP_TWO:
 //                LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-//                state = LaunchState.WAIT_TWO;
+//                state = LaunchState_V2.WAIT_TWO;
 //                timeAtLaunch = getRuntime();
 //                break;
 //            case WAIT_TWO:
 //                if(getRuntime() - timeAtLaunch >= 0.4){
-//                    state = LaunchState.DOWN_TWO;
+//                    state = LaunchState_V2.DOWN_TWO;
 //                    timeAtLaunch = getRuntime();
 //                }
 //                break;
@@ -565,7 +563,7 @@ public class CompDrive extends OpMode {
 //                timeAtLaunch = getRuntime();
 //                INTAKE_LEVEL_TWO_RUN = true;
 //                LAUNCHER_RUN = true;
-//                state = LaunchState.SPIN_UP;
+//                state = LaunchState_V2.SPIN_UP;
 //                break;
 //        }
         }

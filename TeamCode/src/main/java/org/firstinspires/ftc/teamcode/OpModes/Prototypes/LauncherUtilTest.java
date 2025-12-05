@@ -24,6 +24,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -37,6 +38,8 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @TeleOp
+@Disabled
+@Deprecated
 public class LauncherUtilTest extends OpMode {
     Input input = new Input();
     AprilTagMethod aprilTagDetector = new AprilTagMethod();

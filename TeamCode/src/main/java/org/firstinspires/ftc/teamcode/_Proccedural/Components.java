@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode._Proccedural;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -94,6 +95,11 @@ public class Components {
         webcam = hardwareMap.get(WebcamName.class, "Webcam");
         tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
         artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
+
+        //other
+        for (LynxModule m : hardwareMap.getAll(LynxModule.class)){
+            m.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
 
     }
 

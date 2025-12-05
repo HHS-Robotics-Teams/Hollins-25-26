@@ -23,9 +23,11 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_FAR;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -82,6 +84,14 @@ public class CompDriveV3RED extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
+
+        /* ---------- Drivetrain ---------- */
+
+        if (input.start.down()) {
+            imu.resetYaw();
+            imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
+        }
+
         //Drivetrain movement values
         double forward = -gamepad1.left_stick_y * 0.8;
         double strafes = gamepad1.left_stick_x * 1.0;
@@ -157,12 +167,6 @@ public class CompDriveV3RED extends OpMode {
             LeftSideFeedRoller.setPower(power);
         } else {
             LeftSideFeedRoller.setPower(0);
-        }
-
-        /* ---------- Drivetrain ---------- */
-
-        if (input.start.down()) {
-            imu.resetYaw();
         }
 
         //while LAUNCHER_RUN flag is true launch

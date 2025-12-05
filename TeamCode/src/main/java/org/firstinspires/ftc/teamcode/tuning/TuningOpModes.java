@@ -296,7 +296,7 @@ public final class TuningOpModes {
         } else {
             throw new RuntimeException();
         }
-
+/* todo get rid of comments if ever need to retune
         manager.register(metaForClass(AngularRampLogger.class), new AngularRampLogger(dvf));
         manager.register(metaForClass(ForwardPushTest.class), new ForwardPushTest(dvf));
         manager.register(metaForClass(ForwardRampLogger.class), new ForwardRampLogger(dvf));
@@ -305,16 +305,13 @@ public final class TuningOpModes {
         manager.register(metaForClass(ManualFeedforwardTuner.class), new ManualFeedforwardTuner(dvf));
         manager.register(metaForClass(MecanumMotorDirectionDebugger.class), new MecanumMotorDirectionDebugger(dvf));
         manager.register(metaForClass(DeadWheelDirectionDebugger.class), new DeadWheelDirectionDebugger(dvf));
-
         manager.register(metaForClass(ManualFeedbackTuner.class), ManualFeedbackTuner.class);
         manager.register(metaForClass(SplineTest.class), SplineTest.class);
         manager.register(metaForClass(LocalizationTest.class), LocalizationTest.class);
-
         manager.register(metaForClass(OTOSAngularScalarTuner.class), new OTOSAngularScalarTuner(dvf));
         manager.register(metaForClass(OTOSLinearScalarTuner.class), new OTOSLinearScalarTuner(dvf));
         manager.register(metaForClass(OTOSHeadingOffsetTuner.class), new OTOSHeadingOffsetTuner(dvf));
         manager.register(metaForClass(OTOSPositionOffsetTuner.class), new OTOSPositionOffsetTuner(dvf));
-
         FtcDashboard.getInstance().withConfigRoot(configRoot -> {
             for (Class<?> c : Arrays.asList(
                     AngularRampLogger.class,
@@ -327,5 +324,7 @@ public final class TuningOpModes {
                 configRoot.putVariable(c.getSimpleName(), ReflectionConfig.createVariableFromClass(c));
             }
         });
+
+ */
     }
 }

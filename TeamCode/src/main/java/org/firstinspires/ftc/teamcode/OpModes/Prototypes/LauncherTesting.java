@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FIN
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -20,6 +21,8 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 //testing opmode disabled
 
 @TeleOp
+@Disabled
+@Deprecated
 public class LauncherTesting extends OpMode {
 
 

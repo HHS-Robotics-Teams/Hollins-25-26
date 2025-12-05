@@ -23,9 +23,12 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_FAR;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -82,11 +85,17 @@ public class CompDriveV3BLUE extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
+
+        /* ---------- Drivetrain ---------- */
+
+        if (input.start.down()) {
+            imu.resetYaw(); imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
+        }
+
         //Drivetrain movement values
         double forward = -gamepad1.left_stick_y * 0.8;
         double strafes = gamepad1.left_stick_x * 1.0;
         double rotates = gamepad1.right_stick_x * 0.6;
-
 
         if (abs(forward) <= 0.15) {
             forward = 0;
@@ -131,7 +140,6 @@ public class CompDriveV3BLUE extends OpMode {
             INTAKE_REVERSED = false;
         }
 
-
         /* ---------- Intake ---------- */
         if (input.b.down()) {
             // Reverses intake
@@ -140,11 +148,7 @@ public class CompDriveV3BLUE extends OpMode {
 
         // Hold left trigger to run the main intake motor
         if (!LAUNCHER_RUN) INTAKE_RUN = input.left_trigger.held();
-
-        // Press left bumper to TOGGLE the second level intake on/off
         if (!LAUNCHER_RUN) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held();
-
-        // --- Final Intake Motor Logic ---
 
         // Control the main intake motor
         if (INTAKE_RUN) {
@@ -160,13 +164,6 @@ public class CompDriveV3BLUE extends OpMode {
             LeftSideFeedRoller.setPower(0);
         }
 
-        /* ---------- Drivetrain ---------- */
-
-        if (input.start.down()) {
-            imu.resetYaw();
-        }
-
-
         //while LAUNCHER_RUN flag is true launch
         if (LAUNCHER_RUN) {
             telemetry.addLine("Launch Status:" + launcherUtil.runLauncher());
@@ -175,7 +172,6 @@ public class CompDriveV3BLUE extends OpMode {
             /* ---------- Launcher Finger (Manual) ---------- */
             if (input.x.held()) {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             } else {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             }
