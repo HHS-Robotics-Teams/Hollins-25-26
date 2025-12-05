@@ -39,8 +39,12 @@ public class PathFactory {
     });
     public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-155));
     public static Pose2d blueNearLaunchPose = new Pose2d(-24,-20,Math.toRadians(-130));
+    public static Pose2d redFarLaunchPose = new Pose2d(50, 10, Math.toRadians(155));
+    public static Pose2d redNearLaunchPose = new Pose2d(-24,20,Math.toRadians(130));
     public static Pose2d bluePPGPickupStartPose = new Pose2d(-11.75,-30,Math.toRadians(-90));
     public static Pose2d bluePGPPickupStartPose = new Pose2d(11.75,-30,Math.toRadians(-90));
+    public static Pose2d redPPGPickupStartPose = new Pose2d(-11.75,30,Math.toRadians(90));
+    public static Pose2d redPGPPickupStartPose = new Pose2d(11.75,30,Math.toRadians(90));
     double intakeDriveY = 48;
 
 

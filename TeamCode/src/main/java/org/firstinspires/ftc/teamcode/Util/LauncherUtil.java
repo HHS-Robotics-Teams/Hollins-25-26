@@ -26,7 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class LauncherUtil {
     AprilTagMethod aprilTagMethod;
-    private enum LaunchState {
+    public enum LaunchState {
         FIND_TAG,
         SPIN_UP_AND_MOVE,
         FINAL_CHECK,
@@ -42,11 +42,10 @@ public class LauncherUtil {
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime resetTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
-    /** @noinspection ClassEscapesDefinedScope*/
     public LaunchState getLaunchState()    {return launchState;}
 
-    public LauncherUtil(AprilTagMethod aprilTagMethod, String color){
-        this.aprilTagMethod = new AprilTagMethod();
+    public LauncherUtil(String color){
+        aprilTagMethod = new AprilTagMethod();
         launchState = LaunchState.FIND_TAG;
         this.color = color;
     }
@@ -122,14 +121,13 @@ public class LauncherUtil {
         if(range >= 75){
             target = LAUNCH_TICK_VELOCITY_FAR + 125;
             phi = 3;
-            if(color == "RED"){
+            if(color.equals("RED")){
                 phi = 2.5;
             }
-            margin = 3;
         } else {
             target = LAUNCH_TICK_VELOCITY_NEAR + 75;
             phi = 0;
-            if(color == "RED"){
+            if(color.equals("RED")){
               phi = 1;
             }
             margin = 6;

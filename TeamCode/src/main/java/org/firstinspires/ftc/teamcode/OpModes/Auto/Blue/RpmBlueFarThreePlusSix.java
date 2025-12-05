@@ -32,18 +32,6 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 @Autonomous
 public class RpmBlueFarThreePlusSix extends OpMode {
     MecanumDrive drive;
-
-    InstantAction runIntake = new InstantAction(new InstantFunction() {
-        @Override
-        public void run() {
-            LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-            //IntakeMotor.setPower(.1);
-            LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-            LeftSideFeedRoller.setPower(0);
-            LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-        }
-    });
-
     InstantAction IntakePickup = new InstantAction(new InstantFunction() {
         @Override
         public void run() {

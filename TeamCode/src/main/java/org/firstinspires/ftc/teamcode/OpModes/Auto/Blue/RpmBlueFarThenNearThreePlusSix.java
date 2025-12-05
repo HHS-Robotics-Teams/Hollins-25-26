@@ -125,7 +125,10 @@ public class RpmBlueFarThenNearThreePlusSix extends OpMode {
                 .lineToY(-48)
                // .lineToY(-46)
                 .build();
-        driveToLaunchOne = factory.blueNearLaunchPath(new Pose2d(39,-48,Math.toRadians(-90)));
+        driveToLaunchOne = drive.actionBuilder(new Pose2d(39,-48,Math.toRadians(-90)))
+                .lineToYConstantHeading(-20)
+                .splineToLinearHeading(blueNearLaunchPose, Math.toRadians(-105))
+                .build();
         driveToIntakeTwo = drive.actionBuilder(blueNearLaunchPose)
                 .splineToSplineHeading(new Pose2d(16,-30,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(1,IntakePickup)
