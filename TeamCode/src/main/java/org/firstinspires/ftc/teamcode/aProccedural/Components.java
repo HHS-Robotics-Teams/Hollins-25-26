@@ -37,32 +37,35 @@ public class Components {
     public static void initComponents(HardwareMap hardwareMap){
 
         //Initialize Motors
-        //leftFront = hardwareMap.get(DcMotor.class, "leftFront");
-        //rightFront = hardwareMap.get(DcMotor.class, "rightFront");
-        leftRear = hardwareMap.get(DcMotor.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotor.class, "rightRear");
+        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
+        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
+        leftRear = hardwareMap.get(DcMotor.class, "leftBack");
+        rightRear = hardwareMap.get(DcMotor.class, "rightBack");
         launcher = hardwareMap.get(DcMotorEx.class, "launcher");
         leftFeeder = hardwareMap.get(CRServo.class, "leftFeeder");
         rightFeeder = hardwareMap.get(CRServo.class, "rightFeeder");
 
 
         //Drive Motor Settings
-        //leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Drive Motor Reverse
         leftRear.setDirection(REVERSE);
+        leftFront.setDirection(REVERSE);
         rightRear.setDirection(FORWARD);
+        rightFront.setDirection(REVERSE);
 
         // Launcher Motor Settings
         launcher.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
         launcher.setDirection(REVERSE);
 
         // Feeder Servo Settings
-        leftFeeder.setDirection(REVERSE);
-        rightFeeder.setDirection(FORWARD);
+        leftFeeder.setDirection(FORWARD);
+        rightFeeder.setDirection(REVERSE
+        );
 
 
 
