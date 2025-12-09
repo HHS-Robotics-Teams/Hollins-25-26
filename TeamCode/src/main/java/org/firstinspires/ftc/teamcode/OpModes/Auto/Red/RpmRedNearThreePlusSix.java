@@ -99,13 +99,13 @@ public class RpmRedNearThreePlusSix extends OpMode {
         Components.initComponents(hardwareMap);
         turnToLaunch = drive.actionBuilder( new Pose2d(-55,50,Math.toRadians(135)))
                 .afterDisp(.5, runIntake)
-                .lineToYLinearHeading(-19,Math.toRadians(132.5))
+                .lineToYLinearHeading(19,Math.toRadians(132.5))
                 .build();
-        driveToIntakeOne = factory.redPPGPickupPath(new Pose2d(24,-19,Math.toRadians(132.5)));
+        driveToIntakeOne = factory.redPPGPickupPath(new Pose2d(-24,19,Math.toRadians(132.5)));
         telemetry.addLine("Trajectory 1 built");
         driveToLaunchOne = factory.redNearLaunchPath(new Pose2d(-11.75, 30, Math.toRadians(90)));
         telemetry.addLine("Trajectory 2 built");
-        driveToIntakeTwo = factory.redPGPPickupPath(new Pose2d(24,-19,Math.toRadians(132.5)));
+        driveToIntakeTwo = factory.redPGPPickupPath(new Pose2d(-24,19,Math.toRadians(132.5)));
         telemetry.addLine("Trajectory 3 built");
         driveToLaunchThree = factory.redNearLaunchPath(new Pose2d(11.75, 30, Math.toRadians(90)));
         telemetry.addLine("Trajectory 4 built");

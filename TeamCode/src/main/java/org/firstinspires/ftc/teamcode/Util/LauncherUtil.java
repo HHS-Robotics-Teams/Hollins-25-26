@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.Util;
 
-
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.artifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
@@ -33,43 +34,47 @@ public class LauncherUtil {
         LAUNCH,
         RESET_SHOT,
         INTAKE,
-        EXIT
+        EXIT,
+        STUCK_MIDDLE,
+        DISTANCE_CHECK
     }
     private LaunchState launchState;
     double target;
     String color;
+    boolean isAuto;
 
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime resetTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     public LaunchState getLaunchState()    {return launchState;}
 
-    public LauncherUtil(String color){
+    public LauncherUtil(String color, boolean isAuto) {
         aprilTagMethod = new AprilTagMethod();
         launchState = LaunchState.FIND_TAG;
         this.color = color;
+        this.isAuto = isAuto;
     }
-    public void cancelLaunch(){
+    public void cancelLaunch() {
         launchState = LaunchState.FIND_TAG;
         LauncherMotor.setPower(LAUNCHER_IDLE);
     }
     public String runLauncher() {
-        if(!aprilTagMethod.isTagVisible() ){
+        if (!aprilTagMethod.isTagVisible() ) {
             return "No Tag Visible";
         }
-        switch (launchState){
+        switch (launchState) {
             case EXIT:
                 launchState = LaunchState.FIND_TAG;
                 LauncherMotor.setPower(LAUNCHER_IDLE);
                 LAUNCHER_RUN = false;
                 break;
             case FIND_TAG:
-                if(aprilTagMethod.isTagVisible() && aprilTagMethod.tagMatchesAlliance(color)){
+                if (aprilTagMethod.isTagVisible() && aprilTagMethod.tagMatchesAlliance(color)) {
                     launchState = LaunchState.SPIN_UP_AND_MOVE;
                 }
                 break;
             case SPIN_UP_AND_MOVE:
-                if(moveToLaunch()&&isSpunUp()){
+                if ((moveToLaunch() || isAuto)&&isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
                     launchTimer.reset();
                 }
@@ -77,35 +82,64 @@ public class LauncherUtil {
             case LAUNCH:
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 LeftSideFeedRoller.setPower(1);
-                if(launchTimer.seconds() >= 0.8){
+                if (launchTimer.seconds() >= 0.8) {
                     launchState = LaunchState.RESET_SHOT;
                     resetTimer.reset();
                 }
+                if (launchTimer.seconds() >= 0.5) {
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+                }
                 break;
             case RESET_SHOT:
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(0);
-                if(artifactCounterDistance.getDistance(DistanceUnit.INCH) >= 8){
-                    launchState = LaunchState.EXIT;
-                } else if (resetTimer.seconds() >= 0.25) {
-                    intakeTimer.reset();
-                    launchState = LaunchState.INTAKE;
-                }
+                resetTimer.reset();
+                launchState = LaunchState.DISTANCE_CHECK;
                 break;
             case INTAKE:
                 IntakeMotor.setPower(INTAKE_POWER);
-                if(intakeTimer.seconds() >= .75){
+                if (intakeTimer.seconds() >= .75) {
                     launchState = LaunchState.FINAL_CHECK;
                 }
                 break;
             case FINAL_CHECK:
                 IntakeMotor.setPower(0);
-                if(moveToLaunch()&&isSpunUp()){
+                if (moveToLaunch()&&isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
                     launchTimer.reset();
                     intakeTimer.reset();
                 }
                 break;
+            case STUCK_MIDDLE:
+                IntakeMotor.setPower(0);
+                if (launchTimer.seconds() >= 0.4) {
+                    launchState = LaunchState.INTAKE;
+                }
+                break;
+            case DISTANCE_CHECK:
+                if (resetTimer.seconds() >= 0.25) {
+                if (rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 8 && leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 8) {
+                    if (rearDistance.getDistance(DistanceUnit.INCH) <= 2) {
+                        launchState = LaunchState.EXIT;
+                    }
+                    else if (rearDistance.getDistance(DistanceUnit.INCH) <= 6) {
+                        launchState = LaunchState.FINAL_CHECK;
+                    } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 10) {
+                        launchState = LaunchState.STUCK_MIDDLE;
+                        launchTimer.reset();
+                    } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 12) {
+                        launchState = LaunchState.INTAKE;
+                    } else {
+                        launchState = LaunchState.EXIT;
+                    }
+                } else {
+                    intakeTimer.reset();
+                    launchState = LaunchState.INTAKE;
+                }
+                }
+            return "Launch In Progress, current state: " + launchState
+                    + "\n" + "PHI: " + phi
+                    + "\n" + "Theta: " + theta
+                    + "\n" + "Distance Measurements: " + leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) + ", " + rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) + ", " + rearDistance.getDistance(DistanceUnit.INCH);
         }
         return "Launch In Progress, current state: " + launchState
                 + "\n" + "PHI: " + phi
@@ -118,21 +152,21 @@ public class LauncherUtil {
         theta = aprilTagMethod.getTagBearing();
         range = aprilTagMethod.getTagDistance()+2;
         double margin = 3;
-        if(range >= 75){
+        if (range >= 75) {
             target = LAUNCH_TICK_VELOCITY_FAR + 125;
             phi = 3;
-            if(color.equals("RED")){
+            if (color.equals("RED")) {
                 phi = 2.5;
             }
         } else {
             target = LAUNCH_TICK_VELOCITY_NEAR + 75;
             phi = 0;
-            if(color.equals("RED")){
+            if (color.equals("RED")) {
               phi = 1;
             }
             margin = 6;
         }
-        if(theta >= phi + 2) {
+        if (theta >= phi + 2) {
             leftFront.setPower (-0.35);
             rightBack.setPower ( 0.35);
             leftBack.setPower  (-0.35);

@@ -23,7 +23,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_FAR;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -50,7 +49,7 @@ public class CompDriveV3BLUE extends OpMode {
         //Initialize Components
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
-        launcherUtil = new LauncherUtil("BLUE");
+        launcherUtil = new LauncherUtil("BLUE", false);
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");

@@ -42,8 +42,9 @@ public class Components {
     public static IMU imu;
     public static WebcamName webcam;
     public static AprilTagHelper tagHelper;
-    public static DistanceSensor artifactCounterDistance;
-
+    public static DistanceSensor rightArtifactCounterDistance;
+    public static DistanceSensor leftArtifactCounterDistance;
+    public static DistanceSensor rearDistance;
 
     /**
      * Method to initialize components
@@ -75,7 +76,7 @@ public class Components {
         MotorConfigurationType type = LauncherMotor.getMotorType().clone(); //DO NOT TOUCH
         type.setAchieveableMaxRPMFraction(1.0); //DO NOT TOUCH
         LauncherMotor.setMotorType(type); //DO NOT TOUCH
-        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 0.3, 10, 20)); //DO NOT TOUCH
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 0.45, 10, 20)); //DO NOT TOUCH
 
         //Initialize Intake Motor
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
@@ -94,7 +95,9 @@ public class Components {
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
         webcam = hardwareMap.get(WebcamName.class, "Webcam");
         tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
-        artifactCounterDistance = hardwareMap.get(DistanceSensor.class, "artifactCounter");
+        rightArtifactCounterDistance = hardwareMap.get(DistanceSensor.class, "rightArtifactCounter");
+        leftArtifactCounterDistance = hardwareMap.get(DistanceSensor.class, "leftArtifactCounter");
+        rearDistance = hardwareMap.get(DistanceSensor.class, "rearDistance");
 
         //other
         for (LynxModule m : hardwareMap.getAll(LynxModule.class)){

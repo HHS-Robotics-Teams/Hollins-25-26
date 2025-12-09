@@ -38,7 +38,7 @@ public class PathFactory {
         }
     });
     public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-155));
-    public static Pose2d blueNearLaunchPose = new Pose2d(-24,-20,Math.toRadians(-130));
+    public static Pose2d blueNearLaunchPose = new Pose2d(-12,-10,Math.toRadians(-130));
     public static Pose2d redFarLaunchPose = new Pose2d(50, 10, Math.toRadians(155));
     public static Pose2d redNearLaunchPose = new Pose2d(-24,20,Math.toRadians(130));
     public static Pose2d bluePPGPickupStartPose = new Pose2d(-11.75,-30,Math.toRadians(-90));
@@ -141,7 +141,7 @@ public class PathFactory {
     }
     public Action redFarLaunchPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(152)), Math.toRadians(105))
+                .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(152)), Math.toRadians(startPose.heading.minus(Rotation2d.exp(0))))
                 .build();
     }
 }

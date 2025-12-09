@@ -49,7 +49,7 @@ public class CompDriveV3RED extends OpMode {
         //Initialize Components
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
-        launcherUtil = new LauncherUtil("RED");
+        launcherUtil = new LauncherUtil("RED", false);
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");

@@ -5,7 +5,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.artifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
@@ -105,7 +105,7 @@ public class LauncherUtilV2 {
             case RESET_SHOT:
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(0);
-                if(artifactCounterDistance.getDistance(DistanceUnit.INCH) >= 8){
+                if(rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 8){
                     launchState = LaunchState_V2.EXIT;
                 } else if (resetTimer.seconds() >= 0.25) {
                     intakeTimer.reset();

@@ -50,7 +50,7 @@ public class LauncherUtilTest extends OpMode {
         //Initialize Components
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
-        launcherUtil = new LauncherUtil("BLUE");
+        launcherUtil = new LauncherUtil("BLUE", true);
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
