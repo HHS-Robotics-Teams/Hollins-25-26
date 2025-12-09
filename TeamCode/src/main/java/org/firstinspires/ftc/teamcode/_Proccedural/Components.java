@@ -1,5 +1,4 @@
-package org.firstinspires.ftc.teamcode.aProccedural;
-
+package org.firstinspires.ftc.teamcode._Proccedural;
 
 
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
@@ -8,10 +7,9 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * File to store all hardware code
@@ -26,8 +24,8 @@ public class Components {
     public static DcMotorEx launcher;
     public static CRServo leftFeeder;
     public static CRServo rightFeeder;
-
-
+    public static DcMotor intake;
+    public static Servo intakeFeeder;
 
 
     /*
@@ -44,6 +42,8 @@ public class Components {
         launcher = hardwareMap.get(DcMotorEx.class, "launcher");
         leftFeeder = hardwareMap.get(CRServo.class, "leftFeeder");
         rightFeeder = hardwareMap.get(CRServo.class, "rightFeeder");
+        intake = hardwareMap.get(DcMotor.class, "intake");
+        intakeFeeder = hardwareMap.get(Servo.class, "intakeFeeder");
 
 
         //Drive Motor Settings
@@ -64,11 +64,11 @@ public class Components {
 
         // Feeder Servo Settings
         leftFeeder.setDirection(FORWARD);
-        rightFeeder.setDirection(REVERSE
-        );
+        rightFeeder.setDirection(REVERSE);
 
-
-
+        // Intake Motor Settings
+        intake.setDirection(FORWARD);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 

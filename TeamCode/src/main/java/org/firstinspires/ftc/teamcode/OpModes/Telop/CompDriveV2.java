@@ -1,31 +1,29 @@
 package org.firstinspires.ftc.teamcode.OpModes.Telop;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.launcher;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeeder;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftRear;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeeder;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightRear;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.FEED_TIME_SECONDS;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.FULL_SPEED;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_MIN_VELOCITY;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_TARGET_VELOCITY;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.STOP_SPEED;
-
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.launcher;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFeeder;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftRear;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFeeder;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightRear;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.FEED_TIME_SECONDS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.FULL_SPEED;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_MIN_VELOCITY;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_TARGET_VELOCITY;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.STOP_SPEED;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.aProccedural.Components;
+import org.firstinspires.ftc.teamcode._Proccedural.Components;
+import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @TeleOp
 public class CompDriveV2 extends OpMode {
     ElapsedTime feederTimer = new ElapsedTime();
+    Input input = new Input();
 
     enum LaunchStateTelop {
         IDLE,

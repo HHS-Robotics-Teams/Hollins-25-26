@@ -1,20 +1,20 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.launcher;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeeder;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftRear;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeeder;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightRear;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.DRIVE_SPEED;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.FEED_TIME_SECONDS;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_MIN_VELOCITY;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LAUNCHER_TARGET_VELOCITY;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.ROTATE_SPEED;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.TICKS_PER_MM;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.TIME_BETWEEN_SHOTS;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.TRACK_WIDTH_MM;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.robotRotationAngle;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.shotsToFire;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.launcher;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFeeder;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftRear;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFeeder;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightRear;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.DRIVE_SPEED;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.FEED_TIME_SECONDS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_MIN_VELOCITY;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_TARGET_VELOCITY;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.ROTATE_SPEED;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.TICKS_PER_MM;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.TIME_BETWEEN_SHOTS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.TRACK_WIDTH_MM;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.robotRotationAngle;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.shotsToFire;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
