@@ -26,7 +26,6 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 public class CompDriveV3 extends OpMode {
     ElapsedTime feederTimer = new ElapsedTime();
     Input input = new Input();
-
     enum LaunchStateTelop {
         IDLE,
         SPIN_UP,
@@ -45,26 +44,37 @@ public class CompDriveV3 extends OpMode {
     }
 
     @Override
+    public void start() {
+        intakeFeeder.setPosition(0);
+    }
+
+    @Override
     public void loop() {
 
         input.pollGamepad(gamepad1);
 
         //intake stuff
         if (input.left_bumper.held()) {
-            intake.setPower(0.65);
+            if(intakeFeeder.getPosition() != 0.2) {
+                intakeFeeder.setPosition(0.2);
+                intake.setPower(0.2);
+            } else {
+                intake.setPower(0.85);
+            }
         } else {
             intake.setPower(0);
         }
-        if (input.a.down()) {
-            if(intakeFeeder.getPosition() != 0){
-                intakeFeeder.setPosition(0);
-            } else {
-                intakeFeeder.setPosition(0.65);
-            }
-        } else {
 
+        if (input.a.down()) {
+            if(intakeFeeder.getPosition() != 0.2){
+                intakeFeeder.setPosition(0.2);
+            } else {
+                intakeFeeder.setPosition(0.9);
+            }
         }
 
+        telemetry.addData("Intake Feeder Pos:",
+                intakeFeeder.getPosition());
         /*
          * Here we give the user control of the speed of the launcher motor without automatically
          * queuing a shot.
