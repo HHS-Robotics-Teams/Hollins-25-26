@@ -46,7 +46,6 @@ public class LauncherUtil {
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime resetTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
-    public LaunchState getLaunchState()    {return launchState;}
 
     public LauncherUtil(String color, boolean isAuto) {
         aprilTagMethod = new AprilTagMethod();
@@ -54,6 +53,7 @@ public class LauncherUtil {
         this.color = color;
         this.isAuto = isAuto;
     }
+
     public void cancelLaunch() {
         launchState = LaunchState.FIND_TAG;
         LauncherMotor.setPower(LAUNCHER_IDLE);
@@ -64,22 +64,34 @@ public class LauncherUtil {
         }
         switch (launchState) {
             case EXIT:
+                if (!aprilTagMethod.isTagVisible() ) {
+                    return "No Tag Visible";
+                }
                 launchState = LaunchState.FIND_TAG;
                 LauncherMotor.setPower(LAUNCHER_IDLE);
                 LAUNCHER_RUN = false;
                 break;
             case FIND_TAG:
+                if (!aprilTagMethod.isTagVisible() ) {
+                    return "No Tag Visible";
+                }
                 if (aprilTagMethod.isTagVisible() && aprilTagMethod.tagMatchesAlliance(color)) {
                     launchState = LaunchState.SPIN_UP_AND_MOVE;
                 }
                 break;
             case SPIN_UP_AND_MOVE:
+                if (!aprilTagMethod.isTagVisible() ) {
+                    return "No Tag Visible";
+                }
                 if ((moveToLaunch() || isAuto)&&isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
                     launchTimer.reset();
                 }
                 break;
             case LAUNCH:
+                if (!aprilTagMethod.isTagVisible() ) {
+                    return "No Tag Visible";
+                }
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 LeftSideFeedRoller.setPower(1);
                 if (launchTimer.seconds() >= 0.8) {
@@ -91,17 +103,26 @@ public class LauncherUtil {
                 }
                 break;
             case RESET_SHOT:
+                if (!aprilTagMethod.isTagVisible() ) {
+                    return "No Tag Visible";
+                }
                 LeftSideFeedRoller.setPower(0);
                 resetTimer.reset();
                 launchState = LaunchState.DISTANCE_CHECK;
                 break;
             case INTAKE:
+                if (!aprilTagMethod.isTagVisible() ) {
+                    return "No Tag Visible";
+                }
                 IntakeMotor.setPower(INTAKE_POWER);
-                if (intakeTimer.seconds() >= .75) {
+                if (intakeTimer.seconds() >= 1) {
                     launchState = LaunchState.FINAL_CHECK;
                 }
                 break;
             case FINAL_CHECK:
+                if (!aprilTagMethod.isTagVisible() ) {
+                    return "No Tag Visible";
+                }
                 IntakeMotor.setPower(0);
                 if (moveToLaunch()&&isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
@@ -110,12 +131,18 @@ public class LauncherUtil {
                 }
                 break;
             case STUCK_MIDDLE:
+                if (!aprilTagMethod.isTagVisible() ) {
+                    return "No Tag Visible";
+                }
                 IntakeMotor.setPower(0);
                 if (launchTimer.seconds() >= 0.4) {
                     launchState = LaunchState.INTAKE;
                 }
                 break;
             case DISTANCE_CHECK:
+                if (!aprilTagMethod.isTagVisible() ) {
+                    return "No Tag Visible";
+                }
                 if (resetTimer.seconds() >= 0.25) {
                 if (rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 8 && leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 8) {
                     if (rearDistance.getDistance(DistanceUnit.INCH) <= 2) {
@@ -149,6 +176,9 @@ public class LauncherUtil {
     double range;
     double phi;
     private boolean moveToLaunch() {
+        if (!aprilTagMethod.isTagVisible() ) {
+            return false;
+        }
         theta = aprilTagMethod.getTagBearing();
         range = aprilTagMethod.getTagDistance()+2;
         double margin = 3;
@@ -167,15 +197,15 @@ public class LauncherUtil {
             margin = 6;
         }
         if (theta >= phi + 2) {
-            leftFront.setPower (-0.35);
-            rightBack.setPower ( 0.35);
-            leftBack.setPower  (-0.35);
-            rightFront.setPower( 0.35);
+            leftFront.setPower (-0.30);
+            rightBack.setPower ( 0.30);
+            leftBack.setPower  (-0.30);
+            rightFront.setPower( 0.30);
         } else if (theta <= phi - 2) {
-            leftFront.setPower ( 0.35);
-            rightBack.setPower (-0.35);
-            leftBack.setPower  ( 0.35);
-            rightFront.setPower(-0.35);
+            leftFront.setPower ( 0.30);
+            rightBack.setPower (-0.30);
+            leftBack.setPower  ( 0.30);
+            rightFront.setPower(-0.30);
         } else {
             leftFront.setPower (0);
             rightBack.setPower (0);
