@@ -34,5 +34,12 @@ public class DrivetrainTest extends OpMode {
         if (input.a.down()){
             rightFront.setPower(.5);
         }
+        if (input.left_bumper.down()){
+            leftFront.setPower(0);
+            leftRear.setPower(0);
+            rightRear.setPower(0);
+            rightFront.setPower(0);
+        }
+
     }
 }
