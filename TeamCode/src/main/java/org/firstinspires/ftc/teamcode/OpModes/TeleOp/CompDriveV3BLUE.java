@@ -88,7 +88,8 @@ public class CompDriveV3BLUE extends OpMode {
         /* ---------- Drivetrain ---------- */
 
         if (input.start.down()) {
-            imu.resetYaw(); imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
+            imu.resetYaw();
+            imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
         }
 
         //Drivetrain movement values

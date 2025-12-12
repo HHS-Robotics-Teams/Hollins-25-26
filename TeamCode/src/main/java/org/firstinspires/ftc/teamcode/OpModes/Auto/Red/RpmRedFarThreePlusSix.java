@@ -94,7 +94,7 @@ public class RpmRedFarThreePlusSix extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(63.5, 6, Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), 13/2, Math.toRadians(180)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
@@ -102,23 +102,23 @@ public class RpmRedFarThreePlusSix extends OpMode {
                 .splineToLinearHeading(redFarLaunchPose, Math.toRadians(175))
                 .build();
         driveToIntakeOne = drive.actionBuilder(redFarLaunchPose)
-                .splineToLinearHeading(new Pose2d(39,30,Math.toRadians(90)),Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(40,30,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(36)
                 .waitSeconds(.3)
                 .lineToY(40)
                 .waitSeconds(.3)
                 .lineToY(46)
                 .build();
-        driveToLaunchOne = factory.redFarLaunchPath(new Pose2d(36, 46,Math.toRadians( 90)));
+        driveToLaunchOne = factory.redFarLaunchPath(new Pose2d(40, 46,Math.toRadians( 90)));
         driveToIntakeTwo = drive.actionBuilder(redFarLaunchPose)
-                .splineToLinearHeading(new Pose2d(15,30,Math.toRadians(90)),Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(17,30,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(36)
                 .waitSeconds(.3)
                 .lineToY(40)
                 .waitSeconds(.3)
                 .lineToY(46)
                 .build();
-        driveToLaunchThree = factory.redFarLaunchPath(new Pose2d(12,46,Math.toRadians(90)));
+        driveToLaunchThree = factory.redFarLaunchPath(new Pose2d(17,46,Math.toRadians(90)));
     }
 
     @Override
@@ -155,7 +155,7 @@ public class RpmRedFarThreePlusSix extends OpMode {
                 }
                 break;
             case LAUNCH_ONE:
-                if(launchTimer.seconds() >= 1){ // do not change this time
+                if(launchTimer.seconds() >= 1.2){ // do not change this time
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
                     LeftSideFeedRoller.setPower(0);
@@ -165,11 +165,11 @@ public class RpmRedFarThreePlusSix extends OpMode {
                 break;
             case RESET_ONE:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-                IntakeMotor.setPower(0);
                 if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR) && ( intakeTimer.seconds() >= 0.75)){
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_TWO;
+                    IntakeMotor.setPower(0);
                     launchTimer.reset();
 
                 }

@@ -141,7 +141,7 @@ public class PathFactory {
     }
     public Action redFarLaunchPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(152)), Math.toRadians(startPose.heading.minus(Rotation2d.exp(0))))
+                .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(175)), Math.toRadians(startPose.heading.minus(Rotation2d.exp(0))))
                 .build();
     }
 }
