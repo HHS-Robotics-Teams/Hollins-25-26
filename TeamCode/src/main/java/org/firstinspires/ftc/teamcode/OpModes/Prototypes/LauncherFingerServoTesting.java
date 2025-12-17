@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 //testing opmode disabled
-@Disabled
 @TeleOp
+@Disabled
 @Deprecated
 public class LauncherFingerServoTesting extends OpMode {
 

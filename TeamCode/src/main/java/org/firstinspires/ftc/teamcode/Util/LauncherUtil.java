@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Util;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
@@ -14,6 +15,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_HOOD_UP_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_FAR;
@@ -72,8 +74,9 @@ public class LauncherUtil {
                 LAUNCHER_RUN = false;
                 break;
             case FIND_TAG:
+                boolean a = alignHood();
                 if (!aprilTagMethod.isTagVisible() ) {
-                    return "No Tag Visible";
+                    return "No Tag Visible\nHood Alignment Status: " + a;
                 }
                 if (aprilTagMethod.isTagVisible() && aprilTagMethod.tagMatchesAlliance(color)) {
                     launchState = LaunchState.SPIN_UP_AND_MOVE;
@@ -83,7 +86,7 @@ public class LauncherUtil {
                 if (!aprilTagMethod.isTagVisible() ) {
                     return "No Tag Visible";
                 }
-                if ((moveToLaunch() || isAuto)&&isSpunUp()) {
+                if ((moveToLaunch() || isAuto) && isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
                     launchTimer.reset();
                 }
@@ -217,6 +220,26 @@ public class LauncherUtil {
     }
     private boolean isSpunUp() {
         LauncherMotor.setVelocity(target);
+        if(!alignHood()) {
+            return false;
+        }
+
         return abs(LauncherMotor.getVelocity() - target) <= LAUNCH_TICK_VEL_THRESHOLD;
+    }
+    double hoodTarget = LAUNCHER_HOOD_UP_POS;
+    double hoodTicksPerInchRange = 5; //temp
+    double maxRange = 100; //temp
+    //supposed to return false if not aligned
+    //run servo to pos
+    //and then return true
+    private boolean alignHood() {
+        if (!aprilTagMethod.isTagVisible() ) {
+            return false;
+        }
+        hoodTarget = LAUNCHER_HOOD_UP_POS;
+        range = aprilTagMethod.getTagDistance();
+        hoodTarget -= (maxRange - range) * hoodTicksPerInchRange;
+        LauncherHoodServo.setPosition(hoodTarget);
+        return abs(LauncherHoodServo.getPosition() - hoodTarget) <= 0.03;
     }
 }

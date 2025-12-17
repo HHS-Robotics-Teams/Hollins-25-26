@@ -21,7 +21,7 @@ public class Constants {
 
     public static final double LAUNCHER_FINGER_UP_POS = 0.6;
 
-    public static final double LAUNCHER_FINGER_DOWN_POS = 1;
+    public static final double LAUNCHER_FINGER_DOWN_POS = 0.9;
     public static final double LAUNCHER_HOOD_UP_POS = 0.7;
     public static final double LAUNCHER_HOOD_DOWN_POS = 0;
     public static final double SAFETY_HOLDING = 0.9;

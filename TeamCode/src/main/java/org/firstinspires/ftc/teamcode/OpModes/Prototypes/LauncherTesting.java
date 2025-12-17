@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
 
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.DriveSlowdown;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
@@ -23,8 +22,8 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 //testing opmode disabled
 
 @TeleOp
-//@Disabled
-//@Deprecated
+@Disabled
+@Deprecated
 public class LauncherTesting extends OpMode {
 
 
