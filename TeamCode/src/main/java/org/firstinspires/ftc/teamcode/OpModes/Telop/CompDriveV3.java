@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Telop;
 
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.imu;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.intake;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.intakeFeeder;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.launcher;
@@ -19,18 +20,23 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @TeleOp
 public class CompDriveV3 extends OpMode {
     ElapsedTime feederTimer = new ElapsedTime();
+    ElapsedTime intakeTimer = new ElapsedTime();
     Input input = new Input();
     enum LaunchStateTelop {
         IDLE,
         SPIN_UP,
         LAUNCH,
         LAUNCHING,
+        RESET,
     }
 
     LaunchStateTelop launchState;
@@ -65,6 +71,11 @@ public class CompDriveV3 extends OpMode {
             intake.setPower(0);
         }
 
+
+
+
+
+
         if (input.a.down()) {
             if(intakeFeeder.getPosition() != 0.2){
                 intakeFeeder.setPosition(0.2);
@@ -89,20 +100,30 @@ public class CompDriveV3 extends OpMode {
          * Now we call our "Launch" function.
          */
         launch(gamepad1.rightBumperWasPressed());
+//
+        double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
+        double x = gamepad1.left_stick_x; // Counteract imperfect strafing
+        double rx = gamepad1.right_stick_x * 0.8;
 
-        double y = gamepad1.left_stick_y; // Remember, Y stick value is reversed
-        double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-        double rx = gamepad1.right_stick_x;
+        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double rotX = x * Math.cos(-heading) - y * Math.sin(-heading);
+        double rotY = x * Math.sin(-heading) + y * Math.cos(-heading);
+
+        rotX *= 1.1;
 
         // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
 
-        double frontLeftPower = (y + x + rx) / denominator;
-        double backLeftPower = (y - x + rx) / denominator;
-        double frontRightPower = (y - x - rx) / denominator;
-        double backRightPower = (y + x - rx) / denominator;
+        double frontLeftPower = (rotY + rotX + rx) / denominator;
+        double backLeftPower = (rotY - rotX + rx) / denominator;
+        double frontRightPower = (rotY - rotX - rx) / denominator;
+        double backRightPower = (rotY + rotX - rx) / denominator;
+
+        if(gamepad1.start){
+            imu.resetYaw();
+        }
 
         //todo add slowdown code
 
@@ -154,8 +175,21 @@ public class CompDriveV3 extends OpMode {
                     launchState = LaunchStateTelop.IDLE;
                     leftFeeder.setPower(STOP_SPEED);
                     rightFeeder.setPower(STOP_SPEED);
+                    intakeTimer.reset();
+//                    launchState = LaunchStateTelop.RESET;
                 }
                 break;
+
+//            case RESET:
+//                if(intakeTimer.seconds()>= 0.5) {
+//                    if (intakeFeeder.getPosition() == 0.2) {
+//
+//                        intakeFeeder.setPosition(0.9);
+//                        launchState = LaunchStateTelop.LAUNCHING;
+//
+//                    }
+//                }
+//                break;
         }
     }
 }

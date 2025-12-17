@@ -4,10 +4,12 @@ package org.firstinspires.ftc.teamcode._Proccedural;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -26,7 +28,7 @@ public class Components {
     public static CRServo rightFeeder;
     public static DcMotor intake;
     public static Servo intakeFeeder;
-
+    public static IMU imu;
 
     /*
         Method to initialize components
@@ -70,6 +72,8 @@ public class Components {
         intake.setDirection(FORWARD);
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        imu = hardwareMap.get(IMU.class, "imu");
+        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
     }
 
 

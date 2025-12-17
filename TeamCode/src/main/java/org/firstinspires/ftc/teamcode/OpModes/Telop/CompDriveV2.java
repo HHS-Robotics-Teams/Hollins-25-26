@@ -13,13 +13,14 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_MIN
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_TARGET_VELOCITY;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.STOP_SPEED;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
-
+@Disabled
 @TeleOp
 public class CompDriveV2 extends OpMode {
     ElapsedTime feederTimer = new ElapsedTime();
