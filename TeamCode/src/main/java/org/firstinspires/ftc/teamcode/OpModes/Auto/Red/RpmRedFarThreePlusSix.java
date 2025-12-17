@@ -268,7 +268,7 @@ public class RpmRedFarThreePlusSix extends OpMode {
                 break;
             case RESET_FIVE:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR) && (intakeTimer.seconds() >= 1)) {
+                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR) && (intakeTimer.seconds() >= 1.2)) {
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     IntakeMotor.setPower(0);
                     LeftSideFeedRoller.setPower(1);

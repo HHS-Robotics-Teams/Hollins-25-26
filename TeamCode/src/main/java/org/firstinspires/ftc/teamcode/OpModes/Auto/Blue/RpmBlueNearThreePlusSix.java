@@ -84,6 +84,7 @@ public class RpmBlueNearThreePlusSix extends OpMode {
     Action driveToLaunchOne;
     Action driveToIntakeTwo;
     Action driveToLaunchThree;
+    Action park;
     PathFactory factory;
 
 
@@ -111,6 +112,7 @@ public class RpmBlueNearThreePlusSix extends OpMode {
         driveToIntakeTwo = factory.bluePGPPickupPath(blueNearLaunchPose);
         telemetry.addLine("Trajectory 3 built");
         driveToLaunchThree = factory.blueNearLaunchPath(bluePGPPickupStartPose);
+        park = factory.bluePPGPickupPath(blueNearLaunchPose);
         telemetry.addLine("Trajectory 4 built");
         telemetry.addLine("Ready to Start");
     }
@@ -375,6 +377,7 @@ public class RpmBlueNearThreePlusSix extends OpMode {
                 }
                 break;
             case END:
+                Actions.runBlocking(park);
                 requestOpModeStop();
                 break;
         }
