@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
 
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.DriveSlowdown;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_HOOD_DOWN_POS;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
@@ -21,8 +23,8 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 //testing opmode disabled
 
 @TeleOp
-@Disabled
-@Deprecated
+//@Disabled
+//@Deprecated
 public class LauncherTesting extends OpMode {
 
 
@@ -41,6 +43,7 @@ public class LauncherTesting extends OpMode {
     //public static CRServo RightSideFeedRoller;
     //public static  CRServo IntakeSecondLevelServo;
     private static Servo LauncherFingerServo;
+    private static Servo LauncherHoodServo;
     //power
     private double power = 0.25;
     private double delta = 0.05;
@@ -52,6 +55,8 @@ public class LauncherTesting extends OpMode {
         launcher_motor.setDirection(DcMotorSimple.Direction.REVERSE);
         intake_motor = hardwareMap.get(DcMotor.class, "IntakeMotor");
         intake_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        LauncherHoodServo = hardwareMap.get(Servo.class, "LauncherHoodServo");
 
         LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
         LeftSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -83,6 +88,7 @@ public class LauncherTesting extends OpMode {
         launcher_motor.setPower(power);
         intake_motor.setPower(1);
         LeftSideFeedRoller.setPower(1);
+        LauncherHoodServo.setPosition(LAUNCHER_HOOD_DOWN_POS);
         //RightSideFeedRoller.setPower(1);
 
     }
@@ -119,12 +125,18 @@ public class LauncherTesting extends OpMode {
         } else {
             LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
         }
-
-        //change power
         if(input.x.down()){
-            power += delta;
+            LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()+0.05);
         }
         if(input.y.down()){
+            LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()-0.05);
+        }
+
+        //change power
+        if(input.dpad_up.down()){
+            power += delta;
+        }
+        if(input.dpad_down.down()){
             power -= delta;
         }
 
@@ -139,12 +151,12 @@ public class LauncherTesting extends OpMode {
             }
         }
 
-        if(input.dpad_up.down()){
-            delta += 0.01;
-        }
-        if(input.dpad_down.down()){
-            delta -= 0.01;
-        }
+//        if(input.dpad_up.down()){
+//            delta += 0.01;
+//        }
+//        if(input.dpad_down.down()){
+//            delta -= 0.01;
+//        }
 
         input.pollGamepad(gamepad1);
 
@@ -190,6 +202,7 @@ public class LauncherTesting extends OpMode {
         telemetry.addData("Current power: ", power);
         telemetry.addData("Current speed: ", launcher_motor.getVelocity());
         telemetry.addData("Current delta: ", delta);
+        telemetry.addData("Shooter Hood Pos", LauncherHoodServo.getPosition());
         telemetry.addLine();
         telemetry.addLine("dpad up to increase delta\ndpad down to decrease delta\na to toggle on/off\nx to increase power by delta\ny to decrease power by delta\nb to reverse");
     }

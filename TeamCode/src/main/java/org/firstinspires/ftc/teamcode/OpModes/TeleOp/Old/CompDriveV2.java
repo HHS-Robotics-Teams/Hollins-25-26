@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.TeleOp.Old;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 
@@ -20,6 +21,8 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_HOOD_DOWN_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_HOOD_UP_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
@@ -113,6 +116,12 @@ public class CompDriveV2 extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
+        if (input.dpad_left.down()) {
+            LauncherHoodServo.setPosition(.3);
+        }
+        if (input.dpad_right.down()){
+            LauncherHoodServo.setPosition(LAUNCHER_HOOD_UP_POS);
+        }
 
         /* ---------- Launch ---------- */
         if (input.right_trigger.down()) {

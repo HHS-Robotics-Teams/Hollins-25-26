@@ -37,6 +37,7 @@ public class Components {
     public static Servo LauncherFingerServo;
     public static Servo LauncherSafetyServo;
     public static CRServo LeftSideFeedRoller;
+    public static Servo LauncherHoodServo;
 
     //Instantiate Sensors
     public static IMU imu;
@@ -85,6 +86,7 @@ public class Components {
         IntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //Initialize Servos
+        LauncherHoodServo = hardwareMap.get(Servo.class, "LauncherHoodServo");
         LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
         LauncherSafetyServo = hardwareMap.get(Servo.class, "LauncherSafetyServo");
         LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
