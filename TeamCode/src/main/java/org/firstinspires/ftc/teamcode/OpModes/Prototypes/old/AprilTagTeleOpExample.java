@@ -1,6 +1,6 @@
 // Example of a TeleOp OpMode using your new class
 
-package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
+package org.firstinspires.ftc.teamcode.OpModes.Prototypes.old;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

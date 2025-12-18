@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
+package org.firstinspires.ftc.teamcode.OpModes.Prototypes.old;
 
-import static org.firstinspires.ftc.teamcode.Util.IntakeUtil.initIntake;
-import static org.firstinspires.ftc.teamcode.Util.IntakeUtil.updateIntake;
+import static org.firstinspires.ftc.teamcode.Util.oldUtil.IntakeUtil.initIntake;
+import static org.firstinspires.ftc.teamcode.Util.oldUtil.IntakeUtil.updateIntake;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_PPR;
 

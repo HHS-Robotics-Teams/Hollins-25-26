@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Util;
+package org.firstinspires.ftc.teamcode.Util.oldUtil;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_HOLD_POS;
@@ -7,6 +7,7 @@ import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@Deprecated
 public class IntakeUtil {
     static int interval = 100;
     public static void initIntake() {
