@@ -49,6 +49,10 @@ public class LauncherUtil {
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime resetTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
+    public void setTarget(double target) {
+        this.target = target;
+    }
+
     public LauncherUtil(String color, boolean isAuto) {
         aprilTagMethod = new AprilTagMethod();
         launchState = LaunchState.FIND_TAG;
@@ -90,7 +94,7 @@ public class LauncherUtil {
                 if (!aprilTagMethod.isTagVisible() ) {
                     return "No Tag Visible";
                 }
-                if ((moveToLaunch() || isAuto) && isSpunUp()) {
+                if ((moveToLaunch()) && isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
                     launchTimer.reset();
                 }
@@ -101,12 +105,10 @@ public class LauncherUtil {
                 }
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 LeftSideFeedRoller.setPower(1);
-                if (launchTimer.seconds() >= 0.5) {
+                if (launchTimer.seconds() >= 0.4) {
                     launchState = LaunchState.RESET_SHOT;
-                    resetTimer.reset();
-                }
-                if (launchTimer.seconds() >= 0.2) {
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+                    resetTimer.reset();
                 }
                 break;
             case RESET_SHOT:
@@ -122,12 +124,17 @@ public class LauncherUtil {
                     return "No Tag Visible";
                 }
                 IntakeMotor.setPower(INTAKE_POWER);
-                if (intakeTimer.seconds() >= 0.5) {
+                if (intakeTimer.seconds() >= 0.4) {
                     launchState = LaunchState.FINAL_CHECK;
                 }
                 break;
             case FINAL_CHECK:
                 if (!aprilTagMethod.isTagVisible() ) {
+                    if(isAuto){
+                        launchState = LaunchState.LAUNCH;
+                        launchTimer.reset();
+                        intakeTimer.reset();
+                    }
                     return "No Tag Visible";
                 }
                 IntakeMotor.setPower(0);
@@ -141,22 +148,19 @@ public class LauncherUtil {
                 if (!aprilTagMethod.isTagVisible() ) {
                     return "No Tag Visible";
                 }
-                if (resetTimer.seconds() >= 0.25) {
-                if (rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 8 && leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 8) {
+                if (resetTimer.seconds() >= 0.4) {
                     if (rearDistance.getDistance(DistanceUnit.INCH) <= 2) {
                         launchState = LaunchState.EXIT;
                     }
                     else if (rearDistance.getDistance(DistanceUnit.INCH) <= 6) {
                         launchState = LaunchState.FINAL_CHECK;
-                    } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 12) {
+                    } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 11) {
                         launchState = LaunchState.INTAKE;
+                        intakeTimer.reset();
                     } else {
                         launchState = LaunchState.EXIT;
                     }
-                } else {
-                    intakeTimer.reset();
-                    launchState = LaunchState.INTAKE;
-                }
+                break;
                 }
             return "Launch In Progress, current state: " + launchState
                     + "\n" + "PHI: " + phi
@@ -171,6 +175,9 @@ public class LauncherUtil {
     double range;
     double phi;
     private boolean moveToLaunch() {
+        if(isAuto){
+            return true;
+        }
         if (!aprilTagMethod.isTagVisible() ) {
             return false;
         }
@@ -184,7 +191,7 @@ public class LauncherUtil {
                 phi = 2.5;
             }
         } else {
-            target = LAUNCH_TICK_VELOCITY_NEAR + 75;
+            target = LAUNCH_TICK_VELOCITY_NEAR + 100;
             phi = 0;
             if (color.equals("RED")) {
               phi = 1;
@@ -228,17 +235,7 @@ public class LauncherUtil {
     //and then return true
     ElapsedTime alignTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     private boolean alignHood() {
-        if (!aprilTagMethod.isTagVisible() ) {
-            return false;
-        }
-        hoodTarget = LAUNCHER_HOOD_UP_POS;
-        range = aprilTagMethod.getTagDistance();
-        hoodTarget -= (maxRange - range) * hoodTicksPerInchRange;
-        LauncherHoodServo.setPosition(hoodTarget);
-        if(abs(hoodTarget - lastTarget) >= 0.02){
-            alignTimer.reset();
-        }
-        lastTarget = hoodTarget;
-        return alignTimer.seconds() >= 0.2;
+        LauncherHoodServo.setPosition(0.2);
+        return true;
     }
 }

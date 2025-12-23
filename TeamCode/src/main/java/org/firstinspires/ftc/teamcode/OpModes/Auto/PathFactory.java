@@ -37,7 +37,7 @@ public class PathFactory {
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
         }
     });
-    public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-155));
+    public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-152.5));
     public static Pose2d blueNearLaunchPose = new Pose2d(-12,-10,Math.toRadians(-130));
     public static Pose2d redFarLaunchPose = new Pose2d(50, 10, Math.toRadians(155));
     public static Pose2d redNearLaunchPose = new Pose2d(-24,20,Math.toRadians(130));

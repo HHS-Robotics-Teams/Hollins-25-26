@@ -104,12 +104,8 @@ public class RpmBlueFarThreePlusSix extends OpMode {
                 .afterDisp(1,IntakePickup)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-41)
-//                .lineToY(-36)
-//                .waitSeconds(.3)
-//                .lineToY(-40)
                 .waitSeconds(.3)
                 .lineToY(-48)
-               // .lineToY(-46)
                 .build();
         driveToLaunchOne = factory.blueFarLaunchPath(new Pose2d(39,-48,Math.toRadians(-90)));
         driveToIntakeTwo = drive.actionBuilder(blueFarLaunchPose)

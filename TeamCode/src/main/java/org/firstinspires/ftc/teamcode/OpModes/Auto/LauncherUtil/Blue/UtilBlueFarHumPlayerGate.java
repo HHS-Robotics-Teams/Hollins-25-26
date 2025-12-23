@@ -2,18 +2,12 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto.LauncherUtil.Blue;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueFarLaunchPose;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FAR_TARGET;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_FAR;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -33,27 +27,6 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 @Deprecated
 public class UtilBlueFarHumPlayerGate extends OpMode {
     MecanumDrive drive;
-
-    InstantAction runIntake = new InstantAction(new InstantFunction() {
-        @Override
-        public void run() {
-            LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-            //IntakeMotor.setPower(.1);
-            LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-            LeftSideFeedRoller.setPower(0);
-            LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-        }
-    });
-
-    InstantAction IntakePickup = new InstantAction(new InstantFunction() {
-        @Override
-        public void run() {
-            IntakeMotor.setPower(INTAKE_POWER);
-            LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-            LeftSideFeedRoller.setPower(0);
-            LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-        }
-    });
 
     enum AutoState{
         START,
@@ -89,6 +62,12 @@ public class UtilBlueFarHumPlayerGate extends OpMode {
         launcherUtil = new LauncherUtil("BLUE", true);
         turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -(13 / 2), Math.toRadians(180)))
                 .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
+                .afterDisp(0.01, new InstantFunction() {
+                    @Override
+                    public void run() {
+                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
+                    }
+                })
                 .build();
         driveToIntakeOne = drive.actionBuilder(blueFarLaunchPose)
                 .afterDisp(40, new InstantFunction() {
@@ -97,9 +76,6 @@ public class UtilBlueFarHumPlayerGate extends OpMode {
                         IntakeMotor.setPower(INTAKE_POWER);
                     }
                 })
-                //todo this
-                .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
-                .waitSeconds(4)
                 .strafeToLinearHeading(new Vector2d(60,-56),Math.toRadians(-90))
                 .waitSeconds(0.2)
                 .lineToYConstantHeading(-58)
@@ -118,6 +94,7 @@ public class UtilBlueFarHumPlayerGate extends OpMode {
 
     @Override
     public void start() {
+        launcherUtil.setTarget(LAUNCH_TICK_VELOCITY_FAR + 125);
         LauncherMotor.setVelocity(LAUNCHER_FAR_TARGET);
         Actions.runBlocking(turnToLaunch);
     }

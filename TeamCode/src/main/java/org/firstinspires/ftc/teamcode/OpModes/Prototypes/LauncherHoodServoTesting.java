@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -44,7 +40,6 @@ public class LauncherHoodServoTesting extends OpMode {
         telemetry.addLine("X to increase");
         telemetry.addLine("Y to decrease");
         telemetry.addData("Launcher Hood Pos: ", LauncherHoodServo.getPosition());
-        telemetry.addData("Shooter saftey servo pos", LauncherSafetyServo.getPosition());
         telemetry.addLine("hold A to run feed rollers");
         telemetry.addLine("left bumper to decrease power");
         telemetry.addLine("right bumper to increase power");
