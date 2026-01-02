@@ -64,8 +64,8 @@ public class PathFactory {
     }
     public Action bluePPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(-13,-32,Math.toRadians(-90)),Math.toRadians(-90))
-                .afterDisp(1, runIntake)
+                .splineToLinearHeading(new Pose2d(-13,-29,Math.toRadians(-90)),Math.toRadians(-90))
+                .afterDisp(.1, runIntake)
                 .waitSeconds(intakeWaitTime)
 //                .lineToY(-34)
 //                .waitSeconds(.4)
