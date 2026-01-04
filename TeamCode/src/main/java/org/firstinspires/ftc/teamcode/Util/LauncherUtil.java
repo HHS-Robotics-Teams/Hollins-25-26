@@ -184,13 +184,28 @@ public class LauncherUtil {
         theta = aprilTagMethod.getTagBearing();
         range = aprilTagMethod.getTagDistance()+2;
         double margin = 3;
-        if (range >= 75) {
+        if (range >= 90) {
             target = LAUNCH_TICK_VELOCITY_FAR + 125;
             phi = 3;
             if (color.equals("RED")) {
                 phi = 2.5;
             }
-        } else {
+        } else if (range < 90 && range > 75){
+            target = LAUNCH_TICK_VELOCITY_NEAR + 150;
+            phi = 0;
+            if (color.equals("RED")) {
+                phi = 1;
+            }
+            margin = 6;
+        } else if (range < 60 && range > 40){
+            target = LAUNCH_TICK_VELOCITY_NEAR;
+            phi = 0;
+            if (color.equals("RED")) {
+                phi = 1;
+            }
+            margin = 6;
+        }
+        else {
             target = LAUNCH_TICK_VELOCITY_NEAR + 100;
             phi = 0;
             if (color.equals("RED")) {

@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
-@Disabled
-@Deprecated
+//@Disabled
+//@Deprecated
 @TeleOp(name = "AprilTag TeleOp Example")
 public class AprilTagTeleOpExample extends LinearOpMode {
 

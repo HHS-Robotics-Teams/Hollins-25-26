@@ -40,9 +40,10 @@ public class PathFactory {
     public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-152.5));
     public static Pose2d blueNearLaunchPose = new Pose2d(-12,-10,Math.toRadians(-130));
     public static Pose2d redFarLaunchPose = new Pose2d(50, 10, Math.toRadians(155));
-    public static Pose2d redNearLaunchPose = new Pose2d(-24,20,Math.toRadians(130));
+    public static Pose2d redNearLaunchPose = new Pose2d(-24,20,Math.toRadians(131));
     public static Pose2d bluePPGPickupStartPose = new Pose2d(-11.75,-30,Math.toRadians(-90));
     public static Pose2d bluePGPPickupStartPose = new Pose2d(11.75,-30,Math.toRadians(-90));
+    public static Pose2d blueParkPath =  new Pose2d(-12,-10,Math.toRadians(-131));
     public static Pose2d redPPGPickupStartPose = new Pose2d(-11.75,30,Math.toRadians(90));
     public static Pose2d redPGPPickupStartPose = new Pose2d(11.75,30,Math.toRadians(90));
     double intakeDriveY = 48;
@@ -76,12 +77,12 @@ public class PathFactory {
     }
     public Action bluePGPPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(12,-32,Math.toRadians(-90)),Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(11,-32,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(1, runIntake)
                 .waitSeconds(intakeWaitTime)
 //                .lineToY(-34)
 //                .waitSeconds(.3)
-                .lineToY(-41)   
+                .lineToY(-41)
 //                .waitSeconds(.35)
                 .lineToY(-56)
                 .build();
@@ -98,6 +99,10 @@ public class PathFactory {
                 .lineToY(-45)
                 .build();
 
+    }public Action blueParkPath(Pose2d startPose) {
+        return drive.actionBuilder(startPose)
+                .splineToLinearHeading(new Pose2d(-13,-40,Math.toRadians(-90)),Math.toRadians(-90))
+                .build();
     }public Action redPPGPickupPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
                 .splineToLinearHeading(new Pose2d(-11.75,30,Math.toRadians(90)),Math.toRadians(90))
