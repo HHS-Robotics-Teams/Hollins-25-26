@@ -50,7 +50,7 @@ public class Components {
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         LauncherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        LauncherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        LauncherMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
