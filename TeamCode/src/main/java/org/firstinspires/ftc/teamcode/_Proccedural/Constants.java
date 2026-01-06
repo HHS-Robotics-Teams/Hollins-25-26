@@ -27,7 +27,7 @@ public class Constants {
     public static final double SAFETY_HOLDING = 0.5;
     public static final double SAFTEY_FIRING = 1.0;
     public static final double FINGER_UP_TIME = 0.75;
-    public static final double CAMERA_START_POS = 0.15;
+    public static final double CAMERA_START_POS = 0.8;
     /* Timings */
     public static double DWELL_TIME = 0.5;
     public static double LAUNCHING_TIME = 1.0;

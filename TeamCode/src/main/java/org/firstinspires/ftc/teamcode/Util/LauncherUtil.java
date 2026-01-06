@@ -70,12 +70,19 @@ public class LauncherUtil {
     public LaunchState getLaunchState() {
         return launchState;
     }
+    boolean cameraTiltDir = false;
     public String runLauncher() {
         if (!aprilTagMethod.isTagVisible() ) {
-            if(cameraTiltServo.getPosition() <= 0.3){
-                cameraTiltServo.setPosition(cameraTiltServo.getPosition() + 0.05);
+            if(cameraTiltServo.getPosition() <= 0.975 && !cameraTiltDir){
+                cameraTiltServo.setPosition(cameraTiltServo.getPosition() + 0.02);
             } else {
-                cameraTiltServo.setPosition(cameraTiltServo.getPosition() - 0.05);
+                cameraTiltServo.setPosition(cameraTiltServo.getPosition() - 0.02);
+                cameraTiltDir = true;
+            }
+            if(cameraTiltDir){
+                if(cameraTiltServo.getPosition() <= 0.7){
+                    cameraTiltDir = false;
+                }
             }
             return "No Tag Visible";
         }
@@ -95,6 +102,18 @@ public class LauncherUtil {
                 }
                 if (aprilTagMethod.isTagVisible() && aprilTagMethod.tagMatchesAlliance(color)) {
                     launchState = LaunchState.SPIN_UP_AND_MOVE;
+                    break;
+                }
+                if(cameraTiltServo.getPosition() <= 0.975 && !cameraTiltDir){
+                    cameraTiltServo.setPosition(cameraTiltServo.getPosition() + 0.02);
+                } else {
+                    cameraTiltServo.setPosition(cameraTiltServo.getPosition() - 0.02);
+                    cameraTiltDir = true;
+                }
+                if(cameraTiltDir){
+                    if(cameraTiltServo.getPosition() <= 0.7){
+                        cameraTiltDir = false;
+                    }
                 }
                 break;
             case SPIN_UP_AND_MOVE:
@@ -208,8 +227,8 @@ public class LauncherUtil {
                 phi = 1;
             }
             margin = 6;
-        } else if (range < 60 && range > 40){
-            target = LAUNCH_TICK_VELOCITY_NEAR;
+        } else if (range < 75 && range > 40){
+            target = LAUNCH_TICK_VELOCITY_NEAR + 75;
             phi = 0;
             if (color.equals("RED")) {
                 phi = 1;
@@ -217,7 +236,7 @@ public class LauncherUtil {
             margin = 6;
         }
         else {
-            target = LAUNCH_TICK_VELOCITY_NEAR + 100;
+            target = LAUNCH_TICK_VELOCITY_NEAR + 25;
             phi = 0;
             if (color.equals("RED")) {
               phi = 1;
