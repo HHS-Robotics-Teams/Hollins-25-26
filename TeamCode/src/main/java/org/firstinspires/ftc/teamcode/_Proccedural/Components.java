@@ -65,8 +65,8 @@ public class Components {
         launcher.setDirection(REVERSE);
 
         // Feeder Servo Settings
-        leftFeeder.setDirection(FORWARD);
-        rightFeeder.setDirection(REVERSE);
+        leftFeeder.setDirection(REVERSE);
+        rightFeeder.setDirection(FORWARD);
 
         // Intake Motor Settings
         intake.setDirection(FORWARD);
