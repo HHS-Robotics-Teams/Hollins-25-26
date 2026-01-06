@@ -37,6 +37,7 @@ public class Components {
     public static Servo LauncherFingerServo;
     public static Servo LauncherSafetyServo;
     public static CRServo LeftSideFeedRoller;
+    public static Servo cameraTiltServo;
     public static Servo LauncherHoodServo;
 
     //Instantiate Sensors
@@ -100,6 +101,7 @@ public class Components {
         rightArtifactCounterDistance = hardwareMap.get(DistanceSensor.class, "rightArtifactCounter");
         leftArtifactCounterDistance = hardwareMap.get(DistanceSensor.class, "leftArtifactCounter");
         rearDistance = hardwareMap.get(DistanceSensor.class, "rearDistance");
+        cameraTiltServo = hardwareMap.get(Servo.class, "cameraTiltServo");
 
         //other
         for (LynxModule m : hardwareMap.getAll(LynxModule.class)){

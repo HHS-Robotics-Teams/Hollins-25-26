@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFin
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
@@ -24,6 +25,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VEL_THRESHOLD;
 import static java.lang.Math.abs;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -70,6 +72,11 @@ public class LauncherUtil {
     }
     public String runLauncher() {
         if (!aprilTagMethod.isTagVisible() ) {
+            if(cameraTiltServo.getPosition() <= 0.3){
+                cameraTiltServo.setPosition(cameraTiltServo.getPosition() + 0.05);
+            } else {
+                cameraTiltServo.setPosition(cameraTiltServo.getPosition() - 0.05);
+            }
             return "No Tag Visible";
         }
         switch (launchState) {
@@ -96,6 +103,10 @@ public class LauncherUtil {
                 }
                 if ((moveToLaunch()) && isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
+                    leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                    rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                    leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                    rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                     launchTimer.reset();
                 }
                 break;
@@ -228,6 +239,10 @@ public class LauncherUtil {
             rightBack.setPower (0);
             leftBack.setPower  (0);
             rightFront.setPower(0);
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             return true;
         }
         return abs(theta - phi) <= margin;
