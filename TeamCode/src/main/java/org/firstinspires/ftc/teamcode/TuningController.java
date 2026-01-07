@@ -20,12 +20,12 @@ public class TuningController {
     // Then we append Z just because we want it to show below the MOTOR_ and TESTING_ because
     // these settings aren't as important
     public static double ZSTATE1_RAMPING_UP_DURATION = 3.5;
-    public static double ZSTATE2_COASTING_1_DURATION = 4;
+    public static double ZSTATE2_COASTING_1_DURATION = 14;
     public static double ZSTATE3_RAMPING_DOWN_DURATION = 2;
-    public static double ZSTATE4_COASTING_2_DURATION = 2;
-    public static double ZSTATE5_RANDOM_1_DURATION = 2;
-    public static double ZSTATE6_RANDOM_2_DURATION = 2;
-    public static double ZSTATE7_RANDOM_3_DURATION = 2;
+    public static double ZSTATE4_COASTING_2_DURATION = 12;
+    public static double ZSTATE5_RANDOM_1_DURATION = 7;
+    public static double ZSTATE6_RANDOM_2_DURATION = 7;
+    public static double ZSTATE7_RANDOM_3_DURATION = 7;
     public static double ZSTATE8_REST_DURATION = 1;
 
     enum State {
