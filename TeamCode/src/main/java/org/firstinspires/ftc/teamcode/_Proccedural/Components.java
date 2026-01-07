@@ -78,7 +78,7 @@ public class Components {
         MotorConfigurationType type = LauncherMotor.getMotorType().clone(); //DO NOT TOUCH
         type.setAchieveableMaxRPMFraction(1.0); //DO NOT TOUCH
         LauncherMotor.setMotorType(type); //DO NOT TOUCH
-        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 1.25, 10, 20)); //DO NOT TOUCH
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 7.5, 10, 20)); //DO NOT TOUCH
 
         //Initialize Intake Motor
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");

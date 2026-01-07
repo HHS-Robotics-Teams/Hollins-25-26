@@ -20,8 +20,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_HOO
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_HOOD_UP_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_FAR;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VEL_THRESHOLD;
 import static java.lang.Math.abs;
 
@@ -73,18 +71,20 @@ public class LauncherUtil {
     boolean cameraTiltDir = false;
     public String runLauncher() {
         if (!aprilTagMethod.isTagVisible() ) {
-            if(cameraTiltServo.getPosition() <= 0.975 && !cameraTiltDir){
+            if(cameraTiltServo.getPosition() <= 0.9 && !cameraTiltDir){
                 cameraTiltServo.setPosition(cameraTiltServo.getPosition() + 0.02);
             } else {
                 cameraTiltServo.setPosition(cameraTiltServo.getPosition() - 0.02);
                 cameraTiltDir = true;
             }
             if(cameraTiltDir){
-                if(cameraTiltServo.getPosition() <= 0.7){
+                if(cameraTiltServo.getPosition() <= 0.65){
                     cameraTiltDir = false;
                 }
             }
             return "No Tag Visible";
+        } else {
+            cameraTiltServo.setPosition(cameraTiltServo.getPosition());
         }
         switch (launchState) {
             case EXIT:
@@ -98,22 +98,24 @@ public class LauncherUtil {
             case FIND_TAG:
                 boolean a = alignHood();
                 if (!aprilTagMethod.isTagVisible() ) {
+                    if(cameraTiltServo.getPosition() <= 0.9 && !cameraTiltDir){
+                        cameraTiltServo.setPosition(cameraTiltServo.getPosition() + 0.02);
+                    } else {
+                        cameraTiltServo.setPosition(cameraTiltServo.getPosition() - 0.02);
+                        cameraTiltDir = true;
+                    }
+                    if(cameraTiltDir){
+                        if(cameraTiltServo.getPosition() <= 0.65){
+                            cameraTiltDir = false;
+                        }
+                    }
                     return "No Tag Visible\nHood Alignment Status: " + a;
+                } else {
+                    cameraTiltServo.setPosition(cameraTiltServo.getPosition());
                 }
                 if (aprilTagMethod.isTagVisible() && aprilTagMethod.tagMatchesAlliance(color)) {
                     launchState = LaunchState.SPIN_UP_AND_MOVE;
                     break;
-                }
-                if(cameraTiltServo.getPosition() <= 0.975 && !cameraTiltDir){
-                    cameraTiltServo.setPosition(cameraTiltServo.getPosition() + 0.02);
-                } else {
-                    cameraTiltServo.setPosition(cameraTiltServo.getPosition() - 0.02);
-                    cameraTiltDir = true;
-                }
-                if(cameraTiltDir){
-                    if(cameraTiltServo.getPosition() <= 0.7){
-                        cameraTiltDir = false;
-                    }
                 }
                 break;
             case SPIN_UP_AND_MOVE:
@@ -135,7 +137,7 @@ public class LauncherUtil {
                 }
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 LeftSideFeedRoller.setPower(1);
-                if (launchTimer.seconds() >= 0.4) {
+                if (launchTimer.seconds() >= 0.2) {
                     launchState = LaunchState.RESET_SHOT;
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     resetTimer.reset();
@@ -154,7 +156,7 @@ public class LauncherUtil {
                     return "No Tag Visible";
                 }
                 IntakeMotor.setPower(INTAKE_POWER);
-                if (intakeTimer.seconds() >= 0.4) {
+                if (intakeTimer.seconds() >= 0.6) {
                     launchState = LaunchState.FINAL_CHECK;
                 }
                 break;
@@ -215,20 +217,17 @@ public class LauncherUtil {
         range = aprilTagMethod.getTagDistance()+2;
         double margin = 3;
         if (range >= 90) {
-            target = LAUNCH_TICK_VELOCITY_FAR + 125;
             phi = 3;
             if (color.equals("RED")) {
                 phi = 2.5;
             }
         } else if (range < 90 && range > 75){
-            target = LAUNCH_TICK_VELOCITY_NEAR + 150;
             phi = 0;
             if (color.equals("RED")) {
                 phi = 1;
             }
             margin = 6;
         } else if (range < 75 && range > 40){
-            target = LAUNCH_TICK_VELOCITY_NEAR + 75;
             phi = 0;
             if (color.equals("RED")) {
                 phi = 1;
@@ -236,7 +235,6 @@ public class LauncherUtil {
             margin = 6;
         }
         else {
-            target = LAUNCH_TICK_VELOCITY_NEAR + 25;
             phi = 0;
             if (color.equals("RED")) {
               phi = 1;
@@ -264,6 +262,7 @@ public class LauncherUtil {
             rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             return true;
         }
+        target = (0.0132275 * range * range) + (1.52116 * range) + 732.98942;
         return abs(theta - phi) <= margin;
     }
     double turnPower = 0.25;
