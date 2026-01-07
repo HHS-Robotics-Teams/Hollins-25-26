@@ -21,8 +21,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
@@ -31,6 +29,7 @@ public class CompDriveV3 extends OpMode {
     ElapsedTime feederTimer = new ElapsedTime();
     ElapsedTime intakeTimer = new ElapsedTime();
     Input input = new Input();
+    boolean reversedDrivetrain = false;
     enum LaunchStateTelop {
         IDLE,
         SPIN_UP,
@@ -72,6 +71,14 @@ public class CompDriveV3 extends OpMode {
         }
 
 
+        if (input.left_trigger.held()) {
+                intake.setPower(-0.85);
+            }
+        } else {
+            intake.setPower(0);
+        }
+
+
 
 
 
@@ -106,8 +113,15 @@ public class CompDriveV3 extends OpMode {
         double rx = gamepad1.right_stick_x * 0.8;
 
         double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        double rotX = x * Math.cos(-heading) - y * Math.sin(-heading);
-        double rotY = x * Math.sin(-heading) + y * Math.cos(-heading);
+        double rotX = x;//x * Math.cos(-heading) - y * Math.sin(-heading);
+        double rotY = y;//x * Math.sin(-heading) + y * Math.cos(-heading);
+
+        if(reversedDrivetrain){
+            rotY = -rotY;
+        }
+        if(input.x.down()){
+            reversedDrivetrain = !reversedDrivetrain;
+        }
 
         rotX *= 1.1;
 
