@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.OpModes.Telop;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.holderServo;
@@ -12,11 +12,13 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.shooting;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.shootingClose;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.shootingFar;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
-
+@Deprecated
+@Disabled
 @TeleOp
 public class CompDrive extends OpMode {
     Input input = new Input();

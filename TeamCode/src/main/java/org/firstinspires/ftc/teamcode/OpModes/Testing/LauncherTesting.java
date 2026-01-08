@@ -1,14 +1,16 @@
-package org.firstinspires.ftc.teamcode.OpModes;
+package org.firstinspires.ftc.teamcode.OpModes.Testing;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.holderServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.initComponents;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
-
+@Deprecated
+@Disabled
 @TeleOp
 public class LauncherTesting extends OpMode {
     Input input = new Input();

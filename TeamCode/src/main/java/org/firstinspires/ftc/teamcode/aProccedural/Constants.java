@@ -1,11 +1,59 @@
 package org.firstinspires.ftc.teamcode.aProccedural;
 
-public class Constants {
-    /* Constants */
-    public static final double shootingFar = .63;
-    public static final double shootingClose = .44;
-    public static final double holding = 0.2;
-    public static final double shooting = 0.1;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeSecondRollerMotor;
 
+public class Constants {
+    /* Old launcher Velocity's */
+        public static final double shootingFar = .63;
+        public static final double shootingClose = .44;
+    /* New Launcher Velocity's */
+        public static final double Idle_Vel = 300;
+        public static final double Launcher_far_Vel = 1200;
+        public static final double Launcher_close_Vel = 800;
+        public static double Launcher_Vel;
+
+    /* Old positions for holder servo */
+       public static final double holding = 0.2;
+       public static final double shooting = 0.1;
+
+    /* New positions for launcher hand servo */
+        public static final double loading = 0;
+        public static final double firing = 1;
+
+    /* Flags */
+        public static boolean intake_reversed = false;
+        public static boolean Launching_Far = false;
+        public static boolean Launching_Close = false;
+
+    /* Intake Power Methods */
+        public static void main_intake_Powers() {
+            if (intake_reversed) {
+            intakeMotor.setPower(-1);
+            intakeSecondRollerMotor.setPower(-1);
+            } else {
+            intakeMotor.setPower(1);
+            intakeSecondRollerMotor.setPower(1);
+            }
+        }
+        public static void first_intake_Powers() {
+            if (intake_reversed) {
+            intakeMotor.setPower(-1);
+            } else {
+            intakeMotor.setPower(1);
+            }
+        }
+        public static void second_intake_Powers() {
+            if (intake_reversed) {
+            intakeSecondRollerMotor.setPower(-1);
+            } else {
+            intakeSecondRollerMotor.setPower(1);
+            }
+        }
+        public static void intake_stop() {
+            intake_reversed = false;
+            intakeMotor.setPower(0);
+            intakeSecondRollerMotor.setPower(0);
+        }
 }
 

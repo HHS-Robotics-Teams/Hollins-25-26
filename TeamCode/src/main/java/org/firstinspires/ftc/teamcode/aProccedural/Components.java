@@ -20,6 +20,8 @@ public class Components {
     public static DcMotor rightRear;
     public static DcMotorEx LauncherMotor;
     public static DcMotor intakeMotor;
+    public static DcMotor intakeSecondRollerMotor;
+    public static Servo LauncherHandServo;
     public static Servo holderServo;
 
 
@@ -37,6 +39,8 @@ public class Components {
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
         LauncherMotor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
+        intakeSecondRollerMotor = hardwareMap.get(DcMotor.class, "intakeSecondRollerMotor");
+        LauncherHandServo = hardwareMap.get(Servo.class, "LauncherHandServo");
         holderServo = hardwareMap.get(Servo.class, "holderServo");
 
 
@@ -49,11 +53,15 @@ public class Components {
 
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        LauncherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         LauncherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        intakeSecondRollerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeSecondRollerMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
 
     }
