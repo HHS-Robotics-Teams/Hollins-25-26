@@ -33,6 +33,9 @@ public class Components {
     //Instantiate Intake Motor
     public static DcMotor IntakeMotor;
 
+    // Instantiate Parking Motor
+    public static DcMotor Parking_Motor;
+
     //Instantiate Servos
     public static Servo LauncherFingerServo;
     public static Servo LauncherSafetyServo;
@@ -85,6 +88,11 @@ public class Components {
         IntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         IntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         IntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        //Initialize Parking Motor
+        Parking_Motor = hardwareMap.get(DcMotorEx.class, "ParkingMotor");
+        Parking_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        Parking_Motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Initialize Servos
         LauncherHoodServo = hardwareMap.get(Servo.class, "LauncherHoodServo");

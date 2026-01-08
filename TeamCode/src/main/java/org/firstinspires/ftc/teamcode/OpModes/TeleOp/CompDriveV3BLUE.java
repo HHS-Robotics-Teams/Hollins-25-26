@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Motor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.imu;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
@@ -22,6 +23,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDL
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN_TWO;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_FAR;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.park_Pos;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
@@ -75,6 +77,10 @@ public class CompDriveV3BLUE extends OpMode {
         LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
         cameraTiltServo.setPosition(CAMERA_START_POS);
+        Parking_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Parking_Motor.setTargetPosition(0);
+        Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Parking_Motor.setPower(1);
     }
 
     @Override
@@ -122,9 +128,9 @@ public class CompDriveV3BLUE extends OpMode {
         //Power fixer
         double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 1);
 
-        if (abs(imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle) <= 30) {
-            strafes = -strafes;
-        }
+//        if (abs(imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle) <= 30) {
+//            strafes = -strafes;
+//        }
 
         //Setting Powers
         leftFront.setPower((forward + strafes + rotates) / denominator);
@@ -177,6 +183,11 @@ public class CompDriveV3BLUE extends OpMode {
             } else {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             }
+        }
+        if (input.dpad_down.down()){
+            Parking_Motor.setTargetPosition(park_Pos);
+        } if (input.dpad_up.down()) {
+            Parking_Motor.setTargetPosition(0);
         }
 
 

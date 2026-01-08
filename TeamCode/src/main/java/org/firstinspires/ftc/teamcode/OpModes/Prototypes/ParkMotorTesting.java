@@ -1,20 +1,10 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
 
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.DriveSlowdown;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_HOOD_DOWN_POS;
-import static java.lang.Math.abs;
-import static java.lang.Math.max;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
@@ -33,6 +23,7 @@ public class ParkMotorTesting extends OpMode {
     @Override
     public void init() {
         Parking_Motor = hardwareMap.get(DcMotorEx.class, "ParkingMotor");
+        Parking_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Parking_Motor.setTargetPosition(0);
         Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
