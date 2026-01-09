@@ -10,10 +10,12 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.intake_stop;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.main_intake_Powers;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.second_intake_Powers;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
+@Disabled
 @TeleOp(name = "Intake Tuning", group = "Tuning")
 public class IntakeTuning extends OpMode {
     Input input = new Input();
@@ -32,13 +34,13 @@ public class IntakeTuning extends OpMode {
         if (input.x.down()){
             intake_reversed = true;
         }
-        if (input.left_trigger.down()) {
+        if (input.left_trigger.held()) {
             main_intake_Powers();
         }
-        if (input.left_bumper.down()) {
+        if (input.left_bumper.held()) {
             first_intake_Powers();
         }
-        if (input.right_bumper.down()) {
+        if (input.right_bumper.held()) {
             second_intake_Powers();
         } else {
             intake_stop();

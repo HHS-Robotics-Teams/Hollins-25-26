@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -54,13 +55,15 @@ public class Components {
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LauncherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        LauncherMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 7.5, 10, 20));
+        //LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intakeSecondRollerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intakeSecondRollerMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeSecondRollerMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
 

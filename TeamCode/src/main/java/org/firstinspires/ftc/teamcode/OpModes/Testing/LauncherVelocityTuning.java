@@ -11,10 +11,12 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.loading;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.main_intake_Powers;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.second_intake_Powers;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
+@Disabled
 @TeleOp
 public class LauncherVelocityTuning extends OpMode {
     Input input = new Input();
@@ -31,23 +33,24 @@ public class LauncherVelocityTuning extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
+
         if (input.dpad_up.down()){
             Velocity += 100;
         } if (input.dpad_down.down()){
             Velocity -= 100;
         }
 
-        if (input.right_trigger.down()){
+        if (input.right_trigger.held()){
             LauncherMotor.setVelocity(Velocity);
         } else {
             LauncherMotor.setVelocity(0);
         }
-        if (input.dpad_up.down()){
+        if (input.x.down()){
             LauncherHandServo.setPosition(firing);
-        } else {
+        } if (input.x.up()) {
             LauncherHandServo.setPosition(loading);
         }
-        if (input.left_trigger.down()){
+        if (input.left_trigger.held()){
             main_intake_Powers();
         }
         else {

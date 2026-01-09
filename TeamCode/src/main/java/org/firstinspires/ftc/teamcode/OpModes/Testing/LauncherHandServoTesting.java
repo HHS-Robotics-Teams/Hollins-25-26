@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode.OpModes.Testing;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHandServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.initComponents;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
-
+@Disabled
 @TeleOp
 public class LauncherHandServoTesting extends OpMode {
     Input input = new Input();
@@ -21,6 +22,7 @@ public class LauncherHandServoTesting extends OpMode {
 
     @Override
     public void loop() {
+        input.pollGamepad(gamepad1);
         if (input.dpad_up.down()) {
             LauncherHandServo.setPosition(LauncherHandServo.getPosition() + .05);
         }

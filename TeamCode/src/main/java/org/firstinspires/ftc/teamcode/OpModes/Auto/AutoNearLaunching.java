@@ -1,42 +1,36 @@
-package org.firstinspires.ftc.teamcode.OpModes.Telop;
+package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHandServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
-import static org.firstinspires.ftc.teamcode.aProccedural.Components.initComponents;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Idle_Vel;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launcher_close_Vel;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launcher_far_Vel;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launching_Far;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launching_Close;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launching_Far;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.TimeOne;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.TimeTwo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.firing;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.first_intake_Powers;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.intake_reversed;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.intake_stop;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.loading;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.main_intake_Powers;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.second_intake_Powers;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.isIntaking;
-import static org.firstinspires.ftc.teamcode.aProccedural.Constants.targetVel;
 
-
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.aProccedural.Input;
+import org.firstinspires.ftc.teamcode.OpModes.Telop.CompDriveV2;
+import org.firstinspires.ftc.teamcode.aProccedural.Components;
 
-@TeleOp
-public class CompDriveV2 extends OpMode {
+@Autonomous
+public class AutoNearLaunching extends OpMode {
+    double targetVel = Launcher_close_Vel;
     ElapsedTime Intake_Time = new ElapsedTime();
     ElapsedTime Launcher_Time = new ElapsedTime();
-    Input input = new Input();
-
+    ElapsedTime Strafe_Time = new ElapsedTime();
+    double timeAtStart;
     public enum LaunchState {
         IDLE,
         SPIN_UP,
@@ -45,114 +39,51 @@ public class CompDriveV2 extends OpMode {
         LOAD_BALL_TWO,
         FIRE_BALL_TWO,
         LOAD_BALL_THREE,
-        FIRE_BALL_THREE
+        FIRE_BALL_THREE,
+        STRAFE,
+        END
     }
 
-    LaunchState state = LaunchState.IDLE;
-
+     LaunchState state = LaunchState.IDLE;
 
     @Override
     public void init() {
-        initComponents(hardwareMap);
+        Components.initComponents(hardwareMap);
         LauncherHandServo.setPosition(loading);
-        telemetry.speak("Robot is spinning Danger Danger");
-        telemetry.update();
     }
-
     @Override
     public void start() {
+        leftFront.setPower(-.2);
+        rightFront.setPower(-.2);
+        leftRear.setPower(-.2);
+        rightRear.setPower(-.2);
+        LauncherMotor.setVelocity(targetVel);
+        timeAtStart = getRuntime();
         state = LaunchState.IDLE;
     }
+
 
     @Override
     public void loop() {
 
-        input.pollGamepad(gamepad1);
-        /* State machine kill and reset */
-        if (input.back.down()) {
-            LauncherHandServo.setPosition(loading);
-            intake_reversed = false;
-            Launching_Far = false;
-            Launching_Close = true;
-            state = LaunchState.IDLE;
-        }
-
-        /* Shooting modes */
-        if (input.a.down()) { // Select Far
-            Launching_Far = true;
-            Launching_Close = false;
-        } else if (input.b.down()) { // Select Close
-            Launching_Close = true;
-            Launching_Far = false;
-        }
-        if (!Launching_Far && !Launching_Close) {
-            Launching_Close = true;
-        }
-        if (input.right_trigger.down()) {
-            state = LaunchState.SPIN_UP;
-        }
-
-        /* Intake */
-        intake_reversed = input.x.held();
-        isIntaking = input.left_trigger.held() || input.left_bumper.held() || input.right_bumper.held();
-
-        if (isIntaking) {
-            LauncherHandServo.setPosition(loading);
-            if (input.left_trigger.held()) main_intake_Powers();
-            else if (input.left_bumper.held()) first_intake_Powers();
-            else if (input.right_bumper.held()) second_intake_Powers();
-        } else {
-            intake_stop();
-        }
-
-//        intake_reversed = input.x.held();
-//
-//        if (input.left_trigger.held()) {
-//            LauncherHandServo.setPosition(loading);
-//            main_intake_Powers();
-//        } if (input.left_bumper.held()){
-//            LauncherHandServo.setPosition(loading);
-//            first_intake_Powers();
-//        } if (input.right_bumper.held()){
-//            LauncherHandServo.setPosition(loading);
-//            second_intake_Powers();
-//        } else {
-//            intake_stop();
-//        }
-
-
-
-        /* ---------- Drivetrain ---------- */
-
-        //Drivetrain movement values
-        double forward = gamepad1.left_stick_y;  //x
-        double strafes = -gamepad1.left_stick_x;  //y
-        double rotates = (gamepad1.right_stick_x * .8); //rx
-
-        //Setting Powers
-        leftFront.setPower(forward + strafes + rotates);
-        rightFront.setPower(forward - strafes - rotates);
-        leftRear.setPower(forward - strafes + rotates);
-        rightRear.setPower(forward + strafes - rotates);
-
         telemetry.addLine("Launching state information");
-        telemetry.addData("Launching Far", Launching_Far);
-        telemetry.addData("Launching Close", Launching_Close);
         telemetry.addData("State", state);
         telemetry.addData("Launcher Velocity: ", LauncherMotor.getVelocity());
-        telemetry.addData("Intake Reversed", intake_reversed);
+        telemetry.addData("Intake time", Intake_Time.seconds());
+        telemetry.addData("Launcher time", Launcher_Time.seconds());
         telemetry.update();
 
-        /* --- Consolidated Launching Logic --- */
-        targetVel = Launching_Far ? Launcher_far_Vel : Launcher_close_Vel;
-
-        if (Launching_Far || Launching_Close) {
             switch (state) {
                 case IDLE:
-                    LauncherMotor.setVelocity(Idle_Vel);
-                    LauncherHandServo.setPosition(loading);
+                    if (getRuntime() > (timeAtStart + 3)) {
+                        leftFront.setPower(0);
+                        rightFront.setPower(0);
+                        leftRear.setPower(0);
+                        rightRear.setPower(0);
+                        LauncherMotor.setPower(0);
+                        LauncherHandServo.setPosition(loading);
+                    }
                     break;
-
                 case SPIN_UP:
                     LauncherMotor.setVelocity(targetVel);
                     LauncherHandServo.setPosition(loading);
@@ -209,16 +140,28 @@ public class CompDriveV2 extends OpMode {
                         LauncherHandServo.setPosition(firing);
                         if (Launcher_Time.seconds() >= TimeOne) {
                             // Reset everything
-                            Launching_Far = false;
-                            Launching_Close = true;
-                            state = LaunchState.IDLE;
+                            Strafe_Time.reset();
+                            state = LaunchState.STRAFE;
                         }
                     }
                     break;
+                case STRAFE:
+                    leftFront.setPower(-.2);
+                    rightFront.setPower(.2);
+                    leftRear.setPower(.2);
+                    rightRear.setPower(-.2);
+                    Strafe_Time.reset();
+                    state = LaunchState.END;
+                    break;
+                case END:
+                    if (Strafe_Time.seconds() >= TimeOne) {
+                        leftFront.setPower(0);
+                        rightFront.setPower(0);
+                        leftRear.setPower(0);
+                        rightRear.setPower(0);
+                    }
+                    break;
             }
-        } else {
-            // Default state when not shooting
-            LauncherMotor.setVelocity(Idle_Vel);
         }
-    }
 }
+

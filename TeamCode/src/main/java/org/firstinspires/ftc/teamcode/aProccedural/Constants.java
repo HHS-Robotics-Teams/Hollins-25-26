@@ -5,26 +5,31 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeSecon
 
 public class Constants {
     /* Old launcher Velocity's */
-        public static final double shootingFar = .63;
-        public static final double shootingClose = .44;
+        public static final double shootingFar = .6;
+        public static final double shootingClose = .3;
     /* New Launcher Velocity's */
-        public static final double Idle_Vel = 300;
-        public static final double Launcher_far_Vel = 1200;
+        public static final double Idle_Vel = 500;
+        public static final double Launcher_far_Vel = 1150;
         public static final double Launcher_close_Vel = 800;
-        public static double Launcher_Vel;
+        public static double targetVel;
 
     /* Old positions for holder servo */
        public static final double holding = 0.2;
        public static final double shooting = 0.1;
 
     /* New positions for launcher hand servo */
-        public static final double loading = 0;
-        public static final double firing = 1;
+        public static final double loading = 0.85;
+        public static final double firing = 0.6;
 
     /* Flags */
         public static boolean intake_reversed = false;
         public static boolean Launching_Far = false;
         public static boolean Launching_Close = false;
+        public static boolean isIntaking;
+
+    /* Timmers */
+        public static final double TimeTwo = 2;
+        public static final double TimeOne = 1 ;
 
     /* Intake Power Methods */
         public static void main_intake_Powers() {
@@ -51,7 +56,6 @@ public class Constants {
             }
         }
         public static void intake_stop() {
-            intake_reversed = false;
             intakeMotor.setPower(0);
             intakeSecondRollerMotor.setPower(0);
         }
