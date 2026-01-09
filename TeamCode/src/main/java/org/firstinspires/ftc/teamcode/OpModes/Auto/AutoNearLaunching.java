@@ -53,10 +53,10 @@ public class AutoNearLaunching extends OpMode {
     }
     @Override
     public void start() {
-        leftFront.setPower(-.2);
-        rightFront.setPower(-.2);
-        leftRear.setPower(-.2);
-        rightRear.setPower(-.2);
+        leftFront.setPower(.2);
+        rightFront.setPower(.2);
+        leftRear.setPower(.2);
+        rightRear.setPower(.2);
         LauncherMotor.setVelocity(targetVel);
         timeAtStart = getRuntime();
         state = LaunchState.IDLE;
@@ -75,20 +75,24 @@ public class AutoNearLaunching extends OpMode {
 
             switch (state) {
                 case IDLE:
-                    if (getRuntime() > (timeAtStart + 3)) {
+                    if (getRuntime() > (timeAtStart + 5)) {
                         leftFront.setPower(0);
                         rightFront.setPower(0);
                         leftRear.setPower(0);
                         rightRear.setPower(0);
                         LauncherMotor.setPower(0);
                         LauncherHandServo.setPosition(loading);
+                        state = LaunchState.SPIN_UP;
                     }
                     break;
                 case SPIN_UP:
                     LauncherMotor.setVelocity(targetVel);
                     LauncherHandServo.setPosition(loading);
-                    Launcher_Time.reset();
                     state = LaunchState.FIRE_BALL;
+                    if (Intake_Time.seconds() >= 2) {
+                        Launcher_Time.reset();
+                        state = LaunchState.FIRE_BALL;
+                    }
                     break;
 
                 case FIRE_BALL:
@@ -105,19 +109,22 @@ public class AutoNearLaunching extends OpMode {
 
                 case LOAD_BALL_TWO:
                     LauncherHandServo.setPosition(loading);
-                    main_intake_Powers(); // Assuming this moves balls to the launcher
-                    if (Intake_Time.seconds() >= TimeTwo) {
-                        Launcher_Time.reset();
-                        state = LaunchState.FIRE_BALL_TWO;
+                    if (Intake_Time.seconds() >= 1) {
+                        main_intake_Powers(); // Assuming this moves balls to the launcher
+                        if (Intake_Time.seconds() >= 4) {
+                            Launcher_Time.reset();
+                            state = LaunchState.FIRE_BALL_TWO;
+                        }
                     }
                     break;
+
 
                 case FIRE_BALL_TWO:
                     intake_stop();
                     LauncherMotor.setVelocity(targetVel);
                     if (LauncherMotor.getVelocity() >= (targetVel * 0.95)) {
                         LauncherHandServo.setPosition(firing);
-                        if (Launcher_Time.seconds() >= TimeOne) {
+                        if (Launcher_Time.seconds() >= TimeTwo) {
                             Intake_Time.reset();
                             state = LaunchState.LOAD_BALL_THREE;
                         }
@@ -126,10 +133,12 @@ public class AutoNearLaunching extends OpMode {
 
                 case LOAD_BALL_THREE:
                     LauncherHandServo.setPosition(loading);
-                    main_intake_Powers();
-                    if (Intake_Time.seconds() >= TimeTwo) {
-                        Launcher_Time.reset();
-                        state = LaunchState.FIRE_BALL_THREE;
+                    if (Intake_Time.seconds() >= 1) {
+                        main_intake_Powers(); // Assuming this moves balls to the launcher
+                        if (Intake_Time.seconds() >= 4) {
+                            Launcher_Time.reset();
+                            state = LaunchState.FIRE_BALL_THREE;
+                        }
                     }
                     break;
 
@@ -146,6 +155,7 @@ public class AutoNearLaunching extends OpMode {
                     }
                     break;
                 case STRAFE:
+                    LauncherMotor.setVelocity(Idle_Vel);
                     leftFront.setPower(-.2);
                     rightFront.setPower(.2);
                     leftRear.setPower(.2);
@@ -154,7 +164,7 @@ public class AutoNearLaunching extends OpMode {
                     state = LaunchState.END;
                     break;
                 case END:
-                    if (Strafe_Time.seconds() >= TimeOne) {
+                    if (Strafe_Time.seconds() >= 4) {
                         leftFront.setPower(0);
                         rightFront.setPower(0);
                         leftRear.setPower(0);

@@ -29,6 +29,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.OpModes.Auto.AutoFarLaunching;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
 
 @TeleOp
@@ -45,7 +46,8 @@ public class CompDriveV2 extends OpMode {
         LOAD_BALL_TWO,
         FIRE_BALL_TWO,
         LOAD_BALL_THREE,
-        FIRE_BALL_THREE
+        FIRE_BALL_THREE,
+        STOP_AND_RESET
     }
 
     LaunchState state = LaunchState.IDLE;
@@ -54,7 +56,6 @@ public class CompDriveV2 extends OpMode {
     @Override
     public void init() {
         initComponents(hardwareMap);
-        LauncherHandServo.setPosition(loading);
         telemetry.speak("Robot is spinning Danger Danger");
         telemetry.update();
     }
@@ -68,6 +69,7 @@ public class CompDriveV2 extends OpMode {
     public void loop() {
 
         input.pollGamepad(gamepad1);
+
         /* State machine kill and reset */
         if (input.back.down()) {
             LauncherHandServo.setPosition(loading);
@@ -97,13 +99,20 @@ public class CompDriveV2 extends OpMode {
         isIntaking = input.left_trigger.held() || input.left_bumper.held() || input.right_bumper.held();
 
         if (isIntaking) {
-            LauncherHandServo.setPosition(loading);
             if (input.left_trigger.held()) main_intake_Powers();
             else if (input.left_bumper.held()) first_intake_Powers();
             else if (input.right_bumper.held()) second_intake_Powers();
         } else {
             intake_stop();
         }
+        /* Manual Hand Movements */
+        if (input.dpad_up.down()) {
+            LauncherHandServo.setPosition(.5);
+        } if (input.dpad_down.down()) {
+            LauncherHandServo.setPosition(loading);
+        }
+
+        /* Intake */
 
 //        intake_reversed = input.x.held();
 //
@@ -150,7 +159,6 @@ public class CompDriveV2 extends OpMode {
             switch (state) {
                 case IDLE:
                     LauncherMotor.setVelocity(Idle_Vel);
-                    LauncherHandServo.setPosition(loading);
                     break;
 
                 case SPIN_UP:
@@ -174,10 +182,12 @@ public class CompDriveV2 extends OpMode {
 
                 case LOAD_BALL_TWO:
                     LauncherHandServo.setPosition(loading);
-                    main_intake_Powers(); // Assuming this moves balls to the launcher
-                    if (Intake_Time.seconds() >= TimeTwo) {
-                        Launcher_Time.reset();
-                        state = LaunchState.FIRE_BALL_TWO;
+                    if (Intake_Time.seconds() >= 1) {
+                        main_intake_Powers(); // Assuming this moves balls to the launcher
+                        if (Intake_Time.seconds() >= 4) {
+                            Launcher_Time.reset();
+                            state = LaunchState.FIRE_BALL_TWO;
+                        }
                     }
                     break;
 
@@ -195,10 +205,12 @@ public class CompDriveV2 extends OpMode {
 
                 case LOAD_BALL_THREE:
                     LauncherHandServo.setPosition(loading);
-                    main_intake_Powers();
-                    if (Intake_Time.seconds() >= TimeTwo) {
-                        Launcher_Time.reset();
-                        state = LaunchState.FIRE_BALL_THREE;
+                    if (Intake_Time.seconds() >= 1) {
+                        main_intake_Powers(); // Assuming this moves balls to the launcher
+                        if (Intake_Time.seconds() >= 4) {
+                            Launcher_Time.reset();
+                            state = LaunchState.FIRE_BALL_THREE;
+                        }
                     }
                     break;
 
@@ -211,9 +223,13 @@ public class CompDriveV2 extends OpMode {
                             // Reset everything
                             Launching_Far = false;
                             Launching_Close = true;
-                            state = LaunchState.IDLE;
+                            state = LaunchState.STOP_AND_RESET;
                         }
                     }
+                    break;
+                case STOP_AND_RESET:
+                    LauncherHandServo.setPosition(loading);
+                    state = LaunchState.IDLE;
                     break;
             }
         } else {

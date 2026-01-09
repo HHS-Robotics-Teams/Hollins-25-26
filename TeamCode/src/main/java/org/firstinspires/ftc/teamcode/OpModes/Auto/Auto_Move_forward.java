@@ -22,25 +22,23 @@ public class Auto_Move_forward extends OpMode {
 
     @Override
     public void start() {
-        leftFront.setPower(.2);
-        rightFront.setPower(.2);
-        leftRear.setPower(.2);
-        rightRear.setPower(.2);
-        LauncherMotor.setPower(.3);
+        leftFront.setPower(-.2);
+        rightFront.setPower(-.2);
+        leftRear.setPower(-.2);
+        rightRear.setPower(-.2);
+
         timeAtStart = getRuntime();
     }
 
     @Override
     public void loop() {
-        if (getRuntime() > (timeAtStart + 3)) {
+        if (getRuntime() > (timeAtStart + 4)) {
             leftFront.setPower(0);
             rightFront.setPower(0);
             leftRear.setPower(0);
             rightRear.setPower(0);
             LauncherMotor.setPower(0);
         }
-       if(LauncherMotor.getVelocity()>=20){
-           LauncherMotor.setVelocity(15);
-       }
+
     }
 }
