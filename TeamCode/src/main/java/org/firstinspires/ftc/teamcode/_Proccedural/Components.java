@@ -69,7 +69,7 @@ public class Components {
         rightFeeder.setDirection(FORWARD);
 
         // Intake Motor Settings
-        intake.setDirection(FORWARD);
+        intake.setDirection(REVERSE);
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         imu = hardwareMap.get(IMU.class, "imu");

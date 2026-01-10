@@ -60,20 +60,15 @@ public class CompDriveV3 extends OpMode {
 
         //intake stuff
         if (input.left_bumper.held()) {
-            if(intakeFeeder.getPosition() != 0.2) {
-                intakeFeeder.setPosition(0.2);
-                intake.setPower(0.2);
-            } else {
                 intake.setPower(0.85);
+            } else {
+                intake.setPower(0);
             }
-        } else {
-            intake.setPower(0);
-        }
 
 
         if (input.left_trigger.held()) {
                 intake.setPower(-0.85);
-            }
+
         } else {
             intake.setPower(0);
         }
