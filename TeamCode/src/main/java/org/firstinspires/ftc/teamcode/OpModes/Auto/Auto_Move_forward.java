@@ -32,7 +32,7 @@ public class Auto_Move_forward extends OpMode {
 
     @Override
     public void loop() {
-        if (getRuntime() > (timeAtStart + 4)) {
+        if (getRuntime() > (timeAtStart + 3)) {
             leftFront.setPower(0);
             rightFront.setPower(0);
             leftRear.setPower(0);

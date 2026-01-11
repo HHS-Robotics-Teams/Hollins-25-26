@@ -9,7 +9,7 @@ public class Constants {
         public static final double shootingClose = .3;
     /* New Launcher Velocity's */
         public static final double Idle_Vel = 500;
-        public static final double Launcher_far_Vel = 1150;
+        public static final double Launcher_far_Vel = 1100;
         public static final double Launcher_close_Vel = 800;
         public static double targetVel;
 
@@ -25,6 +25,8 @@ public class Constants {
         public static boolean intake_reversed = false;
         public static boolean Launching_Far = false;
         public static boolean Launching_Close = false;
+        public static boolean LastLaunching_Far = false;
+        public static boolean LastLaunching_Close = false;
         public static boolean isIntaking;
 
     /* Timmers */

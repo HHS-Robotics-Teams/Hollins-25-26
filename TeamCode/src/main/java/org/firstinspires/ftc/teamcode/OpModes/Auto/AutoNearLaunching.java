@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.aProccedural.Components;
 @Autonomous
 public class AutoNearLaunching extends OpMode {
     double targetVel = Launcher_close_Vel;
+    double targetVelTwo = Launcher_close_Vel + 10;
     ElapsedTime Intake_Time = new ElapsedTime();
     ElapsedTime Launcher_Time = new ElapsedTime();
     ElapsedTime Strafe_Time = new ElapsedTime();
@@ -75,7 +76,7 @@ public class AutoNearLaunching extends OpMode {
 
             switch (state) {
                 case IDLE:
-                    if (getRuntime() > (timeAtStart + 5)) {
+                    if (getRuntime() > (timeAtStart + 5.25)) { //todo tune this value
                         leftFront.setPower(0);
                         rightFront.setPower(0);
                         leftRear.setPower(0);
@@ -86,7 +87,7 @@ public class AutoNearLaunching extends OpMode {
                     }
                     break;
                 case SPIN_UP:
-                    LauncherMotor.setVelocity(targetVel);
+                    LauncherMotor.setVelocity(targetVelTwo);
                     LauncherHandServo.setPosition(loading);
                     state = LaunchState.FIRE_BALL;
                     if (Intake_Time.seconds() >= 2) {
@@ -96,11 +97,11 @@ public class AutoNearLaunching extends OpMode {
                     break;
 
                 case FIRE_BALL:
-                    LauncherMotor.setVelocity(targetVel);
+                    LauncherMotor.setVelocity(targetVelTwo);
                     // Use a 90-95% threshold so it actually fires even if the motor is slightly slow
-                    if (LauncherMotor.getVelocity() >= (targetVel * 0.95)) {
+                    if (LauncherMotor.getVelocity() >= (targetVelTwo* 0.975)) {
                         LauncherHandServo.setPosition(firing);
-                        if (Launcher_Time.seconds() >= TimeOne) {
+                        if (Launcher_Time.seconds() >= TimeTwo + 2) {
                             Intake_Time.reset();
                             state = LaunchState.LOAD_BALL_TWO;
                         }

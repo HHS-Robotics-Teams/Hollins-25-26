@@ -8,6 +8,8 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Idle_Vel;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LastLaunching_Close;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.LastLaunching_Far;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launcher_close_Vel;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launcher_far_Vel;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launching_Far;
@@ -73,6 +75,8 @@ public class CompDriveV2 extends OpMode {
         /* State machine kill and reset */
         if (input.back.down()) {
             LauncherHandServo.setPosition(loading);
+            LastLaunching_Far = false;
+            LastLaunching_Close = false;
             intake_reversed = false;
             Launching_Far = false;
             Launching_Close = true;
@@ -81,13 +85,26 @@ public class CompDriveV2 extends OpMode {
 
         /* Shooting modes */
         if (input.a.down()) { // Select Far
+            LastLaunching_Far = true;
+            LastLaunching_Close = false;
             Launching_Far = true;
             Launching_Close = false;
         } else if (input.b.down()) { // Select Close
+            LastLaunching_Far = false;
+            LastLaunching_Close = true;
             Launching_Close = true;
             Launching_Far = false;
         }
+        if (LastLaunching_Far){
+            Launching_Far = true;
+        }
+        else if (LastLaunching_Close){
+            Launching_Close = true;
+        }
         if (!Launching_Far && !Launching_Close) {
+            Launching_Close = true;
+        }
+        else if (!LastLaunching_Far && !LastLaunching_Close){
             Launching_Close = true;
         }
         if (input.right_trigger.down()) {
@@ -222,7 +239,7 @@ public class CompDriveV2 extends OpMode {
                         if (Launcher_Time.seconds() >= TimeOne) {
                             // Reset everything
                             Launching_Far = false;
-                            Launching_Close = true;
+                            Launching_Close = false;
                             state = LaunchState.STOP_AND_RESET;
                         }
                     }
