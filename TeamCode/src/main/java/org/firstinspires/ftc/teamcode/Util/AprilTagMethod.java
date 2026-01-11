@@ -74,8 +74,6 @@ public class AprilTagMethod {
         return Objects.equals(allianceColor, "BLUE") && tagHelper.getFirstTag().metadata.id == 20;
     }
     public double getTagDistance() { return tagHelper.getFirstTag().ftcPose.range;}
-    public double getTagYaw() { return tagHelper.getFirstTag().ftcPose.yaw;}
     public double getTagBearing() {return tagHelper.getFirstTag().ftcPose.bearing;}
-    public double getTagXPos() {return tagHelper.getFirstTag().metadata.fieldPosition.get(0);}
-    public double getTagYPos() {return tagHelper.getFirstTag().metadata.fieldPosition.get(1);}
+    public void endTagMethod() {tagHelper.stop();}
 }

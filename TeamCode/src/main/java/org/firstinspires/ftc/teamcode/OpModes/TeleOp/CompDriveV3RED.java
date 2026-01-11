@@ -83,6 +83,7 @@ public class CompDriveV3RED extends OpMode {
         Parking_Motor.setTargetPosition(0);
         Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Parking_Motor.setPower(1);
+        aprilTagDetector.endTagMethod();
     }
 
     @Override
