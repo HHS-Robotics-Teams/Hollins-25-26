@@ -32,6 +32,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -47,6 +48,7 @@ public class CompDriveV3BLUE extends OpMode {
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
     LauncherUtil launcherUtil;
+    ElapsedTime timer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     @Override
     public void init() {
@@ -82,6 +84,7 @@ public class CompDriveV3BLUE extends OpMode {
         Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Parking_Motor.setPower(1);
         aprilTagDetector.endTagMethod();
+        timer.reset();
     }
 
     @Override
@@ -95,11 +98,6 @@ public class CompDriveV3BLUE extends OpMode {
         input.pollGamepad(gamepad1);
 
         /* ---------- Drivetrain ---------- */
-
-        if (input.start.down()) {
-            imu.resetYaw();
-            imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
-        }
 
         //Drivetrain movement values
         double forward = -gamepad1.left_stick_y * 0.8;
@@ -185,10 +183,14 @@ public class CompDriveV3BLUE extends OpMode {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             }
         }
-        if (input.dpad_down.down()){
-            Parking_Motor.setTargetPosition(park_Pos);
-        } if (input.dpad_up.down()) {
-            Parking_Motor.setTargetPosition(0);
+
+        if(timer.seconds() >= 100) {
+            if (input.dpad_down.down()) {
+                Parking_Motor.setTargetPosition(park_Pos);
+            }
+            if (input.dpad_up.down()) {
+                Parking_Motor.setTargetPosition(0);
+            }
         }
 
 
