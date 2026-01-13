@@ -25,6 +25,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+/**
+ * Runs flywheel style launcher logic to make teleOp code more readable
+ * Includes camera vision & automatic alignment
+ */
 public class LauncherUtil {
     AprilTagMethod aprilTagMethod;
     public enum LaunchState {
@@ -48,10 +52,21 @@ public class LauncherUtil {
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime resetTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
+    /**
+     * Sets target vel manually
+     * basically never used
+     * see also DcMotor.setVelocity
+     * @param target the velocity (in RPM) to be set
+     */
     public void setTarget(double target) {
         this.target = target;
     }
 
+    /**
+     * Constructor
+     * @param color "BLUE" or "RED" for camera logic
+     * @param isAuto true for auto, false for not
+     */
     public LauncherUtil(String color, boolean isAuto) {
         aprilTagMethod = new AprilTagMethod();
         launchState = LaunchState.FIND_TAG;
@@ -59,15 +74,26 @@ public class LauncherUtil {
         this.isAuto = isAuto;
     }
 
+    /**
+     * Ends launch & resets state machine
+     */
     public void cancelLaunch() {
         launchState = LaunchState.FIND_TAG;
         LauncherMotor.setPower(LAUNCHER_IDLE);
     }
 
+    /**
+     * @return current launch state
+     */
     public LaunchState getLaunchState() {
         return launchState;
     }
 
+    /**
+     * Main method for launcher
+     * Call every loop while launching
+     * @return String of telemetry
+     */
     public String runLauncher() {
         if (!aprilTagMethod.isTagVisible() ) {
             return "No Tag Visible";
@@ -172,6 +198,12 @@ public class LauncherUtil {
                 + "\nCurrentVel: " + LauncherMotor.getVelocity();
     }
 
+    /**
+     * Alignment code & power calculations
+     * Skips if isAuto is true
+     * @return boolean used in runLauncher()
+     * Other users: tune phi & margin to game & spot
+     */
     private boolean moveToLaunch() {
         if(isAuto){
             return true;
@@ -215,6 +247,10 @@ public class LauncherUtil {
         }
     }
 
+    /**
+     * Helper for runLauncher() (sets vel)
+     * @return boolean true if velocity is within threshold
+     */
     private boolean isSpunUp() {
         LauncherMotor.setVelocity(target);
         return abs(LauncherMotor.getVelocity() - target) <= LAUNCH_TICK_VEL_THRESHOLD;
