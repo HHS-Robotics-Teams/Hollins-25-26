@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
@@ -24,7 +25,6 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 public class New_LauncherTesting extends OpMode {
     Input input = new Input();
     double targetVel = LAUNCH_TICK_VELOCITY_NEAR;
-    double delta = 0.1;
     @Override
     public void init() {
         Components.initComponents(hardwareMap);
@@ -41,21 +41,18 @@ public class New_LauncherTesting extends OpMode {
         telemetry.addData("Actual Velocity:", LauncherMotor.getVelocity(AngleUnit.RADIANS));
         telemetry.addLine("X to increase vel,\nY to decrease vel,\nA to raise finger,\nB to toggle intake");
 
-        if(input.a.held()){
-            //LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-        } else if (input.b.down()) {
-            //LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-        }
         if(input.left_trigger.held()){
-            //LauncherSafetyServo.setPosition(SAFTEY_FIRING);
+            ConveyorMotor.setPower(INTAKE_POWER);
             IntakeMotor.setPower(INTAKE_POWER);
             LeftSideFeedRoller.setPower(-1);
 
         } else if (input.left_bumper.held()) {
+            ConveyorMotor.setPower(INTAKE_POWER);
             IntakeMotor.setPower(INTAKE_POWER);
             LeftSideFeedRoller.setPower(-1);
 
         } else {
+            ConveyorMotor.setPower(0);
             IntakeMotor.setPower(0);
             LeftSideFeedRoller.setPower(0);
         }

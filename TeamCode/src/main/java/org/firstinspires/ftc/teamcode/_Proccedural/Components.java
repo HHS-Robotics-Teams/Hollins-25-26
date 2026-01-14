@@ -32,6 +32,7 @@ public class Components {
 
     //Instantiate Intake Motor
     public static DcMotor IntakeMotor;
+    public static DcMotor ConveyorMotor;
 
     // Instantiate Parking Motor
     public static DcMotor Parking_Motor;
@@ -88,6 +89,11 @@ public class Components {
         IntakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         IntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         IntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        ConveyorMotor = hardwareMap.get(DcMotor.class, "ConveyorMotor");
+        ConveyorMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        ConveyorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        ConveyorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //Initialize Parking Motor
         Parking_Motor = hardwareMap.get(DcMotorEx.class, "ParkingMotor");
