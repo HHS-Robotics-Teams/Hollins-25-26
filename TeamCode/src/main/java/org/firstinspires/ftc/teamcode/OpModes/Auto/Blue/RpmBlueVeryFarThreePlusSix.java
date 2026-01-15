@@ -12,10 +12,8 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_FAR;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
-
 import static java.lang.Math.abs;
 
 import com.acmerobotics.roadrunner.Action;
@@ -26,6 +24,8 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -128,7 +128,10 @@ public class RpmBlueVeryFarThreePlusSix extends OpMode {
                 .waitSeconds(0.2)
 
                 .build();
-        driveToLaunchOne = factory.blueFarLaunchPath(new Pose2d(39,-48,Math.toRadians(-90)));
+        driveToLaunchOne = drive.actionBuilder(new Pose2d(64.,-60,Math.toRadians(-40)))
+                .lineToY(-40)
+                .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-90))
+                .build();
         driveToIntakeTwo = drive.actionBuilder(blueFarLaunchPose)
                 .splineToSplineHeading(new Pose2d(39,-30,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(1,IntakePickup)
@@ -138,6 +141,7 @@ public class RpmBlueVeryFarThreePlusSix extends OpMode {
                 .lineToY(-48)
                 .build();
         driveToLaunchThree = factory.blueFarLaunchPath(new Pose2d(39,-48,Math.toRadians(-90)));
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 1.25, 10, 20));
     }
 
     @Override

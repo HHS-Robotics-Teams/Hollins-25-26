@@ -94,8 +94,6 @@ public class PathFactory {
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-38)
                 .waitSeconds(.3)
-                .lineToY(-39)
-                .waitSeconds(.3)
                 .lineToY(-45)
                 .build();
 
@@ -110,9 +108,7 @@ public class PathFactory {
                 .waitSeconds(intakeWaitTime)
                 .lineToY(36)
                 .waitSeconds(.3)
-                .lineToY(40)
-                .waitSeconds(.3)
-                .lineToY(52)
+                .lineToY(48)
                 .build();
     }
     public Action redPGPPickupPath(Pose2d startPose){
@@ -122,9 +118,7 @@ public class PathFactory {
                 .waitSeconds(intakeWaitTime)
                 .lineToY(38)
                 .waitSeconds(.3)
-                .lineToY(39)
-                .waitSeconds(.3)
-                .lineToY(52)
+                .lineToY(50)
                 .build();
     }
     public Action redGPPPickupPath(Pose2d startPose){
@@ -133,8 +127,6 @@ public class PathFactory {
                 .afterDisp(2, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(35)
-                .waitSeconds(.3)
-                .lineToY(39)
                 .waitSeconds(.3)
                 .lineToY(42)
                 .build();
@@ -146,7 +138,7 @@ public class PathFactory {
     }
     public Action redFarLaunchPath(Pose2d startPose){
         return drive.actionBuilder(startPose)
-                .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(155)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(155)), Math.toRadians(125))
                 .build();
     }
 }

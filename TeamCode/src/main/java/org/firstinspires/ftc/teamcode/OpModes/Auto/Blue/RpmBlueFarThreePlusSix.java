@@ -21,6 +21,8 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -120,6 +122,7 @@ public class RpmBlueFarThreePlusSix extends OpMode {
  //               .lineToY(-46)
                 .build();
         driveToLaunchThree = factory.blueFarLaunchPath(new Pose2d(16,-48,Math.toRadians(-90)));
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 1.25, 10, 20));
     }
 
     @Override
