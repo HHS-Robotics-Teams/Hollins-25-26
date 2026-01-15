@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class TuningController {
     public static double MOTOR_TICKS_PER_REV = 103.8;
     public static double MOTOR_MAX_RPM = 1620;
-    public static double MOTOR_GEAR_RATIO = 5; // output (wheel) speed / input (motor) speed
+    public static double MOTOR_GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
 
     public static double TESTING_MAX_SPEED = 0.9 * MOTOR_MAX_RPM;
-    public static double TESTING_MIN_SPEED = 0.3 * MOTOR_MAX_RPM;
+    public static double TESTING_MIN_SPEED = 0.7 * MOTOR_MAX_RPM;
 
 
     // These are prefixed with "STATE1", "STATE2", etc. because Dashboard displays variables in
@@ -20,7 +20,7 @@ public class TuningController {
     // Then we append Z just because we want it to show below the MOTOR_ and TESTING_ because
     // these settings aren't as important
     public static double ZSTATE1_RAMPING_UP_DURATION = 3.5;
-    public static double ZSTATE2_COASTING_1_DURATION = 14;
+    public static double ZSTATE2_COASTING_1_DURATION = 10;
     public static double ZSTATE3_RAMPING_DOWN_DURATION = 2;
     public static double ZSTATE4_COASTING_2_DURATION = 12;
     public static double ZSTATE5_RANDOM_1_DURATION = 7;

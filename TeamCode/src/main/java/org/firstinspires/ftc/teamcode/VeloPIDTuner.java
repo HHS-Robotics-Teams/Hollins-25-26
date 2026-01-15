@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
@@ -27,7 +28,7 @@ public class VeloPIDTuner extends LinearOpMode {
         DcMotorEx myMotor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
 
         // Reverse as appropriate
-        // myMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        myMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
