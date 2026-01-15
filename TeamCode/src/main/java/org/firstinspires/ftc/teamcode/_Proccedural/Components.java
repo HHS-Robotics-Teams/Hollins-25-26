@@ -82,7 +82,7 @@ public class Components {
         MotorConfigurationType type = LauncherMotor.getMotorType().clone(); //DO NOT TOUCH
         type.setAchieveableMaxRPMFraction(1.0); //DO NOT TOUCH
         LauncherMotor.setMotorType(type); //DO NOT TOUCH
-        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 7.5, 10, 20)); //DO NOT TOUCH
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(120, 2.5, 4.5, 15)); //DO NOT TOUCH
 
         //Initialize Intake Motor
         IntakeMotor = hardwareMap.get(DcMotorEx.class, "IntakeMotor");
@@ -105,7 +105,7 @@ public class Components {
         //LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
         //LauncherSafetyServo = hardwareMap.get(Servo.class, "LauncherSafetyServo");
         LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
-        LeftSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+        LeftSideFeedRoller.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //Initialize Sensors
         imu = hardwareMap.get(IMU.class, "imu");

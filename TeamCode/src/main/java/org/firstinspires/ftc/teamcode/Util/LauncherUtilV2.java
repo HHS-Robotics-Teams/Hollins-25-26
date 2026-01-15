@@ -53,7 +53,7 @@ public class LauncherUtilV2 {
      * Sets target vel manually
      * basically never used
      * see also DcMotor.setVelocity
-     * @param target the velocity (in RPM) to be set
+     * @param target the velocity (in ticks) to be set
      */
     public void setTarget(double target) {
         this.target = target;
@@ -92,7 +92,7 @@ public class LauncherUtilV2 {
      * @return String of telemetry
      */
     public String runLauncher() {
-        if (!aprilTagMethod.isTagVisible() ) {
+        if (!aprilTagMethod.isTagVisible() && !isAuto) {
             return "No Tag Visible";
         }
         switch (launchState) {
@@ -102,15 +102,15 @@ public class LauncherUtilV2 {
                 LAUNCHER_RUN = false;
                 break;
             case FIND_TAG:
-                if (!aprilTagMethod.isTagVisible() ) {
+                if (!aprilTagMethod.isTagVisible() && !isAuto) {
                     return "No Tag Visible";
-                } else if (aprilTagMethod.tagMatchesAlliance(color)) {
+                } else if (isAuto || aprilTagMethod.tagMatchesAlliance(color)) {
                     launchState = LaunchState.SPIN_UP_AND_MOVE;
                     break;
                 }
                 break;
             case SPIN_UP_AND_MOVE:
-                if (!aprilTagMethod.isTagVisible() ) {
+                if (!aprilTagMethod.isTagVisible() && !isAuto) {
                     return "No Tag Visible";
                 } else if ((moveToLaunch()) && isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
@@ -122,31 +122,31 @@ public class LauncherUtilV2 {
                 }
                 break;
             case LAUNCH:
-                if (!aprilTagMethod.isTagVisible() ) {
+                if (!aprilTagMethod.isTagVisible() && !isAuto) {
                     return "No Tag Visible";
                 } else {
                     ConveyorMotor.setPower(INTAKE_POWER);
                     LeftSideFeedRoller.setPower(1);
-                    if (launchTimer.seconds() >= 0.25) { //todo check this time
+                    if (launchTimer.seconds() >= 0.33) { //todo check this time
                         launchState = LaunchState.RESET_SHOT;
                     }
                 }
                 break;
             case RESET_SHOT:
-                if (!aprilTagMethod.isTagVisible() ) {
+                if (!aprilTagMethod.isTagVisible() && !isAuto) {
                     return "No Tag Visible";
                 } else {
-                    ConveyorMotor.setPower(0);
                     LeftSideFeedRoller.setPower(0);
                     launchState = LaunchState.DISTANCE_CHECK;
                     }
                 break;
             case INTAKE:
-                if (!aprilTagMethod.isTagVisible() ) {
+                if (!aprilTagMethod.isTagVisible() && !isAuto) {
                     return "No Tag Visible";
                     } else {
                     IntakeMotor.setPower(INTAKE_POWER);
-                    if (intakeTimer.seconds() >= 0.2) { //todo check this time
+                    ConveyorMotor.setPower(INTAKE_POWER);
+                    if (intakeTimer.seconds() >= 0.1) { //todo check this time
                         launchState = LaunchState.CHECK_AGAIN;
                         isSpunUp();
                     }
@@ -154,6 +154,7 @@ public class LauncherUtilV2 {
                 break;
             case CHECK_AGAIN:
                 IntakeMotor.setPower(0);
+                ConveyorMotor.setPower(0);
                 if(isAuto) {
                     launchState = LaunchState.LAUNCH;
                     launchTimer.reset();
@@ -165,7 +166,7 @@ public class LauncherUtilV2 {
                 }
                 break;
             case DISTANCE_CHECK:
-                if (!aprilTagMethod.isTagVisible() ) {
+                if (!aprilTagMethod.isTagVisible() && !isAuto) {
                     return "No Tag Visible";
                 } else  {
                     if (rearDistance.getDistance(DistanceUnit.INCH) <= 6) {
@@ -177,6 +178,7 @@ public class LauncherUtilV2 {
                         intakeTimer.reset();
                         isSpunUp();
                     } else {
+                        ConveyorMotor.setPower(0);
                         launchState = LaunchState.EXIT;
                     }
                     break;

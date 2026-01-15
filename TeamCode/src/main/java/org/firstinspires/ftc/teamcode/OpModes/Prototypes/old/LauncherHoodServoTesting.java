@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
+package org.firstinspires.ftc.teamcode.OpModes.Prototypes.old;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,9 +10,9 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 //testing opmode disabled
-//Disabled
+@Disabled
 @TeleOp
-//@Deprecated
+@Deprecated
 public class LauncherHoodServoTesting extends OpMode {
 
     Input input = new Input();
