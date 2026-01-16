@@ -69,7 +69,6 @@ public class CompDriveV4BLUE extends OpMode {
         Parking_Motor.setTargetPosition(0);
         Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Parking_Motor.setPower(1);
-        aprilTagDetector.endTagMethod();
         climbTimer.reset();
     }
 
@@ -132,7 +131,7 @@ public class CompDriveV4BLUE extends OpMode {
 
         // Hold left trigger to run the main intake motor
         if (!LAUNCHER_RUN) INTAKE_RUN = input.left_trigger.held();
-        if (!LAUNCHER_RUN) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held();
+        if (!LAUNCHER_RUN) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held() || input.left_trigger.held();
 
         // Control the main intake motor
         if (INTAKE_RUN) {

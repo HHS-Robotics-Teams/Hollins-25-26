@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
+package org.firstinspires.ftc.teamcode.OpModes.TeleOp.Old;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
@@ -27,11 +27,10 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.park_Pos;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -43,7 +42,9 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @TeleOp
-public class CompDriveV3RED extends OpMode {
+@Disabled
+@Deprecated
+public class CompDriveV3BLUE extends OpMode {
     //Instantiated new input
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
@@ -55,7 +56,7 @@ public class CompDriveV3RED extends OpMode {
         //Initialize Components
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
-        launcherUtil = new LauncherUtil("RED", false);
+        launcherUtil = new LauncherUtil("BLUE", false);
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
@@ -103,7 +104,6 @@ public class CompDriveV3RED extends OpMode {
         double forward = -gamepad1.left_stick_y * 0.8;
         double strafes = gamepad1.left_stick_x * 1.0;
         double rotates = gamepad1.right_stick_x * 0.6;
-
 
         if (abs(forward) <= 0.15) {
             forward = 0;
@@ -156,11 +156,7 @@ public class CompDriveV3RED extends OpMode {
 
         // Hold left trigger to run the main intake motor
         if (!LAUNCHER_RUN) INTAKE_RUN = input.left_trigger.held();
-
-        // Press left bumper to TOGGLE the second level intake on/off
         if (!LAUNCHER_RUN) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held();
-
-        // --- Final Intake Motor Logic ---
 
         // Control the main intake motor
         if (INTAKE_RUN) {
@@ -184,7 +180,6 @@ public class CompDriveV3RED extends OpMode {
             /* ---------- Launcher Finger (Manual) ---------- */
             if (input.x.held()) {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             } else {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             }
@@ -198,6 +193,8 @@ public class CompDriveV3RED extends OpMode {
                 Parking_Motor.setTargetPosition(0);
             }
         }
+
+
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Comp Drive Running ---------");
         telemetry.addData("ÏMU Z", abs(imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle));

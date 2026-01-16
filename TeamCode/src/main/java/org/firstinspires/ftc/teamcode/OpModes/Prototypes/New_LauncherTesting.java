@@ -2,17 +2,10 @@ package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -49,7 +42,7 @@ public class New_LauncherTesting extends OpMode {
         } else if (input.left_bumper.held()) {
             ConveyorMotor.setPower(INTAKE_POWER);
             IntakeMotor.setPower(INTAKE_POWER);
-            LeftSideFeedRoller.setPower(-1);
+            LeftSideFeedRoller.setPower(1);
 
         } else {
             ConveyorMotor.setPower(0);

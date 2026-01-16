@@ -16,6 +16,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_REVERSED;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.park_Pos;
 import static java.lang.Math.abs;
@@ -32,7 +33,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @TeleOp
-public class CompDriveV4RED extends OpMode {
+public class CompDriveNoCam extends OpMode {
     //Instantiated new input
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
@@ -44,7 +45,7 @@ public class CompDriveV4RED extends OpMode {
         //Initialize Components
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
-        launcherUtil = new LauncherUtilV2("RED", false);
+        launcherUtil = new LauncherUtilV2("BLUE", true);
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
@@ -64,6 +65,7 @@ public class CompDriveV4RED extends OpMode {
         LAUNCHER_RUN = false;
         DriveSlowdown = false;
         LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET);
         cameraTiltServo.setPosition(CAMERA_START_POS);
         Parking_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Parking_Motor.setTargetPosition(0);

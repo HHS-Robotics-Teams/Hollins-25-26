@@ -93,10 +93,13 @@ public class LauncherUtilV2 {
      */
     public String runLauncher() {
         if (!aprilTagMethod.isTagVisible() && !isAuto) {
-            return "No Tag Visible";
+            return "No Tag Visible" + "\nState:" + launchState;
         }
         switch (launchState) {
             case EXIT:
+                IntakeMotor.setPower(0);
+                ConveyorMotor.setPower(0);
+                LeftSideFeedRoller.setPower(0);
                 launchState = LaunchState.FIND_TAG;
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
                 LAUNCHER_RUN = false;
@@ -122,6 +125,7 @@ public class LauncherUtilV2 {
                 }
                 break;
             case LAUNCH:
+                IntakeMotor.setPower(0);
                 if (!aprilTagMethod.isTagVisible() && !isAuto) {
                     return "No Tag Visible";
                 } else {
@@ -146,15 +150,13 @@ public class LauncherUtilV2 {
                     } else {
                     IntakeMotor.setPower(INTAKE_POWER);
                     ConveyorMotor.setPower(INTAKE_POWER);
-                    if (intakeTimer.seconds() >= 0.1) { //todo check this time
+                    if (intakeTimer.seconds() >= 0.15) { //todo check this time
                         launchState = LaunchState.CHECK_AGAIN;
                         isSpunUp();
                     }
                 }
                 break;
             case CHECK_AGAIN:
-                IntakeMotor.setPower(0);
-                ConveyorMotor.setPower(0);
                 if(isAuto) {
                     launchState = LaunchState.LAUNCH;
                     launchTimer.reset();
@@ -208,7 +210,7 @@ public class LauncherUtilV2 {
             return false;
         } else {
             theta = aprilTagMethod.getTagBearing();
-            double range = aprilTagMethod.getTagDistance() + 2;
+            double range = aprilTagMethod.getTagDistance() + 4;
             double margin;
             if (range >= 90) {
                 phi = 2.75;
@@ -237,9 +239,9 @@ public class LauncherUtilV2 {
                 rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                return true;
             }
             target = (0.0132275 * range * range) + (1.52116 * range) + 732.98942;
+            LauncherMotor.setVelocity(target);
             return abs(theta - phi) <= margin;
         }
     }
