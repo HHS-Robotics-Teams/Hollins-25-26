@@ -29,6 +29,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode.Util.LauncherUtilV2;
+import org.firstinspires.ftc.teamcode.Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
@@ -45,7 +46,7 @@ public class CompDriveNoCam extends OpMode {
         //Initialize Components
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
-        launcherUtil = new LauncherUtilV2("BLUE", true);
+        launcherUtil = new LauncherUtilV2("BLUE", true, new LightUtil(2, hardwareMap));
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");

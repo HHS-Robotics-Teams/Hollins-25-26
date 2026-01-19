@@ -19,6 +19,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_
 import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Light;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -29,6 +30,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 public class LauncherUtilV2 {
     AprilTagMethod aprilTagMethod;
+
+    public LightUtil getLightUtil() {
+        return lightUtil;
+    }
+
     public enum LaunchState {
         FIND_TAG,
         SPIN_UP_AND_MOVE,
@@ -45,6 +51,7 @@ public class LauncherUtilV2 {
     private final boolean isAuto;
     private double theta;
     private double phi;
+    private final LightUtil lightUtil;
 
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
@@ -64,11 +71,12 @@ public class LauncherUtilV2 {
      * @param color "BLUE" or "RED" for camera logic
      * @param isAuto true for auto, false for not
      */
-    public LauncherUtilV2(String color, boolean isAuto) {
+    public LauncherUtilV2(String color, boolean isAuto, LightUtil lightUtil) {
         aprilTagMethod = new AprilTagMethod();
         launchState = LaunchState.FIND_TAG;
         this.color = color;
         this.isAuto = isAuto;
+        this.lightUtil = lightUtil;
     }
 
     /**
@@ -92,6 +100,7 @@ public class LauncherUtilV2 {
      * @return String of telemetry
      */
     public String runLauncher() {
+        lightUtil.updateLights();
         if (!aprilTagMethod.isTagVisible() && !isAuto) {
             return "No Tag Visible" + "\nState:" + launchState;
         }
@@ -125,6 +134,7 @@ public class LauncherUtilV2 {
                 }
                 break;
             case LAUNCH:
+                lightUtil.makeOff();
                 IntakeMotor.setPower(0);
                 if (!aprilTagMethod.isTagVisible() && !isAuto) {
                     return "No Tag Visible";
@@ -168,14 +178,15 @@ public class LauncherUtilV2 {
                 }
                 break;
             case DISTANCE_CHECK:
+                lightUtil.makeAmber();
                 if (!aprilTagMethod.isTagVisible() && !isAuto) {
                     return "No Tag Visible";
                 } else  {
                     if (rearDistance.getDistance(DistanceUnit.INCH) <= 6) {
                         launchState = LaunchState.CHECK_AGAIN;
                     } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 11 //todo
-                           || leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5
-                           || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5) {
+                           || leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 4
+                           || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 4) {
                         launchState = LaunchState.INTAKE;
                         intakeTimer.reset();
                         isSpunUp();

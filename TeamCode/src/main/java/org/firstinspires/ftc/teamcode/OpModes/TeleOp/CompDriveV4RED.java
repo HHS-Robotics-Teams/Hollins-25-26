@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode.Util.LauncherUtilV2;
+import org.firstinspires.ftc.teamcode.Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
@@ -37,15 +38,13 @@ public class CompDriveV4RED extends OpMode {
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
     LauncherUtilV2 launcherUtil;
-    ElapsedTime climbTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     @Override
     public void init() {
         //Initialize Components
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
-        launcherUtil = new LauncherUtilV2("RED", false);
-
+        launcherUtil = new LauncherUtilV2("RED", false, new LightUtil(2, hardwareMap));
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
     }
@@ -69,7 +68,6 @@ public class CompDriveV4RED extends OpMode {
         Parking_Motor.setTargetPosition(0);
         Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Parking_Motor.setPower(1);
-        climbTimer.reset();
     }
 
     @Override
@@ -169,6 +167,7 @@ public class CompDriveV4RED extends OpMode {
         telemetry.addData("Intake running? ", INTAKE_RUN);
         telemetry.addData("Intake reversed? ", INTAKE_REVERSED);
         telemetry.addData("Launcher running? ", LAUNCHER_RUN);
+        telemetry.addData("Light Util Status: ", launcherUtil.getLightUtil().getLightState());
     }
 
 }
