@@ -24,7 +24,7 @@ public class PathFactory {
         @Override
         public void run() {
             IntakeMotor.setPower(INTAKE_POWER);
-            LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+            //LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             LeftSideFeedRoller.setPower(0);
         }
     });
@@ -32,9 +32,9 @@ public class PathFactory {
         @Override
         public void run() {
             LauncherMotor.setPower(0.8); // Todo Tune
-            LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+            //LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             LeftSideFeedRoller.setPower(0);
-            LauncherSafetyServo.setPosition(SAFETY_HOLDING);
+            //LauncherSafetyServo.setPosition(SAFETY_HOLDING);
         }
     });
     public static Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-152.5));

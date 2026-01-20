@@ -38,10 +38,7 @@ public class LauncherUtilV2 {
     public enum LaunchState {
         FIND_TAG,
         SPIN_UP_AND_MOVE,
-        CHECK_AGAIN,
         LAUNCH,
-        RESET_SHOT,
-        INTAKE,
         EXIT,
         DISTANCE_CHECK
     }
@@ -51,9 +48,9 @@ public class LauncherUtilV2 {
     private final boolean isAuto;
     private double theta;
     private double phi;
+    private double launchTime;
     private final LightUtil lightUtil;
 
-    ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     /**
@@ -77,6 +74,7 @@ public class LauncherUtilV2 {
         this.color = color;
         this.isAuto = isAuto;
         this.lightUtil = lightUtil;
+        launchTime = 0.5;
     }
 
     /**
@@ -111,13 +109,17 @@ public class LauncherUtilV2 {
                 LeftSideFeedRoller.setPower(0);
                 launchState = LaunchState.FIND_TAG;
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+                leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 LAUNCHER_RUN = false;
                 break;
             case FIND_TAG:
                 if (!aprilTagMethod.isTagVisible() && !isAuto) {
                     return "No Tag Visible";
                 } else if (isAuto || aprilTagMethod.tagMatchesAlliance(color)) {
-                    launchState = LaunchState.SPIN_UP_AND_MOVE;
+                    launchState = LaunchState.DISTANCE_CHECK;
                     break;
                 }
                 break;
@@ -126,76 +128,30 @@ public class LauncherUtilV2 {
                     return "No Tag Visible";
                 } else if ((moveToLaunch()) && isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
-                    leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                    rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                    leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                    rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                     launchTimer.reset();
                 }
                 break;
             case LAUNCH:
                 lightUtil.makeOff();
-                IntakeMotor.setPower(0);
-                if (!aprilTagMethod.isTagVisible() && !isAuto) {
-                    return "No Tag Visible";
-                } else {
-                    ConveyorMotor.setPower(INTAKE_POWER);
-                    LeftSideFeedRoller.setPower(1);
-                    if (launchTimer.seconds() >= 0.33) { //todo check this time
-                        launchState = LaunchState.RESET_SHOT;
-                    }
-                }
-                break;
-            case RESET_SHOT:
-                if (!aprilTagMethod.isTagVisible() && !isAuto) {
-                    return "No Tag Visible";
-                } else {
-                    LeftSideFeedRoller.setPower(0);
+                IntakeMotor.setPower(INTAKE_POWER);
+                ConveyorMotor.setPower(INTAKE_POWER);
+                LeftSideFeedRoller.setPower(1);
+                if (launchTimer.seconds() >= launchTime) { //todo check this time
                     launchState = LaunchState.DISTANCE_CHECK;
-                    }
-                break;
-            case INTAKE:
-                if (!aprilTagMethod.isTagVisible() && !isAuto) {
-                    return "No Tag Visible";
-                    } else {
-                    IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
-                    if (intakeTimer.seconds() >= 0.15) { //todo check this time
-                        launchState = LaunchState.CHECK_AGAIN;
-                        isSpunUp();
-                    }
-                }
-                break;
-            case CHECK_AGAIN:
-                if(isAuto) {
-                    launchState = LaunchState.LAUNCH;
-                    launchTimer.reset();
-                } else if (!aprilTagMethod.isTagVisible() ) {
-                    return "No Tag Visible";
-                } else {
-                    isSpunUp();
-                    launchState = LaunchState.SPIN_UP_AND_MOVE;
                 }
                 break;
             case DISTANCE_CHECK:
                 lightUtil.makeAmber();
-                if (!aprilTagMethod.isTagVisible() && !isAuto) {
-                    return "No Tag Visible";
-                } else  {
-                    if (rearDistance.getDistance(DistanceUnit.INCH) <= 6) {
-                        launchState = LaunchState.CHECK_AGAIN;
-                    } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 11 //todo
-                           || leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 4
-                           || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 4) {
-                        launchState = LaunchState.INTAKE;
-                        intakeTimer.reset();
-                        isSpunUp();
-                    } else {
-                        ConveyorMotor.setPower(0);
-                        launchState = LaunchState.EXIT;
-                    }
-                    break;
+                launchState = LaunchState.SPIN_UP_AND_MOVE;
+                if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7){
+                    launchTime = 2.5;
+                } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 4){
+                    launchTime = 0.75;
+                } else {
+                    launchState = LaunchState.EXIT;
                 }
+                break;
+
         }
 
         return "Launch In Progress, current state: " + launchState

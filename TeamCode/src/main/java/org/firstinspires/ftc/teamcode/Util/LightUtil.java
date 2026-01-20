@@ -62,13 +62,13 @@ public class LightUtil {
         }
     }
     public void makeRed() {
-        lightState = State.GREEN;
+        lightState = State.RED;
     }
     public void makeAmber() {
         lightState = State.AMBER;
     }
     public void makeGreen() {
-        lightState = State.RED;
+        lightState = State.GREEN;
     }
     public void makeOff() {
         lightState = State.OFF;

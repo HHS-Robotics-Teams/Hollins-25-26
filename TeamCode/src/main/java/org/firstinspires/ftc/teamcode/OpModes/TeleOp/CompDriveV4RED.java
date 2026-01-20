@@ -5,8 +5,10 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Motor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.CAMERA_START_POS;
@@ -26,6 +28,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode.Util.LauncherUtilV2;
 import org.firstinspires.ftc.teamcode.Util.LightUtil;
@@ -38,6 +41,7 @@ public class CompDriveV4RED extends OpMode {
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
     LauncherUtilV2 launcherUtil;
+    ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     @Override
     public void init() {
@@ -68,6 +72,7 @@ public class CompDriveV4RED extends OpMode {
         Parking_Motor.setTargetPosition(0);
         Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Parking_Motor.setPower(1);
+        intakeTimer.reset();
     }
 
     @Override
@@ -130,6 +135,14 @@ public class CompDriveV4RED extends OpMode {
         // Hold left trigger to run the main intake motor
         if (!LAUNCHER_RUN) INTAKE_RUN = input.left_trigger.held();
         if (!LAUNCHER_RUN) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held() || input.left_trigger.held();
+
+        if(intakeTimer.seconds() > 1){
+            launcherUtil.getLightUtil().makeGreen();
+            INTAKE_RUN = false;
+        }
+        if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7) {
+            intakeTimer.reset();
+        }
 
         // Control the main intake motor
         if (INTAKE_RUN) {
