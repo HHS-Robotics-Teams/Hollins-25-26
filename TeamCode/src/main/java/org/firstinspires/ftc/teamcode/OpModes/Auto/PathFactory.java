@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 public class PathFactory {
     MecanumDrive drive;
-    public static double intakeWaitTime = 0.2;
+    public static double intakeWaitTime = 0.1;
     InstantAction runIntake = new InstantAction(new InstantFunction() {
         @Override
         public void run() {

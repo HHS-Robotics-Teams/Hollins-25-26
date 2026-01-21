@@ -26,8 +26,8 @@ public class LauncherUtilTest extends OpMode {
 
     @Override
     public void loop() {
-        //utilV2.setTarget(LAUNCH_TICK_VELOCITY_NEAR);
-        //telemetry.addLine(utilV2.runLauncher());
+        utilV2.setTarget(LAUNCH_TICK_VELOCITY_NEAR);
+        telemetry.addLine(utilV2.runLauncher());
         telemetry.addData("STATE:", utilV2.getLaunchState());
         telemetry.addData("rear distance", rearDistance.getDistance(DistanceUnit.INCH));
         telemetry.addData("left arifact distance", leftArtifactCounterDistance.getDistance(DistanceUnit.INCH));
