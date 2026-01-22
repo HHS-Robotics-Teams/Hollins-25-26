@@ -140,9 +140,9 @@ public class CompDriveV4BLUE extends OpMode {
             launcherUtil.getLightUtil().makeGreen();
             INTAKE_RUN = false;
         }
-        if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7) {
-            intakeTimer.reset();
-        }
+//        if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7) {
+//            intakeTimer.reset();
+//        }
 
         // Control the main intake motor
         if (INTAKE_RUN) {

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 //testing opmode disabled
 @TeleOp
-@Disabled
+
 @Deprecated
 public class LauncherFingerServoTesting extends OpMode {
 
@@ -25,7 +25,7 @@ public class LauncherFingerServoTesting extends OpMode {
     }
 
     public void start() {
-        LauncherFingerServo.setPosition(0);
+        //LauncherFingerServo.setPosition(0);
         LauncherSafetyServo.setPosition(0);
     }
 
@@ -40,12 +40,12 @@ public class LauncherFingerServoTesting extends OpMode {
             LauncherSafetyServo.setPosition(LauncherSafetyServo.getPosition()-.05);
         }
 
-        if(input.x.down()){
-            LauncherFingerServo.setPosition(LauncherFingerServo.getPosition()+0.05);
-        }
-        if(input.y.down()){
-            LauncherFingerServo.setPosition(LauncherFingerServo.getPosition()-0.05);
-        }
+//        if(input.x.down()){
+//            LauncherFingerServo.setPosition(LauncherFingerServo.getPosition()+0.05);
+//        }
+//        if(input.y.down()){
+//            LauncherFingerServo.setPosition(LauncherFingerServo.getPosition()-0.05);
+//        }
         if(input.a.held()){
             LeftSideFeedRoller.setPower(power);
         } else {
@@ -59,7 +59,7 @@ public class LauncherFingerServoTesting extends OpMode {
         }
         telemetry.addLine("X to increase");
         telemetry.addLine("Y to decrease");
-        telemetry.addData("Launcher Pos: ", LauncherFingerServo.getPosition());
+        //telemetry.addData("Launcher Pos: ", LauncherFingerServo.getPosition());
         telemetry.addData("Shooter saftey servo pos", LauncherSafetyServo.getPosition());
         telemetry.addLine("hold A to run feed rollers");
         telemetry.addLine("left bumper to decrease power");
