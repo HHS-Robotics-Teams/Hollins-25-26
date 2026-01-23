@@ -30,11 +30,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 public class LauncherUtilV2 {
     AprilTagMethod aprilTagMethod;
-
-    public LightUtil getLightUtil() {
-        return lightUtil;
-    }
-
     public enum LaunchState {
         FIND_TAG,
         SPIN_UP_AND_MOVE,
@@ -50,7 +45,6 @@ public class LauncherUtilV2 {
     private double phi;
     private double launchTime;
     private final LightUtil lightUtil;
-
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     /**
@@ -132,7 +126,7 @@ public class LauncherUtilV2 {
                 }
                 break;
             case LAUNCH:
-                lightUtil.makeOff();
+                setLightOff();
                 IntakeMotor.setPower(INTAKE_POWER);
                 ConveyorMotor.setPower(INTAKE_POWER);
                 LeftSideFeedRoller.setPower(1);
@@ -141,7 +135,7 @@ public class LauncherUtilV2 {
                 }
                 break;
             case DISTANCE_CHECK:
-                lightUtil.makeAmber();
+                setLightAmber();
                 launchState = LaunchState.SPIN_UP_AND_MOVE;
                 if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7){
                     launchTime = 2.5;
@@ -220,5 +214,21 @@ public class LauncherUtilV2 {
     private boolean isSpunUp() {
         LauncherMotor.setVelocity(target);
         return abs(LauncherMotor.getVelocity() - target) <= LAUNCH_TICK_VEL_THRESHOLD;
+    }
+
+    public void setLightRed() {
+        lightUtil.makeRed();
+    }
+    public void setLightAmber() {
+        lightUtil.makeAmber();
+    }
+    public void setLightGreen() {
+        lightUtil.makeGreen();
+    }
+    public void setLightOff() {
+        lightUtil.makeOff();
+    }
+    public LightUtil.LightState getLightState() {
+        return lightUtil.getLightState();
     }
 }

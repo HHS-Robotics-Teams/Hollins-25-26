@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Util;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LED;
 
@@ -9,76 +7,74 @@ import java.util.ArrayList;
 
 public class LightUtil {
     private final int numLights;
-    private enum State {
+    public enum LightState {
         RED,
         AMBER,
         GREEN,
         OFF
     }
-    private State lightState = State.OFF;
-    private final ArrayList<LED> green = new ArrayList<>();
-    private final ArrayList<LED> red = new ArrayList<>();
+    private LightState lightState;
+    private final ArrayList<LED> greens = new ArrayList<>();
+    private final ArrayList<LED> reds = new ArrayList<>();
     public LightUtil(int numLights, HardwareMap hardwareMap){
         this.numLights = numLights;
         for(int i = 1; i <= numLights; i++){
-            green.add(hardwareMap.get(LED.class, ("green" + i)));
-            red.add(hardwareMap.get(LED.class, ("red" + i)));
+            greens.add(hardwareMap.get(LED.class, ("green" + i)));
+            reds.add(hardwareMap.get(LED.class, ("red" + i)));
         }
+        lightState = LightState.OFF;
     }
     public void updateLights() {
         switch (lightState){
             case OFF:
-                for(LED q : green){
-                    q.off();
+                for(LED light : greens){
+                    light.off();
                 }
-                for(LED q : red){
-                    q.off();
+                for(LED light : reds){
+                    light.off();
                 }
                 break;
             case RED:
-                for(LED q : green){
-                    q.off();
+                for(LED light : greens){
+                    light.off();
                 }
-                for(LED q : red){
-                    q.on();
+                for(LED light : reds){
+                    light.on();
                 }
                 break;
             case AMBER:
-                for(LED q : green){
-                    q.on();
+                for(LED light : greens){
+                    light.on();
                 }
-                for(LED q : red){
-                    q.on();
+                for(LED light : reds){
+                    light.on();
                 }
                 break;
             case GREEN:
-                for(LED q : green){
-                    q.on();
+                for(LED light : greens){
+                    light.on();
                 }
-                for(LED q : red){
-                    q.off();
+                for(LED light : reds){
+                    light.off();
                 }
                 break;
         }
     }
     public void makeRed() {
-        lightState = State.RED;
+        lightState = LightState.RED;
     }
     public void makeAmber() {
-        lightState = State.AMBER;
+        lightState = LightState.AMBER;
     }
     public void makeGreen() {
-        lightState = State.GREEN;
+        lightState = LightState.GREEN;
     }
     public void makeOff() {
-        lightState = State.OFF;
+        lightState = LightState.OFF;
     }
-
-    @SuppressWarnings("ClassEscapesDefinedScope")
-    public State getLightState() {
+    public LightState getLightState() {
         return lightState;
     }
-
     public int getNumLights() {
         return numLights;
     }

@@ -1,18 +1,13 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueNearLaunchPose;
-import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.bluePGPPickupStartPose;
-import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.bluePPGPickupStartPose;
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.intakeWaitTime;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Motor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
-
-import static java.lang.Math.abs;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -21,15 +16,12 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
-import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
-import org.firstinspires.ftc.teamcode._Proccedural.Constants;
 
 @Autonomous
 public class BlueNear3x9 extends OpMode {

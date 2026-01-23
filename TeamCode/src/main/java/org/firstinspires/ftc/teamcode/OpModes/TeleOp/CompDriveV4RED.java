@@ -137,9 +137,9 @@ public class CompDriveV4RED extends OpMode {
         if (!LAUNCHER_RUN) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held() || input.left_trigger.held();
 
         if(intakeTimer.seconds() > 1){
-            launcherUtil.getLightUtil().makeGreen();
-            INTAKE_RUN = false;
+            launcherUtil.setLightGreen();
         }
+
         if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7) {
             intakeTimer.reset();
         }
@@ -180,7 +180,7 @@ public class CompDriveV4RED extends OpMode {
         telemetry.addData("Intake running? ", INTAKE_RUN);
         telemetry.addData("Intake reversed? ", INTAKE_REVERSED);
         telemetry.addData("Launcher running? ", LAUNCHER_RUN);
-        telemetry.addData("Light Util Status: ", launcherUtil.getLightUtil().getLightState());
+        telemetry.addData("Light Util Status: ", launcherUtil.getLightState());
     }
 
 }
