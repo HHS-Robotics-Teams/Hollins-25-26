@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Prototypes;
 
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.intakeFeeder;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftIntakeFeeder;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -17,7 +17,7 @@ public class IntakeFeederPosFinder extends OpMode {
     @Override
     public void init() {
         Components.initComponents(hardwareMap);
-        intakeFeeder.setPosition(pos);
+
     }
 
     @Override
@@ -27,7 +27,7 @@ public class IntakeFeederPosFinder extends OpMode {
         telemetry.addLine("B to decrease pos by " + delta);
 
         telemetry.addData("pos:", pos);
-        intakeFeeder.setPosition(pos);
+
         if(input.a.down()){
             pos += delta;
         }

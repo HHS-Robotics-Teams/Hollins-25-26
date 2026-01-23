@@ -27,7 +27,8 @@ public class Components {
     public static CRServo leftFeeder;
     public static CRServo rightFeeder;
     public static DcMotor intake;
-    public static Servo intakeFeeder;
+    public static CRServo LeftIntakeFeeder;
+    public static CRServo RightIntakeFeeder;
     public static IMU imu;
 
     /*
@@ -45,7 +46,9 @@ public class Components {
         leftFeeder = hardwareMap.get(CRServo.class, "leftFeeder");
         rightFeeder = hardwareMap.get(CRServo.class, "rightFeeder");
         intake = hardwareMap.get(DcMotor.class, "intake");
-        intakeFeeder = hardwareMap.get(Servo.class, "intakeFeeder");
+        LeftIntakeFeeder = hardwareMap.get(CRServo.class, "LeftIntakeFeeder");
+        RightIntakeFeeder = hardwareMap.get(CRServo.class, "RightIntakeFeeder");
+
 
 
         //Drive Motor Settings

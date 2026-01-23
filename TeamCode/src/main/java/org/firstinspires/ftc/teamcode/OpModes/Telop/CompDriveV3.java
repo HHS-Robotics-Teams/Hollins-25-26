@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.OpModes.Telop;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.imu;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.intake;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.intakeFeeder;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftIntakeFeeder;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.RightIntakeFeeder;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.launcher;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFeeder;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
@@ -50,7 +51,7 @@ public class CompDriveV3 extends OpMode {
 
     @Override
     public void start() {
-        intakeFeeder.setPosition(0);
+
     }
 
     @Override
@@ -61,9 +62,21 @@ public class CompDriveV3 extends OpMode {
         //intake stuff
         if (input.left_bumper.held()) {
                 intake.setPower(0.85);
+
             } else {
                 intake.setPower(0);
+
             }
+        if (input.dpad_down.held()) {
+            LeftIntakeFeeder.setPower(1);
+            RightIntakeFeeder.setPower(-1);
+
+            } else {
+                LeftIntakeFeeder.setPower(0);
+                RightIntakeFeeder.setPower(0);
+            }
+
+
 
 
         if (input.left_trigger.held()) {
@@ -77,17 +90,20 @@ public class CompDriveV3 extends OpMode {
 
 
 
-
+/*
         if (input.a.down()) {
-            if(intakeFeeder.getPosition() != 0.2){
-                intakeFeeder.setPosition(0.2);
+            if(LeftIntakeFeeder.getPosition() != 0.2){
+                LeftIntakeFeeder.setPosition(0.2);
             } else {
-                intakeFeeder.setPosition(0.9);
+                LeftIntakeFeeder.setPosition(0.9);
             }
         }
 
         telemetry.addData("Intake Feeder Pos:",
-                intakeFeeder.getPosition());
+                LeftIntakeFeeder.getPosition());
+
+
+ */
         /*
          * Here we give the user control of the speed of the launcher motor without automatically
          * queuing a shot.

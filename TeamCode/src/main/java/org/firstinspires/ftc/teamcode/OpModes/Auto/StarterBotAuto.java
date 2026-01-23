@@ -33,9 +33,7 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto;
  */
 
 
-import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.intakeFeeder;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftIntakeFeeder;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -199,7 +197,7 @@ public class StarterBotAuto extends OpMode {
          * step (using the FTC Robot Controller app on the driver's station).
          */
         Components.initComponents(hardwareMap);
-        intakeFeeder.setPosition(0.4);
+
 
 
         /*
@@ -420,7 +418,6 @@ public class StarterBotAuto extends OpMode {
                     launchState = LaunchState.LAUNCH;
                     leftFeeder.setPower(1);
                     rightFeeder.setPower(1);
-                    intakeFeeder.setPosition(0.2);
                     feederTimer.reset();
                 }
                 break;
@@ -428,7 +425,7 @@ public class StarterBotAuto extends OpMode {
                 if (feederTimer.seconds() > FEED_TIME) {
                     leftFeeder.setPower(0);
                     rightFeeder.setPower(0);
-                    intakeFeeder.setPosition(0.4);
+
 
                     if (shotTimer.seconds() > TIME_BETWEEN_SHOTS) {
                         launchState = LaunchState.PPREPARE_TWO;
@@ -440,7 +437,6 @@ public class StarterBotAuto extends OpMode {
                     launchState = LaunchState.LAUNCH_TWO;
                     leftFeeder.setPower(1);
                     rightFeeder.setPower(1);
-                    intakeFeeder.setPosition(0.2);
                     feederTimer.reset();
                 }
                 break;
@@ -448,7 +444,6 @@ public class StarterBotAuto extends OpMode {
                 if (feederTimer.seconds() > FEED_TIME) {
                     leftFeeder.setPower(0);
                     rightFeeder.setPower(0);
-                    intakeFeeder.setPosition(0.4);
 
                     if (shotTimer.seconds() > TIME_BETWEEN_SHOTS) {
                         launchState = LaunchState.PREPARE_THREE;
@@ -462,7 +457,6 @@ public class StarterBotAuto extends OpMode {
                     launchState = LaunchState.LAUNCH_THREE;
                     leftFeeder.setPower(1);
                     rightFeeder.setPower(1);
-                    intakeFeeder.setPosition(0.2);
                     feederTimer.reset();
                 }
                 break;
@@ -470,7 +464,6 @@ public class StarterBotAuto extends OpMode {
                 if (feederTimer.seconds() > FEED_TIME) {
                     leftFeeder.setPower(0);
                     rightFeeder.setPower(0);
-                    intakeFeeder.setPosition(0.4);
 
                     if (shotTimer.seconds() > TIME_BETWEEN_SHOTS) {
                         launchState = LaunchState.IDLE;
