@@ -79,6 +79,7 @@ public class CompDriveV4RED extends OpMode {
     public void loop() {
         input.pollGamepad(gamepad1);
 
+        launcherUtil.updateLights();
         /* ---------- Drivetrain ---------- */
 
         //Drivetrain movement values

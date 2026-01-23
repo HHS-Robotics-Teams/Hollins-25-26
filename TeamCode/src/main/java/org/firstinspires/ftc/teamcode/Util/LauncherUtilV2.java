@@ -201,7 +201,7 @@ public class LauncherUtilV2 {
                 leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-            target = (0.0132275 * range * range) + (1.52116 * range) + 732.98942;
+            target = (0.0132275 * range * range) + (1.52116 * range) + 752.98942;
             LauncherMotor.setVelocity(target);
             return abs(theta - phi) <= margin;
         }
@@ -228,6 +228,7 @@ public class LauncherUtilV2 {
     public void setLightOff() {
         lightUtil.makeOff();
     }
+    public void updateLights() {lightUtil.updateLights();}
     public LightUtil.LightState getLightState() {
         return lightUtil.getLightState();
     }

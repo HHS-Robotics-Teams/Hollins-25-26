@@ -78,6 +78,7 @@ public class CompDriveV4BLUE extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
+        launcherUtil.updateLights();
 
         /* ---------- Drivetrain ---------- */
 
@@ -142,9 +143,9 @@ public class CompDriveV4BLUE extends OpMode {
         }
 
 
-//        if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7) {
-//            intakeTimer.reset();
-//        }
+        if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7) {
+            intakeTimer.reset();
+        }
 
         // Control the main intake motor
         if (INTAKE_RUN) {
