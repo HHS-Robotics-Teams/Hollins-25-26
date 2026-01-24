@@ -5,9 +5,12 @@ import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.intakeWait
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -34,12 +37,14 @@ public class BlueNear3x9 extends OpMode {
         IntakeMotor.setPower(1);
         ConveyorMotor.setPower(1);
         LeftSideFeedRoller.setPower(0);
+        LauncherSafetyServo.setPosition(SAFETY_HOLDING);
     });
     InstantAction offIntake = new InstantAction(() -> {
         LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
         IntakeMotor.setPower(0);
         ConveyorMotor.setPower(0);
         LeftSideFeedRoller.setPower(0);
+        LauncherSafetyServo.setPosition(SAFTEY_FIRING);
     });
     InstantAction setVelocity = new InstantAction(() -> LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR));
     InstantAction stop = new InstantAction(this::requestOpModeStop);

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue;
+package org.firstinspires.ftc.teamcode.OpModes.Auto.Red;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
-public class BlueVeryFar3x6 extends OpMode {
+public class RedVeryFar3x6 extends OpMode {
     MecanumDrive drive;
     InstantAction IntakePickup = new InstantAction(new InstantFunction() {
         @Override
@@ -91,20 +91,20 @@ public class BlueVeryFar3x6 extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), -(13 / 2), Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), (13 / 2), Math.toRadians(180)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -(13 / 2), Math.toRadians(180)))
-                .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(-155)), Math.toRadians(-175))
+        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), (13 / 2), Math.toRadians(180)))
+                .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(155)), Math.toRadians(175))
                 .afterDisp(0.01, new InstantFunction() {
                     @Override
                     public void run() {
-                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR );
+                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 250);
                     }
                 })
                 .build();
-        driveToIntakeOne = drive.actionBuilder(new Pose2d(50, -10, Math.toRadians(-155)))
+        driveToIntakeOne = drive.actionBuilder(new Pose2d(50, 10, Math.toRadians(155)))
                 .afterDisp(20, new InstantFunction() {
                     @Override
                     public void run() {
@@ -112,16 +112,15 @@ public class BlueVeryFar3x6 extends OpMode {
                         ConveyorMotor.setPower(1);
                     }
                 })
-                .strafeToLinearHeading(new Vector2d(64,-54),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(64,54),Math.toRadians(90))
                 .waitSeconds(.1)
-                //.lineToYConstantHeading(-58)
-                .strafeToLinearHeading(new Vector2d(66,-58),Math.toRadians(-60))
+                .strafeToLinearHeading(new Vector2d(70,58),Math.toRadians(60))
                 .waitSeconds(0.4)
-                .turnTo(Math.toRadians(-90))
-                .lineToY(-60)
+                .turnTo(Math.toRadians(90))
+                .lineToY(66)
                 .waitSeconds(0.2)
-                .strafeToLinearHeading(new Vector2d(52, -10), Math.toRadians(-155))
-                .afterDisp(50, new InstantFunction() {
+                .strafeToLinearHeading(new Vector2d(52, 10), Math.toRadians(155))
+                .afterDisp(65, new InstantFunction() {
                     @Override
                     public void run() {
                         IntakeMotor.setPower(0);
@@ -129,13 +128,14 @@ public class BlueVeryFar3x6 extends OpMode {
                     }
                 })
                 .build();
-        driveToIntakeTwo = drive.actionBuilder(new Pose2d(52, -10, Math.toRadians(-155)))
-                .splineToSplineHeading(new Pose2d(39,-28,Math.toRadians(-90)),Math.toRadians(-90))
+        driveToIntakeTwo = drive.actionBuilder(new Pose2d(52, 10, Math.toRadians(155)))
+                .splineToSplineHeading(new Pose2d(39,28,Math.toRadians(90)),Math.toRadians(90))
                 .afterDisp(1,IntakePickup)
                 .waitSeconds(0.2)
-                .lineToY(-41)
-                .lineToY(-59)
-                .splineToLinearHeading(new Pose2d(52, -10, Math.toRadians(-155)),Math.toRadians(-155.75))
+                .lineToY(41)
+                .lineToY(59)
+                .waitSeconds(0.2)
+                .splineToLinearHeading(new Pose2d(52, 10, Math.toRadians(155)),Math.toRadians(155.75))
                 .build();
         telemetry.addLine("Ready to Launch");
         LightUtil util = new LightUtil(2, hardwareMap);
@@ -145,7 +145,7 @@ public class BlueVeryFar3x6 extends OpMode {
 
     @Override
     public void start(){
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 275);
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 185);
         Actions.runBlocking(turnToLaunch);
     }
 
@@ -160,18 +160,17 @@ public class BlueVeryFar3x6 extends OpMode {
 
         switch (state){
             case START:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 275);
                 intakeTimer.reset();
                 state = AutoState.SPIN_UP;
                 break;
 
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 275);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 185);
                 state = AutoState.LAUNCH_ONE;
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                 break;
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 275){ // do not change this time
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 185){ // do not change this time
                     IntakeMotor.setPower(0.75);
                     ConveyorMotor.setPower(0.75);
                     LeftSideFeedRoller.setPower(INTAKE_POWER);
@@ -200,12 +199,12 @@ public class BlueVeryFar3x6 extends OpMode {
                 break;
             case SPIN_UP_TWO:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 275);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 225);
                 state = AutoState.LAUNCH_TWO;
                 launchTimer.reset();
                 break;
             case LAUNCH_TWO:
-                if(LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 275){
+                if(LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 225){
                     IntakeMotor.setPower(0.75);
                     ConveyorMotor.setPower(0.75);
                     LeftSideFeedRoller.setPower(INTAKE_POWER);
@@ -237,11 +236,11 @@ public class BlueVeryFar3x6 extends OpMode {
                 break;
             case SPIN_UP_THREE:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 275);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 250);
                 state = AutoState.LAUNCH_THREE;
                 break;
             case LAUNCH_THREE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 275) { // todo change Time
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 250) { // todo change Time
                     IntakeMotor.setPower(0.75);
                     ConveyorMotor.setPower(0.75);
                     LeftSideFeedRoller.setPower(INTAKE_POWER);
@@ -261,7 +260,7 @@ public class BlueVeryFar3x6 extends OpMode {
             case PARK:
                 LauncherSafetyServo.setPosition(SAFETY_HOLDING);
                 LauncherMotor.setVelocity(400);
-                Actions.runBlocking(drive.actionBuilder(new Pose2d(50, -10, Math.toRadians(-162.5))).lineToX(40).build());
+                Actions.runBlocking(drive.actionBuilder(new Pose2d(50, 10, Math.toRadians(162.5))).lineToX(40).build());
                 state = AutoState.END;
                 break;
             case END:
