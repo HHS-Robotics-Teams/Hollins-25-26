@@ -23,6 +23,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
+import org.firstinspires.ftc.teamcode.Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
@@ -131,9 +132,6 @@ public class RedNear3x9 extends OpMode {
                 .afterDisp(38, offIntake)
                 .splineToLinearHeading(new Pose2d(-23,19,Math.toRadians(132)),Math.toRadians(-90))
                 .build();
-        telemetry.addLine("Trajectory 1 built");
-        //driveToLaunchOne = factory.redNearLaunchPath(new Pose2d(-11.75, 30, Math.toRadians(90)))
-        telemetry.addLine("Trajectory 2 built");
         //driveToIntakeTwo = factory.redPGPPickupPath(new Pose2d(-24,19,Math.toRadians(132.5)));;
         driveToIntakeTwo = drive.actionBuilder(redNearLaunchPose)
                 .splineToLinearHeading(new Pose2d(9.5,28,Math.toRadians(90)),Math.toRadians(-90))
@@ -144,9 +142,6 @@ public class RedNear3x9 extends OpMode {
                 .afterDisp(55, offIntake)
                 .splineToLinearHeading(new Pose2d(-22,19,Math.toRadians(132)),Math.toRadians(-90))
                 .build();
-        telemetry.addLine("Trajectory 3 built");
-        //driveToLaunchThree = factory.redNearLaunchPath(new Pose2d(11.75, 30, Math.toRadians(90)));
-        telemetry.addLine("Trajectory 4 built");
 //        //driveToIntakeThree = factory.blueGPPPickupPath(blueNearLaunchPose);
 //        driveToIntakeThree = drive.actionBuilder(blueNearLaunchPose)
 //                .splineToLinearHeading(new Pose2d(30,-28,Math.toRadians(-90)),Math.toRadians(-90))
@@ -161,8 +156,10 @@ public class RedNear3x9 extends OpMode {
 //        //driveToLaunchFour = factory.blueNearLaunchPath(bluePGPPickupStartPose);
 //        telemetry.addLine("Trajectory 6 built");
         park = factory.redParkPath(redNearLaunchPose);
-        telemetry.addLine("Trajectory 7 built");
-        telemetry.addLine("Ready to Start");
+        telemetry.addLine("Ready to Launch");
+        LightUtil util = new LightUtil(2, hardwareMap);
+        util.makeGreen();
+        util.updateLights();
     }
 
     @Override

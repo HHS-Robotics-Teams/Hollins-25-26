@@ -31,6 +31,7 @@ import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
 import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 @Disabled
+@Deprecated
 @Autonomous
 public class RpmBlueNearThreePlusSix extends OpMode {
     MecanumDrive drive;

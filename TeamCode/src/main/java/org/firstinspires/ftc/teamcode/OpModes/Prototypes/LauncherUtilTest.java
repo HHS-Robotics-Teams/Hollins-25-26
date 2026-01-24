@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifa
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -14,6 +15,8 @@ import org.firstinspires.ftc.teamcode.Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
+@Disabled
+@Deprecated
 public class LauncherUtilTest extends OpMode {
 
     LauncherUtilV2 utilV2;

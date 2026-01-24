@@ -34,6 +34,7 @@ import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
 import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 @Disabled
+@Deprecated
 @Autonomous
 public class RpmBlueVeryFarThreePlusSix extends OpMode {
     MecanumDrive drive;
@@ -128,7 +129,6 @@ public class RpmBlueVeryFarThreePlusSix extends OpMode {
                 .waitSeconds(0.2)
 
                 .build();
-        driveToLaunchOne = factory.blueFarLaunchPath(new Pose2d(39,-48,Math.toRadians(-90)));
         driveToIntakeTwo = drive.actionBuilder(blueFarLaunchPose)
                 .splineToSplineHeading(new Pose2d(39,-30,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(1,IntakePickup)

@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 @Disabled
 @Autonomous
+@Deprecated
 public class NewBlueNearThreePlusSix extends OpMode {
     MecanumDrive drive;
 

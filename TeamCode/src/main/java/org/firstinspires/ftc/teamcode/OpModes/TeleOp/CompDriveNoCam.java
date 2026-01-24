@@ -5,8 +5,10 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Motor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.CAMERA_START_POS;
@@ -16,7 +18,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_REVERSED;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.park_Pos;
 import static java.lang.Math.abs;
@@ -27,6 +28,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode.Util.LauncherUtilV2;
 import org.firstinspires.ftc.teamcode.Util.LightUtil;
@@ -39,7 +41,7 @@ public class CompDriveNoCam extends OpMode {
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
     LauncherUtilV2 launcherUtil;
-    ElapsedTime climbTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
+    ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     @Override
     public void init() {
@@ -47,7 +49,6 @@ public class CompDriveNoCam extends OpMode {
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
         launcherUtil = new LauncherUtilV2("BLUE", true, new LightUtil(2, hardwareMap));
-
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
     }
@@ -66,18 +67,18 @@ public class CompDriveNoCam extends OpMode {
         LAUNCHER_RUN = false;
         DriveSlowdown = false;
         LauncherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        LauncherMotor.setVelocity(LAUNCHER_NEAR_TARGET);
         cameraTiltServo.setPosition(CAMERA_START_POS);
         Parking_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Parking_Motor.setTargetPosition(0);
         Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Parking_Motor.setPower(1);
-        climbTimer.reset();
+        intakeTimer.reset();
     }
 
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
+        launcherUtil.updateLights();
 
         /* ---------- Drivetrain ---------- */
 
@@ -136,6 +137,16 @@ public class CompDriveNoCam extends OpMode {
         if (!LAUNCHER_RUN) INTAKE_RUN = input.left_trigger.held();
         if (!LAUNCHER_RUN) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held() || input.left_trigger.held();
 
+
+        if(intakeTimer.seconds() > 1){
+            launcherUtil.setLightGreen();
+        }
+
+
+        if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7) {
+            intakeTimer.reset();
+        }
+
         // Control the main intake motor
         if (INTAKE_RUN) {
             IntakeMotor.setPower(INTAKE_REVERSED ? -INTAKE_POWER : INTAKE_POWER);
@@ -172,6 +183,7 @@ public class CompDriveNoCam extends OpMode {
         telemetry.addData("Intake running? ", INTAKE_RUN);
         telemetry.addData("Intake reversed? ", INTAKE_REVERSED);
         telemetry.addData("Launcher running? ", LAUNCHER_RUN);
+        telemetry.addData("Light Util Status: ", launcherUtil.getLightState());
     }
 
 }
