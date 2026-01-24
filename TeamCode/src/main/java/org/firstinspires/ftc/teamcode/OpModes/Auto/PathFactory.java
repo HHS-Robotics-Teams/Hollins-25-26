@@ -149,5 +149,9 @@ public class PathFactory {
         return drive.actionBuilder(startPose)
                 .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(155)), Math.toRadians(90))
                 .build();
+    }public Action redParkPath(Pose2d startPose) {
+        return drive.actionBuilder(startPose)
+                .splineToLinearHeading(new Pose2d(-13,40,Math.toRadians(90)),Math.toRadians(-90))
+                .build();
     }
 }

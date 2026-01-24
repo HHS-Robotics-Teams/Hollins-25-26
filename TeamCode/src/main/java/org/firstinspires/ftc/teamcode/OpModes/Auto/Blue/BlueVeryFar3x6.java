@@ -34,6 +34,8 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
 import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
+@Deprecated
+@Disabled
 @Autonomous
 public class BlueVeryFar3x6 extends OpMode {
     MecanumDrive drive;

@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue;
+package org.firstinspires.ftc.teamcode.OpModes.Auto.Red;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueNearLaunchPose;
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.intakeWaitTime;
+import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.redNearLaunchPose;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
 
@@ -15,7 +17,6 @@ import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -23,20 +24,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
-@Deprecated
-@Disabled
+
 @Autonomous
-public class BlueNear3x9 extends OpMode {
+public class RedNear3x9 extends OpMode {
     MecanumDrive drive;
-    double NEWPOWER = 0.75;
 
     InstantAction runIntake = new InstantAction(new InstantFunction() {
         @Override
         public void run() {
             LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
             IntakeMotor.setPower(1);
-            ConveyorMotor.setPower(1);
-            LeftSideFeedRoller.setPower(0);
+            ConveyorMotor.setPower(0);
+            LeftSideFeedRoller.setPower(-1);
         }
     });
     InstantAction offIntake = new InstantAction(new InstantFunction() {
@@ -53,12 +52,6 @@ public class BlueNear3x9 extends OpMode {
         public void run() {
             LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
 
-        }
-    });
-    InstantAction stop = new InstantAction(new InstantFunction() {
-        @Override
-        public void run() {
-            requestOpModeStop();
         }
     });
     //double BVM;
@@ -121,53 +114,53 @@ public class BlueNear3x9 extends OpMode {
     @Override
     public void init() {
 
-        drive = new MecanumDrive(hardwareMap, new Pose2d(-55,-50,Math.toRadians(-135)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(-55,50,Math.toRadians(135)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder( new Pose2d(-55,-50,Math.toRadians(-135)))
+        turnToLaunch = drive.actionBuilder( new Pose2d(-55,50,Math.toRadians(132)))
                 .afterDisp(.5, setVelocity)
-                .lineToYLinearHeading(-19,Math.toRadians(-134))
+                .lineToYLinearHeading(19,Math.toRadians(132.5))
                 .build();
-        //driveToIntakeOne = factory.bluePPGPickupPath(blueNearLaunchPose);
-        driveToIntakeOne = drive.actionBuilder(new Pose2d(-19, -13, Math.toRadians(-133)))
-                .splineToLinearHeading(new Pose2d(-12,-28,Math.toRadians(-90)),Math.toRadians(-90))
+        //driveToIntakeOne = factory.redPPGPickupPath(new Pose2d(-24,19,Math.toRadians(132.5)));;
+        driveToIntakeOne = drive.actionBuilder(redNearLaunchPose)
+                .splineToLinearHeading(new Pose2d(-12,28,Math.toRadians(90)),Math.toRadians(-90))
                 .afterDisp(.1, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(-56)
-                .afterDisp(40, offIntake)
-                .splineToLinearHeading(new Pose2d(-23,-19,Math.toRadians(-135)),Math.toRadians(-90))
+                .lineToY(56)
+                .afterDisp(38, offIntake)
+                .splineToLinearHeading(new Pose2d(-23,19,Math.toRadians(132)),Math.toRadians(-90))
                 .build();
         telemetry.addLine("Trajectory 1 built");
-        //driveToLaunchOne = factory.blueNearLaunchPath(bluePPGPickupStartPose);
+        //driveToLaunchOne = factory.redNearLaunchPath(new Pose2d(-11.75, 30, Math.toRadians(90)))
         telemetry.addLine("Trajectory 2 built");
-        //driveToIntakeTwo = factory.bluePGPPickupPath(blueNearLaunchPose);
-        driveToIntakeTwo = drive.actionBuilder(new Pose2d(-19, -13, Math.toRadians(-133)))
-                .splineToLinearHeading(new Pose2d(11.5,-28,Math.toRadians(-90)),Math.toRadians(-90))
+        //driveToIntakeTwo = factory.redPGPPickupPath(new Pose2d(-24,19,Math.toRadians(132.5)));;
+        driveToIntakeTwo = drive.actionBuilder(redNearLaunchPose)
+                .splineToLinearHeading(new Pose2d(9.5,28,Math.toRadians(90)),Math.toRadians(-90))
                 .afterDisp(1, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(-38)
-                .lineToY(-59)
-                .afterDisp(85, offIntake)
-                .splineToLinearHeading(new Pose2d(-22,-19,Math.toRadians(-133.5)),Math.toRadians(-90))
+                .lineToY(38)
+                .lineToY(56)
+                .afterDisp(55, offIntake)
+                .splineToLinearHeading(new Pose2d(-22,19,Math.toRadians(132)),Math.toRadians(-90))
                 .build();
         telemetry.addLine("Trajectory 3 built");
-        //driveToLaunchThree = factory.blueNearLaunchPath(bluePGPPickupStartPose);
+        //driveToLaunchThree = factory.redNearLaunchPath(new Pose2d(11.75, 30, Math.toRadians(90)));
         telemetry.addLine("Trajectory 4 built");
-        driveToIntakeThree = factory.blueGPPPickupPath(blueNearLaunchPose);
-        driveToIntakeThree = drive.actionBuilder(new Pose2d(-19, -13, Math.toRadians(-133)))
-                .splineToLinearHeading(new Pose2d(12+22,-28,Math.toRadians(-90)),Math.toRadians(-90))
-                .afterDisp(20, stop)
-                .waitSeconds(intakeWaitTime)
-                .lineToY(-41)
-                .lineToY(-56)
-                .afterDisp(65, offIntake)
-                .splineToLinearHeading(new Pose2d(-22,-19,Math.toRadians(-132)),Math.toRadians(-90))
-                .build();
-        telemetry.addLine("Trajectory 5 built");
+//        //driveToIntakeThree = factory.blueGPPPickupPath(blueNearLaunchPose);
+//        driveToIntakeThree = drive.actionBuilder(blueNearLaunchPose)
+//                .splineToLinearHeading(new Pose2d(30,-28,Math.toRadians(-90)),Math.toRadians(-90))
+//                .afterDisp(.1, runIntake)
+//                .waitSeconds(intakeWaitTime)
+//                .lineToY(-41)
+//                .lineToY(-56)
+//                .afterDisp(65, offIntake)
+//                .splineToLinearHeading(new Pose2d(-22,-19,Math.toRadians(-132)),Math.toRadians(-90))
+//                .build();
+//        telemetry.addLine("Trajectory 5 built");
 //        //driveToLaunchFour = factory.blueNearLaunchPath(bluePGPPickupStartPose);
 //        telemetry.addLine("Trajectory 6 built");
-        park = factory.blueParkPath(new Pose2d(-19, -13, Math.toRadians(-135)));
+        park = factory.redParkPath(redNearLaunchPose);
         telemetry.addLine("Trajectory 7 built");
         telemetry.addLine("Ready to Start");
     }
@@ -178,7 +171,6 @@ public class BlueNear3x9 extends OpMode {
 //        Parking_Motor.setTargetPosition(0);
 //        Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        Parking_Motor.setPower(1);
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
         Actions.runBlocking(turnToLaunch);
     }
 
@@ -198,15 +190,15 @@ public class BlueNear3x9 extends OpMode {
                 break;
 
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 55);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
                 intakeTimer.reset();
                 state = AutoState.LAUNCH_ONE;
                 break;
 
             case LAUNCH_ONE:
-                if (Math.abs((LauncherMotor.getVelocity()) - (LAUNCH_TICK_VELOCITY_NEAR + 55)) <= 100){ // do not change this time
-                    IntakeMotor.setPower(NEWPOWER);
-                    ConveyorMotor.setPower(NEWPOWER);
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR){ // do not change this time
+                    IntakeMotor.setPower(INTAKE_POWER);
+                    ConveyorMotor.setPower(INTAKE_POWER);
                     LeftSideFeedRoller.setPower(1);
                     launchTimer.reset();
                     state = AutoState.RESET_ONE;
@@ -230,19 +222,19 @@ public class BlueNear3x9 extends OpMode {
                 state = AutoState.DRIVE_TO_LAUNCH_TWO;
                 break;
             case DRIVE_TO_LAUNCH_TWO:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 125);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 50);
                 //Actions.runBlocking(driveToLaunchOne);
                 intakeTimer.reset();
                 state = AutoState.SPIN_UP_TWO;
                 break;
             case SPIN_UP_TWO:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 125);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 50);
                 state = AutoState.LAUNCH_TWO;
                 break;
             case LAUNCH_TWO:
-                if (Math.abs((LauncherMotor.getVelocity()) - (LAUNCH_TICK_VELOCITY_NEAR + 125)) <= 100){
-                    IntakeMotor.setPower(NEWPOWER);
-                    ConveyorMotor.setPower(NEWPOWER);
+                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 50)){
+                    IntakeMotor.setPower(INTAKE_POWER);
+                    ConveyorMotor.setPower(INTAKE_POWER);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.RESET_TWO;
                     launchTimer.reset();
@@ -260,7 +252,7 @@ public class BlueNear3x9 extends OpMode {
                 break;
 
             case DRIVE_TO_INTAKE_TWO:
-                IntakeMotor.setPower(NEWPOWER);
+                IntakeMotor.setPower(INTAKE_POWER);
                 Actions.runBlocking(driveToIntakeTwo);
                 state = AutoState.INTAKE_TWO;
                 break;
@@ -268,18 +260,18 @@ public class BlueNear3x9 extends OpMode {
                 state = AutoState.DRIVE_TO_LAUNCH_THREE;
                 break;
             case DRIVE_TO_LAUNCH_THREE:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 130);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 75);
                 //Actions.runBlocking(driveToLaunchThree);
                 state = AutoState.SPIN_UP_THREE;
                 break;
             case SPIN_UP_THREE:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 130);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 75);
                 state = AutoState.LAUNCH_THREE;
                 break;
             case LAUNCH_THREE:
-                if (Math.abs((LauncherMotor.getVelocity()) - (LAUNCH_TICK_VELOCITY_NEAR + 130)) <= 100 ) { // do not change this time
-                    IntakeMotor.setPower(NEWPOWER);
-                    ConveyorMotor.setPower(NEWPOWER);
+                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 75 )) { // do not change this time
+                    IntakeMotor.setPower(INTAKE_POWER);
+                    ConveyorMotor.setPower(INTAKE_POWER);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.RESET_THREE;
                     launchTimer.reset();
@@ -291,12 +283,12 @@ public class BlueNear3x9 extends OpMode {
                     IntakeMotor.setPower(0);
                     ConveyorMotor.setPower(0);
                     LeftSideFeedRoller.setPower(0);
-                    state = AutoState.END; //todo
+                    state = AutoState.DRIVE_TO_INTAKE_THREE;
                     launchTimer.reset();
                 }
                 break;
             case DRIVE_TO_INTAKE_THREE:
-                IntakeMotor.setPower(NEWPOWER);
+                IntakeMotor.setPower(INTAKE_POWER);
                 Actions.runBlocking(driveToIntakeThree);
                 state = AutoState.INTAKE_THREE;
                 break;
@@ -314,8 +306,8 @@ public class BlueNear3x9 extends OpMode {
                 break;
             case LAUNCH_FOUR:
                 if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 50)) { // do not change this time
-                    IntakeMotor.setPower(NEWPOWER);
-                    ConveyorMotor.setPower(NEWPOWER);
+                    IntakeMotor.setPower(INTAKE_POWER);
+                    ConveyorMotor.setPower(INTAKE_POWER);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.RESET_FOUR;
                     launchTimer.reset();
