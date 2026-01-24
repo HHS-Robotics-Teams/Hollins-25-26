@@ -52,7 +52,7 @@ public class TuningController {
                 .onEnter(externalTimer::reset)
                 .loop(() -> {
                     double progress = externalTimer.seconds() / ZSTATE1_RAMPING_UP_DURATION;
-                    double target = progress * (TESTING_MAX_SPEED - TESTING_MIN_SPEED) + TESTING_MIN_SPEED;
+                    double target = 1400;//progress * (TESTING_MAX_SPEED - TESTING_MIN_SPEED) + TESTING_MIN_SPEED;
 
                     currentTargetVelo = rpmToTicksPerSecond(target);
                 })
@@ -110,6 +110,6 @@ public class TuningController {
     }
 
     public static double rpmToTicksPerSecond(double rpm) {
-        return rpm * MOTOR_TICKS_PER_REV / MOTOR_GEAR_RATIO / 60;
+        return rpm ;//* MOTOR_TICKS_PER_REV / MOTOR_GEAR_RATIO / 60;
     }
 }
