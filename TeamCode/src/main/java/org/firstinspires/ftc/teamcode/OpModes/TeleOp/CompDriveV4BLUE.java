@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Motor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
@@ -19,6 +20,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_REVER
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.park_Pos;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
@@ -26,6 +28,7 @@ import static java.lang.Math.max;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -71,6 +74,7 @@ public class CompDriveV4BLUE extends OpMode {
         Parking_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Parking_Motor.setTargetPosition(0);
         Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Parking_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
         Parking_Motor.setPower(1);
         intakeTimer.reset();
     }
@@ -83,8 +87,8 @@ public class CompDriveV4BLUE extends OpMode {
         /* ---------- Drivetrain ---------- */
 
         //Drivetrain movement values
-        double forward = -gamepad1.left_stick_y * 0.8;
-        double strafes = gamepad1.left_stick_x * 1.0;
+        double forward = -gamepad1.left_stick_y;
+        double strafes = gamepad1.left_stick_x * 1.1;
         double rotates = gamepad1.right_stick_x * 0.6;
 
         if (abs(forward) <= 0.15) {
@@ -109,7 +113,7 @@ public class CompDriveV4BLUE extends OpMode {
 
 
         //Power fixer
-        double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 1);
+        double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 1.5);
 
         //Setting Powers
         leftFront.setPower((forward + strafes + rotates) / denominator);
@@ -138,8 +142,10 @@ public class CompDriveV4BLUE extends OpMode {
         if (!LAUNCHER_RUN) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held() || input.left_trigger.held();
 
 
-        if(intakeTimer.seconds() > 1){
+        if(intakeTimer.seconds() > 0.25){
             launcherUtil.setLightGreen();
+        } else {
+            launcherUtil.setLightRed();
         }
 
 
@@ -165,7 +171,11 @@ public class CompDriveV4BLUE extends OpMode {
         if (LAUNCHER_RUN) {
             telemetry.addLine("Launch Status:" + launcherUtil.runLauncher());
         } else {
-            LauncherMotor.setPower(LAUNCHER_IDLE);
+            LauncherMotor.setVelocity(500);
+            LauncherSafetyServo.setPosition(SAFETY_HOLDING);
+            if(launcherUtil.getLaunchState() != LauncherUtilV2.LaunchState.FIND_TAG){
+                launcherUtil.cancelLaunch();
+            }
         }
 
         if (input.dpad_down.down()) {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Util;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
@@ -16,6 +17,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDL
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VEL_THRESHOLD;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
 import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -92,6 +94,7 @@ public class LauncherUtilV2 {
      * @return String of telemetry
      */
     public String runLauncher() {
+        LauncherSafetyServo.setPosition(SAFTEY_FIRING);
         lightUtil.updateLights();
         if (!aprilTagMethod.isTagVisible() && !isAuto) {
             return "No Tag Visible" + "\nState:" + launchState;
@@ -137,7 +140,7 @@ public class LauncherUtilV2 {
             case DISTANCE_CHECK:
                 setLightAmber();
                 launchState = LaunchState.SPIN_UP_AND_MOVE;
-                if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7){
+                if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 6 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 6){
                     launchTime = 2.5;
                 } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 4){
                     launchTime = 0.75;
@@ -175,10 +178,10 @@ public class LauncherUtilV2 {
             double margin;
             if (range >= 90) {
                 phi = 2.75;
-                margin = 3;
+                margin = 1.5;
             } else {
                 phi = 0;
-                margin = 6;
+                margin = 3;
             }
             double turnPower = 0.25;
             if (theta >= phi + margin - 1) {
