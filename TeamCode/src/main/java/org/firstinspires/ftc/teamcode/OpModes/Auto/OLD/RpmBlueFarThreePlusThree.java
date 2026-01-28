@@ -1,27 +1,21 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue.OLD;
+package org.firstinspires.ftc.teamcode.OpModes.Auto.OLD;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueFarLaunchPose;
-import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.intakeWaitTime;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_FAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
-
-import static java.lang.Math.abs;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -29,30 +23,33 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
-import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
-@Disabled
+
 @Deprecated
+@Disabled
 @Autonomous
-public class RpmBlueVeryFarThreePlusSix extends OpMode {
+public class RpmBlueFarThreePlusThree extends OpMode {
+
     MecanumDrive drive;
-    InstantAction IntakePickup = new InstantAction(new InstantFunction() {
+    InstantAction runIntake = new InstantAction(new InstantFunction() {
         @Override
         public void run() {
+            LauncherMotor.setPower(0.8); // Todo Tune
             IntakeMotor.setPower(INTAKE_POWER);
             LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             LeftSideFeedRoller.setPower(0);
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-        }
-    });
-
+    }
+});
     enum AutoState{
         START,
         SPIN_UP,
         LAUNCH_ONE,
         RESET_ONE,
+        FEED_ONE,
         LAUNCH_TWO,
         RESET_TWO,
         LAUNCH_THREE,
@@ -86,97 +83,60 @@ public class RpmBlueVeryFarThreePlusSix extends OpMode {
     Action driveToIntakeOne;
     Action driveToLaunchOne;
     Action driveToIntakeTwo;
-    Action driveToLaunchThree;
     PathFactory factory;
-
-    double targetVel = LAUNCH_TICK_VELOCITY_FAR + 200;
-
 
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime specialTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
-
-
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), -(13 / 2), Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(63.5, -6, Math.toRadians(180)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -(13 / 2), Math.toRadians(180)))
+        turnToLaunch = drive.actionBuilder(new Pose2d(63.5, -6, Math.toRadians(180)))
+                .afterDisp(1, runIntake)
+                .lineToX(55)
                 .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
-                .afterDisp(0.01, new InstantFunction() {
-                    @Override
-                    public void run() {
-                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR );
-                    }
-                })
                 .build();
-        driveToIntakeOne = drive.actionBuilder(blueFarLaunchPose)
-                .afterDisp(40, new InstantFunction() {
-                    @Override
-                    public void run() {
-                        IntakeMotor.setPower(INTAKE_POWER);
-                    }
-                })
-                .splineToLinearHeading(new Pose2d(60,-58,Math.toRadians(-90)),Math.toRadians(-90))
-                .waitSeconds(0.2)
-                //.lineToYConstantHeading(-58)
-                .strafeToLinearHeading(new Vector2d(61,-58),Math.toRadians(-60))
-                .waitSeconds(0.2)
-                .splineToLinearHeading(new Pose2d(64,-60,Math.toRadians(-40)),Math.toRadians(-90))
-                .waitSeconds(0.2)
+        driveToIntakeOne = factory.blueGPPPickupPath(blueFarLaunchPose);
+        driveToLaunchOne = factory.blueFarLaunchPath(new Pose2d(11.75+24+3,-42,Math.toRadians(-90)));
+        driveToIntakeTwo = factory.bluePGPPickupPath(blueFarLaunchPose);
 
-                .build();
-        driveToIntakeTwo = drive.actionBuilder(blueFarLaunchPose)
-                .splineToSplineHeading(new Pose2d(39,-30,Math.toRadians(-90)),Math.toRadians(-90))
-                .afterDisp(1,IntakePickup)
-                .waitSeconds(intakeWaitTime)
-                .lineToY(-41)
-                .waitSeconds(.3)
-                .lineToY(-48)
-                .build();
-        driveToLaunchThree = factory.blueFarLaunchPath(new Pose2d(39,-48,Math.toRadians(-90)));
     }
 
     @Override
     public void start(){
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-        LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-        LauncherHoodServo.setPosition(0.2);
         Actions.runBlocking(turnToLaunch);
     }
 
     @Override
     public void loop() {
-        LauncherMotor.setVelocity(targetVel);
         telemetry.addData("State:", state);
         telemetry.addData("Launcher Velocity", LauncherMotor.getVelocity());
         telemetry.addData( "Launch Timer", launchTimer.seconds());
         telemetry.addData("Intake timer", intakeTimer.seconds());
-        telemetry.addData("Launcher Current", LauncherMotor.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Launcher Motor", LauncherMotor.getCurrent(CurrentUnit.AMPS));
         telemetry.update();
 
         switch (state){
             case START:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 200);
                 intakeTimer.reset();
                 state = AutoState.SPIN_UP;
                 break;
-
             case SPIN_UP:
-                LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-
-                if((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 200) && (intakeTimer.seconds() >= 0.4)){  // do not change this time
+                IntakeMotor.setPower(0);
+                LauncherSafetyServo.setPosition(SAFTEY_FIRING); // Todo Tune velocity
+                if(LauncherMotor.getVelocity() >= 1500) /*&& intakeTimer.seconds() >= .5)*/ {  // do not change this time
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
-                    state = AutoState.LAUNCH_ONE;
                     launchTimer.reset();
+                    state = AutoState.LAUNCH_ONE;
                 }
                 break;
             case LAUNCH_ONE:
-                if(launchTimer.seconds() >= 0.4){ // do not change this timeI
+                if(launchTimer.seconds() >= 0.5){ // do not change this time
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
                     LeftSideFeedRoller.setPower(0);
@@ -184,54 +144,55 @@ public class RpmBlueVeryFarThreePlusSix extends OpMode {
                     state = AutoState.RESET_ONE;
                 }
                 break;
-            case RESET_ONE:
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 200) && ( intakeTimer.seconds() >= 0.4)){
+            case RESET_ONE: //Todo Tune Velocity
+                if ((LauncherMotor.getVelocity() >= 1500) && ( intakeTimer.seconds() >= 0.5)){
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                    IntakeMotor.setPower(0);
                     LeftSideFeedRoller.setPower(1);
-                    state = AutoState.LAUNCH_TWO;
                     launchTimer.reset();
-
+                    state = AutoState.LAUNCH_TWO;
                 }
                 break;
             case LAUNCH_TWO:
-                if(launchTimer.seconds() >= 0.4){ // do not change this time
+                if(launchTimer.seconds() >= 1.0){ // do not change this time
                     LeftSideFeedRoller.setPower(0);
+                    LauncherMotor.setPower(.35);
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
-                    state = AutoState.RESET_TWO;
-                    specialTimer.reset();
                     intakeTimer.reset();
+                    state = AutoState.RESET_TWO;
                 }
                 break;
-            case RESET_TWO:
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR) && (intakeTimer.seconds() >= 0.4)) {
+            case RESET_TWO: // Todo tune Velocity
+                if ((LauncherMotor.getVelocity() >= 1500) && (intakeTimer.seconds() >= 1.0)) {
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
-                    state = AutoState.LAUNCH_THREE;
                     launchTimer.reset();
+                    state = AutoState.LAUNCH_THREE;
                 }
-
                 break;
             case LAUNCH_THREE:
-                if(launchTimer.seconds() >= 0.4){ // do not change this time
-
+                if(launchTimer.seconds() >= 1.5){ // do not change this time
+                    IntakeMotor.setPower(0);
                     LeftSideFeedRoller.setPower(0);
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                    intakeTimer.reset();
                     state = AutoState.RESET_THREE;
+                    intakeTimer.reset();
+
                 }
                 break;
             case RESET_THREE:
-                LauncherMotor.setVelocity(500);
+                LauncherMotor.setPower(.2);
                 IntakeMotor.setPower(INTAKE_POWER);
                 LauncherSafetyServo.setPosition(SAFETY_HOLDING);
                 state = AutoState.DRIVE_TO_INTAKE_ONE;
-                launchTimer.reset();
-                intakeTimer.reset();
                 break;
             case DRIVE_TO_INTAKE_ONE:
-                state = AutoState.DRIVE_TO_LAUNCH_TWO;
                 Actions.runBlocking(driveToIntakeOne);
+                state = AutoState.INTAKE_ONE;
+                break;
+            case INTAKE_ONE:
+                state = AutoState.DRIVE_TO_LAUNCH_TWO;
                 break;
             case DRIVE_TO_LAUNCH_TWO:
                 Actions.runBlocking(driveToLaunchOne);
@@ -239,55 +200,55 @@ public class RpmBlueVeryFarThreePlusSix extends OpMode {
                 state = AutoState.SPIN_UP_TWO;
                 break;
             case SPIN_UP_TWO:
+                IntakeMotor.setPower(0);
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-                if((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR) && (intakeTimer.seconds() >= 0.4)){
+                LauncherMotor.setPower(.8); // todo tune velocity
+                if((LauncherMotor.getVelocity() >= 1500) && (intakeTimer.seconds() >= 0.5)){
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
-                    state = AutoState.LAUNCH_FOUR;
                     launchTimer.reset();
+                    state = AutoState.LAUNCH_FOUR;
                 }
                 break;
             case LAUNCH_FOUR:
-                if(launchTimer.seconds() >= 0.2){ // do not change this time
+                if(launchTimer.seconds() >= 1.0){
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
+                    LeftSideFeedRoller.setPower(0);
                     IntakeMotor.setPower(INTAKE_POWER);
-                    state = AutoState.RESET_FOUR;
                     intakeTimer.reset();
+                    state = AutoState.RESET_FOUR;
                 }
                 break;
-            case RESET_FOUR:
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR) && (intakeTimer.seconds() >= 0.4)) {
+            case RESET_FOUR: // todo tune velocity
+                if ((LauncherMotor.getVelocity() >= 1500) && (intakeTimer.seconds() >= 0.5)) {
+                    IntakeMotor.setPower(0);
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
-                    state = AutoState.LAUNCH_FIVE;
                     launchTimer.reset();
+                    state = AutoState.LAUNCH_FIVE;
+
                 }
-
-
                 break;
             case LAUNCH_FIVE:
-                if(launchTimer.seconds() >= 0.2){ // do not change this time
+                if(launchTimer.seconds() >= 1.0){ // do not change this time
                     LeftSideFeedRoller.setPower(1);
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
                     intakeTimer.reset();
                     state = AutoState.RESET_FIVE;
-
                 }
                 break;
-            case RESET_FIVE:
-                if (((abs(LauncherMotor.getVelocity() - targetVel) <= 7)) && (intakeTimer.seconds() >= 0.4)) {
+            case RESET_FIVE: // todo tune velocity
+                if ((LauncherMotor.getVelocity() >= 1500) && (intakeTimer.seconds() >= 0.5)) {
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-
+                    IntakeMotor.setPower(0);
                     LeftSideFeedRoller.setPower(1);
-                    state = AutoState.LAUNCH_SIX;
                     launchTimer.reset();
-
+                    state = AutoState.LAUNCH_SIX;
                 }
                 break;
             case LAUNCH_SIX:
-                if(launchTimer.seconds() >= 0.2){ // do not change this time
+                if(launchTimer.seconds() >= 1.0){ // do not change this time
                     LeftSideFeedRoller.setPower(0);
                     IntakeMotor.setPower(INTAKE_POWER);
                     LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
@@ -304,98 +265,31 @@ public class RpmBlueVeryFarThreePlusSix extends OpMode {
                 intakeTimer.reset();
                 break;
             case DRIVE_TO_INTAKE_TWO:
-                IntakeMotor.setPower(INTAKE_POWER);
-                LauncherSafetyServo.setPosition(SAFETY_HOLDING);
                 Actions.runBlocking(driveToIntakeTwo);
-                state = AutoState.INTAKE_TWO;
                 break;
             case INTAKE_TWO:
-                state = AutoState.DRIVE_TO_LAUNCH_THREE;
                 break;
             case DRIVE_TO_LAUNCH_THREE:
-
-                Actions.runBlocking(driveToLaunchThree);
-                intakeTimer.reset();
-                state = AutoState.SPIN_UP_THREE;
                 break;
             case SPIN_UP_THREE:
-
-                LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                if((abs(LauncherMotor.getVelocity() - targetVel) <= 7) && (intakeTimer.seconds() >= 0.4)){
-                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                    LeftSideFeedRoller.setPower(1);
-                    state = AutoState.LAUNCH_SEVEN;
-                    launchTimer.reset();
-                }
                 break;
             case LAUNCH_SEVEN:
-                if(launchTimer.seconds() >= 0.2){ // do not change this time
-                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                    IntakeMotor.setPower(INTAKE_POWER);
-                    state = AutoState.RESET_SEVEN;
-                    intakeTimer.reset();
-                }
                 break;
             case RESET_SEVEN:
-                if (((abs(LauncherMotor.getVelocity() - targetVel) <= 7)) && (intakeTimer.seconds() >= 0.4)) {
-
-                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                    LeftSideFeedRoller.setPower(1);
-                    state = AutoState.LAUNCH_EIGHT;
-                    launchTimer.reset();
-                }
-
                 break;
             case LAUNCH_EIGHT:
-                if(launchTimer.seconds() >= 0.2){ // do not change this time
-                    LeftSideFeedRoller.setPower(1);
-                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                    IntakeMotor.setPower(INTAKE_POWER);
-                    intakeTimer.reset();
-                    state = AutoState.RESET_EIGHT;
-
-                }
                 break;
             case RESET_EIGHT:
-                if (((abs(LauncherMotor.getVelocity() - targetVel) <= 7)) && (intakeTimer.seconds() >= 0.4)) {
-                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-                    LeftSideFeedRoller.setPower(1);
-                    state = AutoState.LAUNCH_NINE;
-                    launchTimer.reset();
-                }
                 break;
-
             case LAUNCH_NINE:
-                if(launchTimer.seconds() >= 0.2){ // do not change this time
-                    LeftSideFeedRoller.setPower(0);
-                    IntakeMotor.setPower(INTAKE_POWER);
-                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                    intakeTimer.reset();
-                    state = AutoState.RESET_NINE;
-                }
                 break;
             case RESET_NINE:
-                if (((abs(LauncherMotor.getVelocity() - targetVel) <= 7)) && (intakeTimer.seconds() >= 0.4)) {
-                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
-
-                    LeftSideFeedRoller.setPower(1);
-                    state = AutoState.PARK;
-                    launchTimer.reset();
-                    intakeTimer.reset();
-                }
                 break;
             case PARK:
-                LauncherMotor.setPower(0);
-                LeftSideFeedRoller.setPower(0);
-                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
-                Actions.runBlocking(drive.actionBuilder(blueFarLaunchPose).lineToX(30).build());
-                state = AutoState.END;
                 break;
             case END:
-                requestOpModeStop();
                 break;
         }
 
     }
 }
-

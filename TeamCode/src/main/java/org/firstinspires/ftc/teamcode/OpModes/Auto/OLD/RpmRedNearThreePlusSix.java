@@ -1,19 +1,21 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue.OLD;
+package org.firstinspires.ftc.teamcode.OpModes.Auto.OLD;
 
-import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueFarLaunchPose;
-import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueNearLaunchPose;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_DOWN_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_FINGER_UP_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -23,20 +25,25 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
+import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 @Disabled
-@Autonomous
 @Deprecated
-public class NewBlueNearThreePlusSix extends OpMode {
+@Autonomous
+public class RpmRedNearThreePlusSix extends OpMode {
     MecanumDrive drive;
 
     InstantAction runIntake = new InstantAction(new InstantFunction() {
         @Override
         public void run() {
-            LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 45 );
+            LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+            //IntakeMotor.setPower(.1);
+            LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
             LeftSideFeedRoller.setPower(0);
+            LauncherSafetyServo.setPosition(SAFETY_HOLDING);
         }
     });
+    double BVM;
 
     enum AutoState{
         START,
@@ -71,10 +78,12 @@ public class NewBlueNearThreePlusSix extends OpMode {
         END
     }
     AutoState state = AutoState.START;
+    AprilTagMethod aprilTagMethod = new AprilTagMethod();
     Action turnToLaunch;
     Action driveToIntakeOne;
+    Action driveToLaunchOne;
     Action driveToIntakeTwo;
-    Action park;
+    Action driveToLaunchThree;
     PathFactory factory;
 
 
@@ -87,37 +96,28 @@ public class NewBlueNearThreePlusSix extends OpMode {
     @Override
     public void init() {
 
-        drive = new MecanumDrive(hardwareMap, new Pose2d(-55,-50,Math.toRadians(-135)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(-55,50,Math.toRadians(135)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder( new Pose2d(-55,-50,Math.toRadians(-135)))
+        turnToLaunch = drive.actionBuilder( new Pose2d(-55,50,Math.toRadians(135)))
                 .afterDisp(.5, runIntake)
-                .lineToYLinearHeading(-19,Math.toRadians(-131))
+                .lineToYLinearHeading(19,Math.toRadians(132.5))
                 .build();
-        driveToIntakeOne = drive.actionBuilder(blueNearLaunchPose)
-                .strafeToLinearHeading(new Vector2d(-11,-32),Math.toRadians(-90))
-                .afterDisp(1, runIntake)
-                .lineToY(-54)
-                .strafeTo(new Vector2d(5,-61))
-                .waitSeconds(.1)
-                .splineToLinearHeading(blueFarLaunchPose,Math.toRadians(-110))
-                .build();
+        driveToIntakeOne = factory.redPPGPickupPath(new Pose2d(-24,19,Math.toRadians(132.5)));
         telemetry.addLine("Trajectory 1 built");
-        driveToIntakeTwo = drive.actionBuilder(blueNearLaunchPose)
-                .strafeToLinearHeading(new Vector2d(11,-32),Math.toRadians(-90))
-                .afterDisp(1, runIntake)
-                .lineToY(-56)
-                .strafeToLinearHeading(new Vector2d(-12,-10),Math.toRadians(-130))
-                .build();
+        driveToLaunchOne = factory.redNearLaunchPath(new Pose2d(-11.75, 30, Math.toRadians(90)));
         telemetry.addLine("Trajectory 2 built");
-
+        driveToIntakeTwo = factory.redPGPPickupPath(new Pose2d(-24,19,Math.toRadians(132.5)));
+        telemetry.addLine("Trajectory 3 built");
+        driveToLaunchThree = factory.redNearLaunchPath(new Pose2d(11.75, 30, Math.toRadians(90)));
         telemetry.addLine("Trajectory 4 built");
         telemetry.addLine("Ready to Start");
     }
 
     @Override
     public void start(){
+        LauncherSafetyServo.setPosition(SAFETY_HOLDING);
         Actions.runBlocking(turnToLaunch);
     }
 
@@ -137,28 +137,30 @@ public class NewBlueNearThreePlusSix extends OpMode {
                 break;
 
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 45 );
-                if((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 45 ) && (intakeTimer.seconds() >= 0.35)) {  // do not change this time
-                    ConveyorMotor.setPower(INTAKE_POWER);
+                IntakeMotor.setPower(0);
+                LauncherSafetyServo.setPosition(SAFTEY_FIRING);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 10);
+                if((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR + 10) && (intakeTimer.seconds() >= 0.5)) {  // do not change this time
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_ONE;
                     launchTimer.reset();
                 }
                 break;
             case LAUNCH_ONE:
-                if(launchTimer.seconds() >= 0.4){ // do not change this time
-                    LeftSideFeedRoller.setPower(0);
+                if(launchTimer.seconds() >= 0.5){ // do not change this time
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
                     LeftSideFeedRoller.setPower(0);
                     state = AutoState.RESET_ONE;
                     intakeTimer.reset();
                 }
                 break;
             case RESET_ONE:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 10);
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR -10) && ( intakeTimer.seconds() >= 0.35)){
-                    ConveyorMotor.setPower(INTAKE_POWER);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && ( intakeTimer.seconds() >= 0.5)){
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                    IntakeMotor.setPower(0);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_TWO;
                     launchTimer.reset();
@@ -166,20 +168,19 @@ public class NewBlueNearThreePlusSix extends OpMode {
                 }
                 break;
             case LAUNCH_TWO:
-                if(launchTimer.seconds() >= 0.6){ // do not change this time
+                if(launchTimer.seconds() >= 1.0){ // do not change this time
                     LeftSideFeedRoller.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
                     state = AutoState.RESET_TWO;
                     specialTimer.reset();
                     intakeTimer.reset();
                 }
                 break;
-            case RESET_TWO:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 10);
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 10) && (intakeTimer.seconds() >= .5)) {
-                    ConveyorMotor.setPower(INTAKE_POWER);
+            case RESET_TWO: // Todo Find better solution to not feeding 3rd ball probable mechanical
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.5)) {
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_THREE;
                     launchTimer.reset();
@@ -187,9 +188,10 @@ public class NewBlueNearThreePlusSix extends OpMode {
 
                 break;
             case LAUNCH_THREE:
-                if(launchTimer.seconds() >= 0.6){ // do not change this time
+                if(launchTimer.seconds() >= 1.0){ // do not change this time
+                    IntakeMotor.setPower(0);
                     LeftSideFeedRoller.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     intakeTimer.reset();
                     state = AutoState.RESET_THREE;
                 }
@@ -197,7 +199,7 @@ public class NewBlueNearThreePlusSix extends OpMode {
             case RESET_THREE:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 400);
                 IntakeMotor.setPower(INTAKE_POWER);
-                ConveyorMotor.setPower(INTAKE_POWER);
+                LauncherSafetyServo.setPosition(SAFETY_HOLDING);
                 state = AutoState.DRIVE_TO_INTAKE_ONE;
                 launchTimer.reset();
                 intakeTimer.reset();
@@ -210,32 +212,36 @@ public class NewBlueNearThreePlusSix extends OpMode {
                 state = AutoState.DRIVE_TO_LAUNCH_TWO;
                 break;
             case DRIVE_TO_LAUNCH_TWO:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+                IntakeMotor.setPower(0);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 25);
+                Actions.runBlocking(driveToLaunchOne);
                 intakeTimer.reset();
                 state = AutoState.SPIN_UP_TWO;
                 break;
             case SPIN_UP_TWO:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 10);
-                if((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR + 10) && (intakeTimer.seconds() >= 0.4)){
-                    ConveyorMotor.setPower(INTAKE_POWER);
+                IntakeMotor.setPower(0);
+                LauncherSafetyServo.setPosition(SAFTEY_FIRING);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+                if((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.5)){
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_FOUR;
                     launchTimer.reset();
                 }
                 break;
             case LAUNCH_FOUR:
-                if(launchTimer.seconds() >= 0.4){ // do not change this time
-                    LeftSideFeedRoller.setPower(0);
+                if(launchTimer.seconds() >= 1.0){ // do not change this time
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
                     state = AutoState.RESET_FOUR;
                     intakeTimer.reset();
                 }
                 break;
             case RESET_FOUR:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 10);
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR + 10) && (intakeTimer.seconds() >= 0.4)) {
-                    ConveyorMotor.setPower(INTAKE_POWER);
+                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR + 10) && (intakeTimer.seconds() >= 0.5)) {
+                    IntakeMotor.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_FIVE;
                     launchTimer.reset();
@@ -244,11 +250,10 @@ public class NewBlueNearThreePlusSix extends OpMode {
 
                 break;
             case LAUNCH_FIVE:
-                if(launchTimer.seconds() >= 0.4){ // do not change this time
+                if(launchTimer.seconds() >= 1.0){ // do not change this time
                     LeftSideFeedRoller.setPower(1);
-                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
                     intakeTimer.reset();
                     state = AutoState.RESET_FIVE;
 
@@ -256,8 +261,9 @@ public class NewBlueNearThreePlusSix extends OpMode {
                 break;
             case RESET_FIVE:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.4)) {
-                    ConveyorMotor.setPower(INTAKE_POWER);
+                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.5)){
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                    IntakeMotor.setPower(0);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_SIX;
                     launchTimer.reset();
@@ -265,27 +271,25 @@ public class NewBlueNearThreePlusSix extends OpMode {
                 }
                 break;
             case LAUNCH_SIX:
-                if(launchTimer.seconds() >= 0.4){ // do not change this time
+                if(launchTimer.seconds() >= 1.0){ // do not change this time
                     LeftSideFeedRoller.setPower(0);
                     IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
-                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     intakeTimer.reset();
                     state = AutoState.RESET_SIX;
                 }
                 break;
             case RESET_SIX:
-                LeftSideFeedRoller.setPower(0);
+                LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                 LeftSideFeedRoller.setPower(0);
                 IntakeMotor.setPower(INTAKE_POWER);
-                ConveyorMotor.setPower(INTAKE_POWER);
                 state = AutoState.DRIVE_TO_INTAKE_TWO;
                 launchTimer.reset();
                 intakeTimer.reset();
                 break;
             case DRIVE_TO_INTAKE_TWO:
                 IntakeMotor.setPower(INTAKE_POWER);
-                ConveyorMotor.setPower(INTAKE_POWER);
+                LauncherSafetyServo.setPosition(SAFETY_HOLDING);
                 Actions.runBlocking(driveToIntakeTwo);
                 state = AutoState.INTAKE_TWO;
                 break;
@@ -293,14 +297,18 @@ public class NewBlueNearThreePlusSix extends OpMode {
                 state = AutoState.DRIVE_TO_LAUNCH_THREE;
                 break;
             case DRIVE_TO_LAUNCH_THREE:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 25);
+                IntakeMotor.setPower(0);
+                Actions.runBlocking(driveToLaunchThree);
                 intakeTimer.reset();
                 state = AutoState.SPIN_UP_THREE;
                 break;
             case SPIN_UP_THREE:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 10);
-                if((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR + 10) && (intakeTimer.seconds() >= 0.4)){
-                    ConveyorMotor.setPower(INTAKE_POWER);
+                IntakeMotor.setPower(0);
+                LauncherSafetyServo.setPosition(SAFTEY_FIRING);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+                if((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.5)){
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_SEVEN;
                     launchTimer.reset();
@@ -308,17 +316,17 @@ public class NewBlueNearThreePlusSix extends OpMode {
                 break;
             case LAUNCH_SEVEN:
                 if(launchTimer.seconds() >= 1.3){ // do not change this time
-                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
                     state = AutoState.RESET_SEVEN;
                     intakeTimer.reset();
                 }
                 break;
             case RESET_SEVEN:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.4)) {
-                    ConveyorMotor.setPower(INTAKE_POWER);
+                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.5)) {
+                    IntakeMotor.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_EIGHT;
                     launchTimer.reset();
@@ -326,11 +334,10 @@ public class NewBlueNearThreePlusSix extends OpMode {
 
                 break;
             case LAUNCH_EIGHT:
-                if(launchTimer.seconds() >= 0.75){ // do not change this time
-
-                    LeftSideFeedRoller.setPower(0);
+                if(launchTimer.seconds() >= 1.0){ // do not change this time
+                    LeftSideFeedRoller.setPower(1);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
                     intakeTimer.reset();
                     state = AutoState.RESET_EIGHT;
 
@@ -338,8 +345,9 @@ public class NewBlueNearThreePlusSix extends OpMode {
                 break;
             case RESET_EIGHT:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.4)) {
-                    ConveyorMotor.setPower(INTAKE_POWER);
+                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.5)) {
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                    IntakeMotor.setPower(0);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.LAUNCH_NINE;
                     launchTimer.reset();
@@ -347,19 +355,19 @@ public class NewBlueNearThreePlusSix extends OpMode {
                 break;
 
             case LAUNCH_NINE:
-                if(launchTimer.seconds() >= 0.75){ // do not change this time
+                if(launchTimer.seconds() >= 1.0){ // do not change this time
                     LeftSideFeedRoller.setPower(0);
                     IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
-                    LeftSideFeedRoller.setPower(0);
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
                     intakeTimer.reset();
                     state = AutoState.RESET_NINE;
                 }
                 break;
             case RESET_NINE:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.4)) {
-                    ConveyorMotor.setPower(INTAKE_POWER);
+                if ((LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR) && (intakeTimer.seconds() >= 0.5)) {
+                    LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
+                    IntakeMotor.setPower(0);
                     LeftSideFeedRoller.setPower(1);
                     state = AutoState.END;
                     launchTimer.reset();
@@ -367,8 +375,6 @@ public class NewBlueNearThreePlusSix extends OpMode {
                 }
                 break;
             case END:
-                LeftSideFeedRoller.setPower(0);
-                Actions.runBlocking(park);
                 requestOpModeStop();
                 break;
         }

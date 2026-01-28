@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.Blue.OLD;
+package org.firstinspires.ftc.teamcode.OpModes.Auto.OLD;
 
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueFarLaunchPose;
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.intakeWaitTime;

@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.Red;
 
-import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.blueNearLaunchPose;
 import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.intakeWaitTime;
-import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.redNearLaunchPose;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
@@ -28,7 +26,7 @@ import org.firstinspires.ftc.teamcode.Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
-public class RedNear3x9 extends OpMode {
+public class RedNear3x6 extends OpMode {
     MecanumDrive drive;
 
     InstantAction runIntake = new InstantAction(new InstantFunction() {
@@ -37,7 +35,7 @@ public class RedNear3x9 extends OpMode {
             LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
             IntakeMotor.setPower(1);
             ConveyorMotor.setPower(1);
-            LeftSideFeedRoller.setPower(-0);
+            LeftSideFeedRoller.setPower(0);
         }
     });
     InstantAction offIntake = new InstantAction(new InstantFunction() {

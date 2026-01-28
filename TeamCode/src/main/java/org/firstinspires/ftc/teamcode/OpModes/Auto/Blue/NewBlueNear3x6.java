@@ -28,7 +28,8 @@ import org.firstinspires.ftc.teamcode.Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
-public class BlueNear3x9 extends OpMode {
+public class NewBlueNear3x6 extends OpMode {
+    //Launching Without Thresholds
     MecanumDrive drive;
 
     InstantAction runIntake = new InstantAction(() -> {
@@ -115,17 +116,16 @@ public class BlueNear3x9 extends OpMode {
                 .afterDisp(.5, setVelocity)
                 .lineToYLinearHeading(-19,Math.toRadians(-134))
                 .build();
+        //driveToIntakeOne = factory.bluePPGPickupPath(blueNearLaunchPose);
         driveToIntakeOne = drive.actionBuilder(new Pose2d(-19, -13, Math.toRadians(-133)))
                 .splineToLinearHeading(new Pose2d(-12,-28,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(.1, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-56)
                 .afterDisp(40, offIntake)
-                //.splineToLinearHeading(new Pose2d(-58,0,Math.toRadians(-90)),Math.toRadians(-90)) // Spline to gate
-                //.waitSeconds(.2)
-                //.lineToX(-50)
                 .splineToLinearHeading(new Pose2d(-23,-19,Math.toRadians(-135)),Math.toRadians(-90))
                 .build();
+        //driveToIntakeTwo = factory.bluePGPPickupPath(blueNearLaunchPose);
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-19, -13, Math.toRadians(-133)))
                 .splineToLinearHeading(new Pose2d(11.5,-28,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(1, runIntake)
@@ -145,9 +145,12 @@ public class BlueNear3x9 extends OpMode {
                 .afterDisp(65, offIntake)
                 .splineToLinearHeading(new Pose2d(-22,-19,Math.toRadians(-132)),Math.toRadians(-90))
                 .build();
+//        //driveToLaunchFour = factory.blueNearLaunchPath(bluePGPPickupStartPose);
+//        telemetry.addLine("Trajectory 6 built");
         park = factory.blueParkPath(new Pose2d(-19, -44, Math.toRadians(-135)));
 
         telemetry.addLine("Ready to Launch");
+        telemetry.addLine("Launching Without Thresholds");
         LightUtil util = new LightUtil(2, hardwareMap);
         util.makeGreen();
         util.updateLights();
@@ -166,7 +169,7 @@ public class BlueNear3x9 extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("State:", state);
-        telemetry.addData("Launcher amps", LauncherMotor.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("LAuncher amps", LauncherMotor.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Launcher Velocity", LauncherMotor.getVelocity());
         telemetry.addData( "Launch Timer", launchTimer.seconds());
         telemetry.addData("Intake timer", intakeTimer.seconds());
@@ -273,7 +276,7 @@ public class BlueNear3x9 extends OpMode {
                     IntakeMotor.setPower(0);
                     ConveyorMotor.setPower(0);
                     LeftSideFeedRoller.setPower(0);
-                    state = AutoState.DRIVE_TO_INTAKE_THREE;
+                    state = AutoState.END; //todo
                     launchTimer.reset();
                 }
                 break;
@@ -291,11 +294,11 @@ public class BlueNear3x9 extends OpMode {
                 state = AutoState.SPIN_UP_FOUR;
                 break;
             case SPIN_UP_FOUR:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 115);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 50);
                 state = AutoState.LAUNCH_FOUR;
                 break;
             case LAUNCH_FOUR:
-                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 115)) {
+                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 50)) { // do not change this time
                     IntakeMotor.setPower(INTAKE_POWER);
                     ConveyorMotor.setPower(INTAKE_POWER);
                     LeftSideFeedRoller.setPower(1);
