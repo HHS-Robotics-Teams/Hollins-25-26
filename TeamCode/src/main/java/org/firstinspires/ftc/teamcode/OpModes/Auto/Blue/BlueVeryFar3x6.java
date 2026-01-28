@@ -135,7 +135,7 @@ public class BlueVeryFar3x6 extends OpMode {
                 .waitSeconds(0.2)
                 .lineToY(-41)
                 .lineToY(-59)
-                .splineToLinearHeading(new Pose2d(52, -10, Math.toRadians(-155)),Math.toRadians(-155.75))
+                .splineToLinearHeading(new Pose2d(52, -10, Math.toRadians(-154)),Math.toRadians(-155.75))
                 .build();
         telemetry.addLine("Ready to Launch");
         LightUtil util = new LightUtil(2, hardwareMap);
@@ -261,7 +261,7 @@ public class BlueVeryFar3x6 extends OpMode {
             case PARK:
                 LauncherSafetyServo.setPosition(SAFETY_HOLDING);
                 LauncherMotor.setVelocity(400);
-                Actions.runBlocking(drive.actionBuilder(new Pose2d(50, -10, Math.toRadians(-162.5))).lineToX(40).build());
+                Actions.runBlocking(drive.actionBuilder(new Pose2d(50, -10, Math.toRadians(-154))).lineToX(40).build());
                 state = AutoState.END;
                 break;
             case END:

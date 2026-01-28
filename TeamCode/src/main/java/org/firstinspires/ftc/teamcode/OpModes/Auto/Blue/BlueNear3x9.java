@@ -21,6 +21,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
@@ -30,7 +31,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 @Autonomous
 public class BlueNear3x9 extends OpMode {
     MecanumDrive drive;
-    double NEWPOWER = 0.75;
+    double NEWPOWER = 1.0;
 
     InstantAction runIntake = new InstantAction(() -> {
         LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
@@ -147,7 +148,7 @@ public class BlueNear3x9 extends OpMode {
                 .build();
 //        //driveToLaunchFour = factory.blueNearLaunchPath(bluePGPPickupStartPose);
 //        telemetry.addLine("Trajectory 6 built");
-        park = factory.blueParkPath(new Pose2d(-19, -13, Math.toRadians(-135)));
+        park = factory.blueParkPath(new Pose2d(-19, -44, Math.toRadians(-135)));
 
         telemetry.addLine("Ready to Launch");
         LightUtil util = new LightUtil(2, hardwareMap);
@@ -161,13 +162,14 @@ public class BlueNear3x9 extends OpMode {
 //        Parking_Motor.setTargetPosition(0);
 //        Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        Parking_Motor.setPower(1);
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 70);
         Actions.runBlocking(turnToLaunch);
     }
 
     @Override
     public void loop() {
         telemetry.addData("State:", state);
+        telemetry.addData("LAuncher amps", LauncherMotor.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Launcher Velocity", LauncherMotor.getVelocity());
         telemetry.addData( "Launch Timer", launchTimer.seconds());
         telemetry.addData("Intake timer", intakeTimer.seconds());
@@ -181,13 +183,13 @@ public class BlueNear3x9 extends OpMode {
                 break;
 
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 55);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 70);
                 intakeTimer.reset();
                 state = AutoState.LAUNCH_ONE;
                 break;
 
             case LAUNCH_ONE:
-                if (Math.abs((LauncherMotor.getVelocity()) - (LAUNCH_TICK_VELOCITY_NEAR + 55)) <= 100){ // do not change this time
+                if (Math.abs((LauncherMotor.getVelocity()) - (LAUNCH_TICK_VELOCITY_NEAR + 70)) <= 100){ // do not change this time
                     IntakeMotor.setPower(NEWPOWER);
                     ConveyorMotor.setPower(NEWPOWER);
                     LeftSideFeedRoller.setPower(1);
@@ -256,11 +258,11 @@ public class BlueNear3x9 extends OpMode {
                 state = AutoState.SPIN_UP_THREE;
                 break;
             case SPIN_UP_THREE:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 130);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 140);
                 state = AutoState.LAUNCH_THREE;
                 break;
             case LAUNCH_THREE:
-                if (Math.abs((LauncherMotor.getVelocity()) - (LAUNCH_TICK_VELOCITY_NEAR + 130)) <= 100 ) { // do not change this time
+                if (Math.abs((LauncherMotor.getVelocity()) - (LAUNCH_TICK_VELOCITY_NEAR + 140)) <= 100 ) { // do not change this time
                     IntakeMotor.setPower(NEWPOWER);
                     ConveyorMotor.setPower(NEWPOWER);
                     LeftSideFeedRoller.setPower(1);

@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode._Proccedural;
 public class Constants {
 
     /* Constants */
-    public static double Launch_Time = 3.25;
+    public static double Launch_Time = 2.5;
     public static double INTAKE_POWER = 1;
     public static final double LAUNCHER_IDLE = 0.35;
 
@@ -15,8 +15,8 @@ public class Constants {
     public static double LAUNCHER_FAR_TARGET_FIRST = 2.05;
     public static double LAUNCHER_FAR_TARGET_THIRD = 2.45;
     public static final double LAUNCH_THRESHOLD = .021;
-    public static final double LAUNCH_TICK_VELOCITY_NEAR = 775;
-    public static final double LAUNCH_TICK_VELOCITY_FAR = 1000;
+    public static final double LAUNCH_TICK_VELOCITY_NEAR = 1000;
+    public static final double LAUNCH_TICK_VELOCITY_FAR = 1150;
     public static final double LAUNCH_TICK_VEL_THRESHOLD = 35;
     public static final double LAUNCHED_THRESHOLD = 1;
 
