@@ -171,7 +171,7 @@ public class CompDriveV4BLUE extends OpMode {
         if (LAUNCHER_RUN) {
             telemetry.addLine("Launch Status:" + launcherUtil.runLauncher());
         } else {
-            LauncherMotor.setVelocity(500);
+            LauncherMotor.setVelocity(1000);
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
             if(launcherUtil.getLaunchState() != LauncherUtilV2.LaunchState.FIND_TAG){
                 launcherUtil.cancelLaunch();

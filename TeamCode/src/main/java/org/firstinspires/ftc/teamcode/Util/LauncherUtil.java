@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifac
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearSideDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
@@ -173,7 +174,7 @@ public class LauncherUtil {
                 if (!aprilTagMethod.isTagVisible() ) {
                     return "No Tag Visible";
                 } else if (resetTimer.seconds() >= 0.2) { //todo check this time could be less
-                    if (rearDistance.getDistance(DistanceUnit.INCH) <= 6) {
+                    if (rearDistance.getDistance(DistanceUnit.INCH) <= 6 || rearSideDistance.getDistance(DistanceUnit.INCH) <= 4) {
                         launchState = LaunchState.CHECK_AGAIN;
                     } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 11
                            || leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5

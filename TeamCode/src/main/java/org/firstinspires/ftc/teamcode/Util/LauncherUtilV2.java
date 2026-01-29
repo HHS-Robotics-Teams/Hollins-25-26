@@ -19,6 +19,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VEL_THRESHOLD;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
 import static java.lang.Math.abs;
+import static java.lang.Math.pow;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Light;
@@ -98,6 +99,8 @@ public class LauncherUtilV2 {
         lightUtil.updateLights();
         if (!aprilTagMethod.isTagVisible() && !isAuto) {
             return "No Tag Visible" + "\nState:" + launchState;
+        } else {
+            isSpunUp();
         }
         switch (launchState) {
             case EXIT:
@@ -174,7 +177,7 @@ public class LauncherUtilV2 {
             return false;
         } else {
             theta = aprilTagMethod.getTagBearing();
-            double range = aprilTagMethod.getTagDistance() + 4;
+            double range = aprilTagMethod.getTagDistance();
             double margin;
             if (range >= 90) {
                 phi = 2.75;
@@ -183,13 +186,13 @@ public class LauncherUtilV2 {
                 phi = 0;
                 margin = 3;
             }
-            double turnPower = 0.25;
-            if (theta >= phi + margin - 1) {
+            double turnPower = 0.55;
+            if (theta >= phi + (margin + 5)) {
                 leftFront.setPower(-turnPower);
                 rightBack.setPower(turnPower);
                 leftBack.setPower(-turnPower);
                 rightFront.setPower(turnPower);
-            } else if (theta <= phi - margin + 1) {
+            } else if (theta <= phi - (margin + 5)) {
                 leftFront.setPower(turnPower);
                 rightBack.setPower(-turnPower);
                 leftBack.setPower(turnPower);
@@ -204,9 +207,9 @@ public class LauncherUtilV2 {
                 leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-            target = (0.0132275 * range * range) + (1.52116 * range) + 752.98942;
+            target = 890.08429 * pow((1.00483), range);
             LauncherMotor.setVelocity(target);
-            return abs(theta - phi) <= margin;
+            return abs(theta - phi) <= margin + 5;
         }
     }
 
@@ -215,6 +218,10 @@ public class LauncherUtilV2 {
      * @return boolean true if velocity is within threshold
      */
     private boolean isSpunUp() {
+        if(aprilTagMethod.isTagVisible()){
+            double range = aprilTagMethod.getTagDistance();
+            target = 890.08429 * pow((1.00483), range);
+        }
         LauncherMotor.setVelocity(target);
         return abs(LauncherMotor.getVelocity() - target) <= LAUNCH_TICK_VEL_THRESHOLD;
     }

@@ -169,7 +169,7 @@ public class CompDriveV4RED extends OpMode {
         if (LAUNCHER_RUN) {
             telemetry.addLine("Launch Status:" + launcherUtil.runLauncher());
         } else {
-            LauncherMotor.setPower(LAUNCHER_IDLE);
+            LauncherMotor.setVelocity(1000);
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
             if(launcherUtil.getLaunchState() != LauncherUtilV2.LaunchState.FIND_TAG){
                 launcherUtil.cancelLaunch();
