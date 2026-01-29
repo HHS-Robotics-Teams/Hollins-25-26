@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.aProccedural;
 
 
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -24,6 +25,8 @@ public class Components {
     public static DcMotor intakeSecondRollerMotor;
     public static Servo LauncherHandServo;
     public static Servo holderServo;
+    public static CRServo leftFeedRoller;
+    public static CRServo rightFeedRoller;
 
 
 
@@ -43,6 +46,9 @@ public class Components {
         intakeSecondRollerMotor = hardwareMap.get(DcMotor.class, "intakeSecondRollerMotor");
         LauncherHandServo = hardwareMap.get(Servo.class, "LauncherHandServo");
         holderServo = hardwareMap.get(Servo.class, "holderServo");
+        leftFeedRoller = hardwareMap.get(CRServo.class,"leftFeedRoller");
+        rightFeedRoller = hardwareMap.get(CRServo.class,"rightFeedRoller");
+
 
 
 
@@ -65,7 +71,8 @@ public class Components {
         intakeSecondRollerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeSecondRollerMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-
+        leftFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFeedRoller.setDirection(DcMotorSimple.Direction.FORWARD);
 
     }
 

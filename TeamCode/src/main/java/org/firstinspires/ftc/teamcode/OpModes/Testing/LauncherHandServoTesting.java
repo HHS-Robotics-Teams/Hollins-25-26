@@ -1,14 +1,23 @@
 package org.firstinspires.ftc.teamcode.OpModes.Testing;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHandServo;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.initComponents;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launcher_close_Vel;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.first_intake_Powers;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.intake_reversed;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.intake_stop;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.main_intake_Powers;
+import static org.firstinspires.ftc.teamcode.aProccedural.Constants.second_intake_Powers;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
-@Disabled
+
 @TeleOp
 public class LauncherHandServoTesting extends OpMode {
     Input input = new Input();
@@ -16,20 +25,36 @@ public class LauncherHandServoTesting extends OpMode {
     @Override
     public void init() {
         initComponents(hardwareMap);
-        LauncherHandServo.setPosition(0);
 
     }
 
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
-        if (input.dpad_up.down()) {
-            LauncherHandServo.setPosition(LauncherHandServo.getPosition() + .05);
+        LauncherMotor.setVelocity(Launcher_close_Vel);
+        if (input.dpad_up.held()) {
+            leftFeedRoller.setPower(1);
+            rightFeedRoller.setPower(1);
         }
-        if (input.dpad_down.down()) {
-            LauncherHandServo.setPosition(LauncherHandServo.getPosition() - .05);
+        else  {
+            leftFeedRoller.setPower(0);
+            rightFeedRoller.setPower(0);
         }
-        telemetry.addData("Launcher Hand Servo Position", LauncherHandServo.getPosition());
+        if (input.x.down()){
+            intake_reversed = true;
+        }
+        if (input.left_trigger.held()) {
+            main_intake_Powers();
+        }
+        if (input.left_bumper.held()) {
+            first_intake_Powers();
+        }
+        if (input.right_bumper.held()) {
+            second_intake_Powers();
+        } else {
+            intake_stop();
+        }
+
         telemetry.update();
     }
 }
