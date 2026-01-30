@@ -16,6 +16,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRIN
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -112,11 +113,13 @@ public class BlueNear3x9 extends OpMode {
         state = AutoState.START;
         Components.initComponents(hardwareMap);
         turnToLaunch = drive.actionBuilder( new Pose2d(-55,-50,Math.toRadians(-135)))
-                .afterDisp(.5, setVelocity)
-                .lineToYLinearHeading(-19,Math.toRadians(-131))
+                //.afterDisp(.5, setVelocity)
+                .strafeToLinearHeading(new Vector2d(-23,-19),Math.toRadians(-131))
+                //.lineToYLinearHeading(-19,Math.toRadians(-131))
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(-19, -13, Math.toRadians(-131)))
-                .splineToLinearHeading(new Pose2d(-12,-28,Math.toRadians(-90)),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(-12,-28),Math.toRadians(-90))
+                //.splineToLinearHeading(new Pose2d(-12,-28,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(.1, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-56)
@@ -124,29 +127,34 @@ public class BlueNear3x9 extends OpMode {
                 //.splineToLinearHeading(new Pose2d(-58,0,Math.toRadians(-90)),Math.toRadians(-90)) // Spline to gate
                 //.waitSeconds(.2)
                 //.lineToX(-50)
-                .splineToLinearHeading(new Pose2d(-23,-19,Math.toRadians(-133)),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(-23,-19),Math.toRadians(-131))
+                //.splineToLinearHeading(new Pose2d(-23,-19,Math.toRadians(-133)),Math.toRadians(45))
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-19, -13, Math.toRadians(-133)))
-                .splineToLinearHeading(new Pose2d(9,-28,Math.toRadians(-90)),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(9,-28),Math.toRadians(-90))
+                //.splineToLinearHeading(new Pose2d(9,-28,Math.toRadians(-90)),Math.toRadians(90))
                 .afterDisp(1, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-38)
-                .lineToY(-59)
+                .lineToY(-60)
                 .afterDisp(85, offIntake)
-                .splineToLinearHeading(new Pose2d(-22,-19,Math.toRadians(-132)),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(-23,-19),Math.toRadians(-131))
+                //.splineToLinearHeading(new Pose2d(-22,-19,Math.toRadians(-132)),Math.toRadians(-90))
                 .build();
-        //driveToIntakeThree = factory.blueGPPPickupPath(blueNearLaunchPose);
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-22, -19, Math.toRadians(-132)))
-                .splineToLinearHeading(new Pose2d(28,-28,Math.toRadians(-90)),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(29,-28),Math.toRadians(-90))
+                //.splineToLinearHeading(new Pose2d(29,-28,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(20, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-41)
-                .lineToY(-56)
-                .afterDisp(80, offIntake)
+                .lineToY(-60)
+                .afterDisp(100, offIntake)
+                .strafeToLinearHeading(new Vector2d(-23,-19),Math.toRadians(-131))
                 //.splineToLinearHeading(new Pose2d(-22,-19,Math.toRadians(-132)),Math.toRadians(-90))
                 .build();
-        park = drive.actionBuilder(new Pose2d(30, -56, Math.toRadians(-90)))
-                .splineToLinearHeading(new Pose2d(0,-48,Math.toRadians(-90)),Math.toRadians(-90))
+        park = drive.actionBuilder(new Pose2d(-23,-19 , Math.toRadians(-131)))
+                .strafeToLinearHeading(new Vector2d(-12,-36),Math.toRadians(-90))
+                //.splineToLinearHeading(new Pose2d(0,-48,Math.toRadians(-90)),Math.toRadians(-90))
                 .build();
 
 
@@ -288,7 +296,7 @@ public class BlueNear3x9 extends OpMode {
                 state = AutoState.INTAKE_THREE;
                 break;
             case INTAKE_THREE:
-                state = AutoState.END;
+                state = AutoState.DRIVE_TO_LAUNCH_FOUR;
                 break;
             case DRIVE_TO_LAUNCH_FOUR:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 130);

@@ -107,7 +107,7 @@ public class Components {
         //Initialize Parking Motor
         Parking_Motor = hardwareMap.get(DcMotorEx.class, "ParkingMotor");
         Parking_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        Parking_Motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Parking_Motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //Initialize Servos
         //LauncherHoodServo = hardwareMap.get(Servo.class, "LauncherHoodServo");

@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifac
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearSideDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
@@ -79,7 +80,10 @@ public class LauncherUtilV2 {
      */
     public void cancelLaunch() {
         launchState = LaunchState.FIND_TAG;
-        LauncherMotor.setPower(LAUNCHER_IDLE);
+        LauncherMotor.setPower(1000);
+        IntakeMotor.setPower(0);
+        ConveyorMotor.setPower(0);
+        LeftSideFeedRoller.setPower(0);
     }
 
     /**
@@ -143,9 +147,9 @@ public class LauncherUtilV2 {
             case DISTANCE_CHECK:
                 setLightAmber();
                 launchState = LaunchState.SPIN_UP_AND_MOVE;
-                if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 6 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 6){
+                if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 4 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 6){
                     launchTime = 2.5;
-                } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 4){
+                } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 4 || rearSideDistance.getDistance(DistanceUnit.INCH) <= 4){
                     launchTime = 0.75;
                 } else {
                     launchState = LaunchState.EXIT;
@@ -160,6 +164,7 @@ public class LauncherUtilV2 {
                 + "\n" + "Distance Measurements:\n(left) " + leftArtifactCounterDistance.getDistance(DistanceUnit.INCH)
                 + "\n(right) " + rightArtifactCounterDistance.getDistance(DistanceUnit.INCH)
                 + "\n(rear) " + rearDistance.getDistance(DistanceUnit.INCH)
+                + "\n(rear side)" + rearSideDistance.getDistance(DistanceUnit.INCH)
                 + "\nTargetVel: " + target
                 + "\nCurrentVel: " + LauncherMotor.getVelocity();
     }
@@ -181,18 +186,18 @@ public class LauncherUtilV2 {
             double margin;
             if (range >= 90) {
                 phi = 2.75;
-                margin = 1.5;
+                margin = 3;
             } else {
                 phi = 0;
-                margin = 3;
+                margin = 6;
             }
-            double turnPower = 0.55;
-            if (theta >= phi + (margin + 5)) {
+            double turnPower = 0.5;
+            if (theta >= phi + margin - 1) {
                 leftFront.setPower(-turnPower);
                 rightBack.setPower(turnPower);
                 leftBack.setPower(-turnPower);
                 rightFront.setPower(turnPower);
-            } else if (theta <= phi - (margin + 5)) {
+            } else if (theta <= phi - margin + 1) {
                 leftFront.setPower(turnPower);
                 rightBack.setPower(-turnPower);
                 leftBack.setPower(turnPower);
@@ -206,10 +211,11 @@ public class LauncherUtilV2 {
                 rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                return true;
             }
             target = 890.08429 * pow((1.00483), range);
             LauncherMotor.setVelocity(target);
-            return abs(theta - phi) <= margin + 5;
+            return abs(theta - phi) <= margin + 2;
         }
     }
 

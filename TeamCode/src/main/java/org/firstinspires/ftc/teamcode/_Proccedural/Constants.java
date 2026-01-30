@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode._Proccedural;
 public class Constants {
 
     /* Constants */
-    public static double Launch_Time = 2.2;
+    public static double Launch_Time = 1.85;
     public static double INTAKE_POWER = 1;
     public static final double LAUNCHER_IDLE = 0.35;
 
@@ -29,7 +29,7 @@ public class Constants {
     public static final double SAFTEY_FIRING = 0.5;
     public static final double FINGER_UP_TIME = 0.75;
     public static final double CAMERA_START_POS = 0.8;
-    public static final int park_Pos = 400;
+    public static final int park_Pos = 300;
     /* Timings */
     public static double DWELL_TIME = 0.5;
     public static double LAUNCHING_TIME = 1.0;

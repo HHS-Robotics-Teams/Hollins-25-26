@@ -74,7 +74,6 @@ public class CompDriveV4BLUE extends OpMode {
         Parking_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Parking_Motor.setTargetPosition(0);
         Parking_Motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Parking_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
         Parking_Motor.setPower(1);
         intakeTimer.reset();
     }
@@ -89,7 +88,7 @@ public class CompDriveV4BLUE extends OpMode {
         //Drivetrain movement values
         double forward = -gamepad1.left_stick_y;
         double strafes = gamepad1.left_stick_x * 1.1;
-        double rotates = gamepad1.right_stick_x * 0.6;
+        double rotates = gamepad1.right_stick_x * 1;
 
         if (abs(forward) <= 0.15) {
             forward = 0;
@@ -101,9 +100,9 @@ public class CompDriveV4BLUE extends OpMode {
             rotates = 0;
         }
         // slow down
-        if (input.left_stick_button.down() || input.right_stick_button.down()) {
-            DriveSlowdown = !DriveSlowdown;
-        }
+//        if (input.left_stick_button.down() || input.right_stick_button.down()) {
+//            DriveSlowdown = !DriveSlowdown;
+//        }
 
         if (DriveSlowdown) {
             rotates = rotates / 3;
@@ -170,6 +169,9 @@ public class CompDriveV4BLUE extends OpMode {
         //while LAUNCHER_RUN flag is true launch
         if (LAUNCHER_RUN) {
             telemetry.addLine("Launch Status:" + launcherUtil.runLauncher());
+            if(input.right_trigger.down() || input.right_bumper.down()){
+                launcherUtil.cancelLaunch();
+            }
         } else {
             LauncherMotor.setVelocity(1000);
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
