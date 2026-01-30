@@ -62,8 +62,8 @@ public class Components {
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         LauncherMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 7.5, 10, 20));
-        //LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(300, 0, 0, 10));
+        //LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 7.5, 10, 20));
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(130, 5, 50, 20));
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);

@@ -88,7 +88,6 @@ public class AutoNearLaunching extends OpMode {
                     break;
                 case SPIN_UP:
                     LauncherMotor.setVelocity(targetVelTwo);
-                    LauncherHandServo.setPosition(loading);
                     state = LaunchState.FIRE_BALL;
                     if (Intake_Time.seconds() >= 2) {
                         Launcher_Time.reset();

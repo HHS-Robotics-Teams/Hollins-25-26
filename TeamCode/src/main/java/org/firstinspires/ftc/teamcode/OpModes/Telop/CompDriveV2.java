@@ -3,8 +3,12 @@ package org.firstinspires.ftc.teamcode.OpModes.Telop;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHandServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.initComponents;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeSecondRollerMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeedRoller;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftRear;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeedRoller;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Idle_Vel;
@@ -16,6 +20,7 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launching_Fa
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launching_Close;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.TimeOne;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.TimeTwo;
+
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.firing;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.first_intake_Powers;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.intake_reversed;
@@ -65,6 +70,7 @@ public class CompDriveV2 extends OpMode {
     @Override
     public void start() {
         state = LaunchState.IDLE;
+
     }
 
     @Override
@@ -74,7 +80,6 @@ public class CompDriveV2 extends OpMode {
 
         /* State machine kill and reset */
         if (input.back.down()) {
-            LauncherHandServo.setPosition(loading);
             LastLaunching_Far = false;
             LastLaunching_Close = false;
             intake_reversed = false;
@@ -122,29 +127,27 @@ public class CompDriveV2 extends OpMode {
         } else {
             intake_stop();
         }
-        /* Manual Hand Movements */
-        if (input.dpad_up.down()) {
-            LauncherHandServo.setPosition(.5);
-        } if (input.dpad_down.down()) {
-            LauncherHandServo.setPosition(loading);
-        }
+//        /* Manual Hand Movements */
+//        if (input.dpad_up.down()) {
+//            LauncherHandServo.setPosition(.5);
+//        } if (input.dpad_down.down()) {
+//            LauncherHandServo.setPosition(loading);
+//        }
 
         /* Intake */
 
-//        intake_reversed = input.x.held();
-//
-//        if (input.left_trigger.held()) {
-//            LauncherHandServo.setPosition(loading);
-//            main_intake_Powers();
-//        } if (input.left_bumper.held()){
-//            LauncherHandServo.setPosition(loading);
-//            first_intake_Powers();
-//        } if (input.right_bumper.held()){
-//            LauncherHandServo.setPosition(loading);
-//            second_intake_Powers();
-//        } else {
-//            intake_stop();
-//        }
+        intake_reversed = input.x.held();
+
+        if (input.left_trigger.held()) {
+
+            main_intake_Powers();
+        } if (input.left_bumper.held()){
+            first_intake_Powers();
+        } if (input.right_bumper.held()){
+            second_intake_Powers();
+        } else {
+            intake_stop();
+        }
 
 
 
@@ -180,31 +183,22 @@ public class CompDriveV2 extends OpMode {
 
                 case SPIN_UP:
                     LauncherMotor.setVelocity(targetVel);
-                    LauncherHandServo.setPosition(loading);
-                    Launcher_Time.reset();
                     state = LaunchState.FIRE_BALL;
                     break;
 
                 case FIRE_BALL:
-                    LauncherMotor.setVelocity(targetVel);
                     // Use a 90-95% threshold so it actually fires even if the motor is slightly slow
                     if (LauncherMotor.getVelocity() >= (targetVel * 0.95)) {
-                        LauncherHandServo.setPosition(firing);
-                        if (Launcher_Time.seconds() >= TimeOne) {
-                            Intake_Time.reset();
-                            state = LaunchState.LOAD_BALL_TWO;
-                        }
+                        main_intake_Powers();
+                        Intake_Time.reset();
+                        state = LaunchState.LOAD_BALL_TWO;
                     }
                     break;
 
                 case LOAD_BALL_TWO:
-                    LauncherHandServo.setPosition(loading);
-                    if (Intake_Time.seconds() >= 1) {
-                        main_intake_Powers(); // Assuming this moves balls to the launcher
-                        if (Intake_Time.seconds() >= 4) {
-                            Launcher_Time.reset();
-                            state = LaunchState.FIRE_BALL_TWO;
-                        }
+                    if (Intake_Time.seconds() >= 10) {
+                        intake_stop();
+                        state = LaunchState.STOP_AND_RESET;
                     }
                     break;
 
@@ -245,7 +239,6 @@ public class CompDriveV2 extends OpMode {
                     }
                     break;
                 case STOP_AND_RESET:
-                    LauncherHandServo.setPosition(loading);
                     state = LaunchState.IDLE;
                     break;
             }
