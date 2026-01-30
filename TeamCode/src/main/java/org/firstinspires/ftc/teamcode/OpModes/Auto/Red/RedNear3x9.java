@@ -146,10 +146,10 @@ public class RedNear3x9 extends OpMode {
                 .waitSeconds(0.4)
                 .afterDisp(70, offIntake)
                 .lineToY(52)
-                .splineToLinearHeading(new Pose2d(-26,26,Math.toRadians(125)),Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(26,26,Math.toRadians(125)),Math.toRadians(-90))
                 .build();
 //        //driveToIntakeThree = factory.blueGPPPickupPath(blueNearLaunchPose);
-        driveToIntakeThree = drive.actionBuilder(new Pose2d(-26, 26, Math.toRadians(125)))
+        driveToIntakeThree = drive.actionBuilder(new Pose2d(26, 26, Math.toRadians(125)))
                 .splineToLinearHeading(new Pose2d(30,-28,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(.1, runIntake)
                 .waitSeconds(intakeWaitTime)
