@@ -32,13 +32,15 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Constants.isIntaking;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.targetVel;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.OpModes.Auto.AutoFarLaunching;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
-
+@Deprecated
+@Disabled
 @TeleOp
 public class CompDriveV2 extends OpMode {
     ElapsedTime Intake_Time = new ElapsedTime();
