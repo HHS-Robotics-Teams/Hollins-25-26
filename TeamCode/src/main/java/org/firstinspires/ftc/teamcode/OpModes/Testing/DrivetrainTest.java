@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.aProccedural.Input;
-@Disabled
+// @Disabled
 @TeleOp (name = "Drivetrain Test", group = "Test")
 public class DrivetrainTest extends OpMode {
     private DcMotorEx leftFront;
