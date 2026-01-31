@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.TeleOp;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Motor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
@@ -19,6 +20,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_REVER
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.park_Pos;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
@@ -164,8 +166,15 @@ public class CompDriveNoCam extends OpMode {
         //while LAUNCHER_RUN flag is true launch
         if (LAUNCHER_RUN) {
             telemetry.addLine("Launch Status:" + launcherUtil.runLauncher());
+            if(input.right_trigger.down() || input.right_bumper.down()){
+                launcherUtil.cancelLaunch();
+            }
         } else {
-            LauncherMotor.setPower(LAUNCHER_IDLE);
+            LauncherMotor.setVelocity(1000);
+            LauncherSafetyServo.setPosition(SAFETY_HOLDING);
+            if(launcherUtil.getLaunchState() != LauncherUtilV2.LaunchState.FIND_TAG){
+                launcherUtil.cancelLaunch();
+            }
         }
 
         if (input.dpad_down.down()) {

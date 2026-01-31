@@ -142,8 +142,7 @@ public class BlueNear3x9 extends OpMode {
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-41)
                 .lineToY(-56)
-                .afterDisp(65, offIntake)
-                .afterDisp(80, offIntake)
+                //.afterDisp(65, offIntake)
                 //.splineToLinearHeading(new Pose2d(-22,-19,Math.toRadians(-132)),Math.toRadians(-90))
                 .build();
         park = drive.actionBuilder(new Pose2d(30, -56, Math.toRadians(-90)))
@@ -323,6 +322,8 @@ public class BlueNear3x9 extends OpMode {
                                 break;
 
                             case END:
+                                IntakeMotor.setPower(0);
+                                ConveyorMotor.setPower(0);
                                 Actions.runBlocking(park);
                                 requestOpModeStop();
                                 break;

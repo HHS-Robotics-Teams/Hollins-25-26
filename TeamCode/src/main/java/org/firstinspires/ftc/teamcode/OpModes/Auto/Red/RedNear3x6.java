@@ -4,10 +4,13 @@ import static org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory.intakeWait
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -33,6 +36,7 @@ public class RedNear3x6 extends OpMode {
         @Override
         public void run() {
             LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+            LauncherSafetyServo.setPosition(SAFETY_HOLDING);
             IntakeMotor.setPower(1);
             ConveyorMotor.setPower(1);
             LeftSideFeedRoller.setPower(0);
@@ -42,6 +46,7 @@ public class RedNear3x6 extends OpMode {
         @Override
         public void run() {
             LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 50);
+            LauncherSafetyServo.setPosition(SAFTEY_FIRING);
             IntakeMotor.setPower(0);
             ConveyorMotor.setPower(0);
             LeftSideFeedRoller.setPower(0);
@@ -133,7 +138,7 @@ public class RedNear3x6 extends OpMode {
                 .build();
         //driveToIntakeTwo = factory.redPGPPickupPath(new Pose2d(-24,19,Math.toRadians(132.5)));;
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(135)))
-                .splineToLinearHeading(new Pose2d(12,28,Math.toRadians(90)),Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(9,28,Math.toRadians(90)),Math.toRadians(-90))
                 .afterDisp(1, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(38)
@@ -190,13 +195,13 @@ public class RedNear3x6 extends OpMode {
                 break;
 
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 15);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 10);
                 intakeTimer.reset();
                 state = AutoState.LAUNCH_ONE;
                 break;
 
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR + 15){ // do not change this time
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR + 10){ // do not change this time
                     IntakeMotor.setPower(INTAKE_POWER);
                     ConveyorMotor.setPower(INTAKE_POWER);
                     LeftSideFeedRoller.setPower(1);

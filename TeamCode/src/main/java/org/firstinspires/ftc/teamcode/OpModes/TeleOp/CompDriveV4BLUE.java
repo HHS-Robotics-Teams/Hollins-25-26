@@ -105,9 +105,13 @@ public class CompDriveV4BLUE extends OpMode {
 //        }
 
         if (DriveSlowdown) {
-            rotates = rotates / 3;
-            strafes = strafes / 3;
-            forward = forward / 3;
+            rotates /= 3;
+            strafes /= 3;
+            forward /= 3;
+        }
+
+        if(LAUNCHER_RUN){
+            rotates /= 3;
         }
 
 

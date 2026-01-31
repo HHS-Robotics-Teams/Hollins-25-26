@@ -134,32 +134,32 @@ public class RedNear3x9 extends OpMode {
                 .waitSeconds(intakeWaitTime)
                 .lineToY(56)
                 .afterDisp(50, offIntake)
-                .splineToLinearHeading(new Pose2d(-24,24,Math.toRadians(135)),Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(-24,24,Math.toRadians(134)),Math.toRadians(-90))
                 .build();
         //driveToIntakeTwo = factory.redPGPPickupPath(new Pose2d(-24,19,Math.toRadians(132.5)));;
-        driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(135)))
-                .splineToLinearHeading(new Pose2d(12,28,Math.toRadians(90)),Math.toRadians(-90))
+        driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(134)))
+                .splineToLinearHeading(new Pose2d(10,28,Math.toRadians(90)),Math.toRadians(-90))
                 .afterDisp(1, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(38)
                 .lineToY(63)
-                .waitSeconds(0.4)
+                .waitSeconds(0.1)
                 .afterDisp(70, offIntake)
                 .lineToY(52)
-                .splineToLinearHeading(new Pose2d(26,26,Math.toRadians(125)),Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(-24,24,Math.toRadians(125)),Math.toRadians(-90))
                 .build();
 //        //driveToIntakeThree = factory.blueGPPPickupPath(blueNearLaunchPose);
-        driveToIntakeThree = drive.actionBuilder(new Pose2d(26, 26, Math.toRadians(125)))
-                .splineToLinearHeading(new Pose2d(30,-28,Math.toRadians(-90)),Math.toRadians(-90))
+        driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(125)))
+                .splineToLinearHeading(new Pose2d(31,28,Math.toRadians(90)),Math.toRadians(90))
                 .afterDisp(.1, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(-41)
-                .lineToY(-56)
-                .afterDisp(80, offIntake)
+                .lineToY(41)
+                .lineToY(56)
+                .lineToY(62)
                 //.splineToLinearHeading(new Pose2d(-22,-19,Math.toRadians(-132)),Math.toRadians(-90))
                 .build();
-        park = drive.actionBuilder(new Pose2d(30,-56,Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(0,48),Math.toRadians(90))
+        park = drive.actionBuilder(new Pose2d(30,56,Math.toRadians(90)))
+                .splineToLinearHeading(new Pose2d(0,48,Math.toRadians(90)),Math.toRadians(-90))
                 .build();
         telemetry.addLine("Ready to Launch");
         LightUtil util = new LightUtil(2, hardwareMap);
@@ -296,6 +296,7 @@ public class RedNear3x9 extends OpMode {
                 state = AutoState.INTAKE_THREE;
                 break;
             case INTAKE_THREE:
+
                 state = AutoState.PARK;
                 break;
             case DRIVE_TO_LAUNCH_FOUR:
@@ -328,6 +329,8 @@ public class RedNear3x9 extends OpMode {
                 break;
 
             case PARK:
+                IntakeMotor.setPower(0);
+                ConveyorMotor.setPower(0);
                 Actions.runBlocking(park);
                 state = AutoState.END;
                 break;

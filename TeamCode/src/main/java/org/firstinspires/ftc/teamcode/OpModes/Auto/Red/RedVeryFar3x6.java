@@ -135,7 +135,7 @@ public class RedVeryFar3x6 extends OpMode {
                 .lineToY(41)
                 .lineToY(59)
                 .waitSeconds(0.2)
-                .splineToLinearHeading(new Pose2d(52, 10, Math.toRadians(155)),Math.toRadians(155.75))
+                .splineToLinearHeading(new Pose2d(52, 10, Math.toRadians(150)),Math.toRadians(155.75))
                 .build();
         telemetry.addLine("Ready to Launch");
         LightUtil util = new LightUtil(2, hardwareMap);
@@ -145,7 +145,7 @@ public class RedVeryFar3x6 extends OpMode {
 
     @Override
     public void start(){
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 185);
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 200);
         Actions.runBlocking(turnToLaunch);
     }
 
@@ -165,12 +165,12 @@ public class RedVeryFar3x6 extends OpMode {
                 break;
 
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 185);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 200);
                 state = AutoState.LAUNCH_ONE;
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                 break;
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 185){ // do not change this time
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 200){ // do not change this time
                     IntakeMotor.setPower(0.75);
                     ConveyorMotor.setPower(0.75);
                     LeftSideFeedRoller.setPower(INTAKE_POWER);
@@ -199,12 +199,12 @@ public class RedVeryFar3x6 extends OpMode {
                 break;
             case SPIN_UP_TWO:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 225);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 275);
                 state = AutoState.LAUNCH_TWO;
                 launchTimer.reset();
                 break;
             case LAUNCH_TWO:
-                if(LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 225){
+                if(LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 275){
                     IntakeMotor.setPower(0.75);
                     ConveyorMotor.setPower(0.75);
                     LeftSideFeedRoller.setPower(INTAKE_POWER);

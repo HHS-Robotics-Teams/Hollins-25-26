@@ -15,6 +15,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_IDLE;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_NEAR_TARGET;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VEL_THRESHOLD;
@@ -50,6 +51,7 @@ public class LauncherUtilV2 {
     private double launchTime;
     private final LightUtil lightUtil;
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
+    ElapsedTime timeout = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     /**
      * Sets target vel manually
@@ -80,7 +82,7 @@ public class LauncherUtilV2 {
      */
     public void cancelLaunch() {
         launchState = LaunchState.FIND_TAG;
-        LauncherMotor.setPower(1000);
+        LauncherMotor.setVelocity(1000);
         IntakeMotor.setPower(0);
         ConveyorMotor.setPower(0);
         LeftSideFeedRoller.setPower(0);
@@ -100,11 +102,21 @@ public class LauncherUtilV2 {
      */
     public String runLauncher() {
         LauncherSafetyServo.setPosition(SAFTEY_FIRING);
+        lightUtil.makeOff();
         lightUtil.updateLights();
         if (!aprilTagMethod.isTagVisible() && !isAuto) {
-            return "No Tag Visible" + "\nState:" + launchState;
+            if(timeout.seconds() > 0.85){
+                launchState = LaunchState.FIND_TAG;
+                LauncherMotor.setVelocity(1000);
+                IntakeMotor.setPower(0);
+                ConveyorMotor.setPower(0);
+                LeftSideFeedRoller.setPower(0);
+                LAUNCHER_RUN = false;
+            }
+            return "No Tag Visible" + "\nState:" + launchState +"\nTimeout:" + timeout.seconds();
         } else {
             isSpunUp();
+            timeout.reset();
         }
         switch (launchState) {
             case EXIT:
@@ -147,7 +159,7 @@ public class LauncherUtilV2 {
             case DISTANCE_CHECK:
                 setLightAmber();
                 launchState = LaunchState.SPIN_UP_AND_MOVE;
-                if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 4 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 6){
+                if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7){
                     launchTime = 2.5;
                 } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 4 || rearSideDistance.getDistance(DistanceUnit.INCH) <= 4){
                     launchTime = 0.75;
@@ -181,23 +193,29 @@ public class LauncherUtilV2 {
         } else if (!aprilTagMethod.isTagVisible() ) {
             return false;
         } else {
-            theta = aprilTagMethod.getTagBearing();
+            theta = aprilTagMethod.getTagBearing() - 4.75;
             double range = aprilTagMethod.getTagDistance();
             double margin;
             if (range >= 90) {
                 phi = 2.75;
                 margin = 3;
+                if (color.equals("RED")) {
+                    phi = 2.5;
+                }
             } else {
                 phi = 0;
                 margin = 6;
+                if (color.equals("RED")) {
+                    phi = 1;
+                }
             }
-            double turnPower = 0.5;
-            if (theta >= phi + margin - 1) {
+            double turnPower = 0.375;
+            if (theta >= phi + 2) {
                 leftFront.setPower(-turnPower);
                 rightBack.setPower(turnPower);
                 leftBack.setPower(-turnPower);
                 rightFront.setPower(turnPower);
-            } else if (theta <= phi - margin + 1) {
+            } else if (theta <= phi - 2) {
                 leftFront.setPower(turnPower);
                 rightBack.setPower(-turnPower);
                 leftBack.setPower(turnPower);
@@ -207,15 +225,11 @@ public class LauncherUtilV2 {
                 rightBack.setPower(0);
                 leftBack.setPower(0);
                 rightFront.setPower(0);
-                leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 return true;
             }
-            target = 890.08429 * pow((1.00483), range);
+            target = 940.08429 * pow((1.00383), range);
             LauncherMotor.setVelocity(target);
-            return abs(theta - phi) <= margin + 2;
+            return abs(theta - phi) <= margin;
         }
     }
 
@@ -224,9 +238,13 @@ public class LauncherUtilV2 {
      * @return boolean true if velocity is within threshold
      */
     private boolean isSpunUp() {
+        if(isAuto){
+            target = 925;
+            return true;
+        }
         if(aprilTagMethod.isTagVisible()){
             double range = aprilTagMethod.getTagDistance();
-            target = 890.08429 * pow((1.00483), range);
+            target = 940.08429 * pow((1.00383), range);
         }
         LauncherMotor.setVelocity(target);
         return abs(LauncherMotor.getVelocity() - target) <= LAUNCH_TICK_VEL_THRESHOLD;
