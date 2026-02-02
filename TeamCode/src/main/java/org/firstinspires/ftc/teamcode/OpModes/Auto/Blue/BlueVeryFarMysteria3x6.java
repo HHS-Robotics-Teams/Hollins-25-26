@@ -18,18 +18,18 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.OpModes.Auto.PathFactory;
-import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode.Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
-public class BlueVeryFar3x6 extends OpMode {
+public class BlueVeryFarMysteria3x6 extends OpMode {
     MecanumDrive drive;
     InstantAction IntakePickup = new InstantAction(new InstantFunction() {
         @Override
@@ -83,13 +83,22 @@ public class BlueVeryFar3x6 extends OpMode {
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime parkable = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
+
+    @Override
+    public void stop () {
+        Thread.currentThread().interrupt(); //todo add to all opmodes
+        requestOpModeStop();
+    }
+
+
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), -(13 / 2), Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), -(13 / 2) - 24, Math.toRadians(180)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -(13 / 2), Math.toRadians(180)))
+        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -(13 / 2) - 24, Math.toRadians(180)))
+                .waitSeconds(5)
                 .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(-155)), Math.toRadians(-175))
                 .afterDisp(0.01, new InstantFunction() {
                     @Override
@@ -114,8 +123,8 @@ public class BlueVeryFar3x6 extends OpMode {
                 .turnTo(Math.toRadians(-90))
                 .lineToY(-60)
                 .waitSeconds(0.5)
-                .strafeToLinearHeading(new Vector2d(50, -10), Math.toRadians(-155))
-                .afterDisp(50, new InstantFunction() {
+                .strafeToLinearHeading(new Vector2d(56, -60), Math.toRadians(-155))
+                .afterDisp(40, new InstantFunction() {
                     @Override
                     public void run() {
                         IntakeMotor.setPower(0);
@@ -142,12 +151,6 @@ public class BlueVeryFar3x6 extends OpMode {
         parkable.reset();
         LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 275);
         Actions.runBlocking(turnToLaunch);
-    }
-
-    @Override
-    public void stop () {
-        Thread.currentThread().interrupt(); //todo add to all opmodes
-        requestOpModeStop();
     }
 
     @Override

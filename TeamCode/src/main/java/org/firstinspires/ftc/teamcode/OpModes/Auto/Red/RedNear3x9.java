@@ -117,6 +117,13 @@ public class RedNear3x9 extends OpMode {
 
 
     @Override
+    public void stop () {
+        Thread.currentThread().interrupt(); //todo add to all opmodes
+        requestOpModeStop();
+    }
+
+
+    @Override
     public void init() {
 
         drive = new MecanumDrive(hardwareMap, new Pose2d(-55,50,Math.toRadians(135)));

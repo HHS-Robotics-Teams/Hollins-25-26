@@ -88,11 +88,11 @@ public class RedVeryFar3x6 extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), (13 / 2) + 16.7, Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), (13 / 2), Math.toRadians(180)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), (13 / 2) + 16.7, Math.toRadians(180)))
+        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), (13 / 2), Math.toRadians(180)))
                 .waitSeconds(4)
                 .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(155)), Math.toRadians(175))
                 .afterDisp(0.01, new InstantFunction() {
@@ -146,6 +146,14 @@ public class RedVeryFar3x6 extends OpMode {
         LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 225);
         Actions.runBlocking(turnToLaunch);
     }
+
+
+    @Override
+    public void stop () {
+        Thread.currentThread().interrupt(); //todo add to all opmodes
+        requestOpModeStop();
+    }
+
 
     @Override
     public void loop() {

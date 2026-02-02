@@ -103,6 +103,12 @@ public class BlueNear3x9 extends OpMode {
     //ElapsedTime specialTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
 
+    @Override
+    public void stop () {
+        Thread.currentThread().interrupt(); //todo add to all opmodes
+        requestOpModeStop();
+    }
+
 
     @Override
     public void init() {
