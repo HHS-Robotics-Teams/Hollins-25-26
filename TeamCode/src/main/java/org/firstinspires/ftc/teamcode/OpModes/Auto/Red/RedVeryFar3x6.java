@@ -74,12 +74,9 @@ public class RedVeryFar3x6 extends OpMode {
         END
     }
     AutoState state = AutoState.START;
-    AprilTagMethod aprilTagMethod = new AprilTagMethod();
     Action turnToLaunch;
     Action driveToIntakeOne;
-    Action driveToLaunchOne;
     Action driveToIntakeTwo;
-    Action driveToLaunchThree;
     PathFactory factory;
 
 
@@ -91,11 +88,12 @@ public class RedVeryFar3x6 extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), (13 / 2), Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), (13 / 2) + 16.7, Math.toRadians(180)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), (13 / 2), Math.toRadians(180)))
+        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), (13 / 2) + 16.7, Math.toRadians(180)))
+                .waitSeconds(4)
                 .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(155)), Math.toRadians(175))
                 .afterDisp(0.01, new InstantFunction() {
                     @Override
@@ -112,13 +110,13 @@ public class RedVeryFar3x6 extends OpMode {
                         ConveyorMotor.setPower(1);
                     }
                 })
-                .strafeToLinearHeading(new Vector2d(64,54),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(64,54),Math.toRadians(75))
                 .waitSeconds(.1)
                 .strafeToLinearHeading(new Vector2d(70,58),Math.toRadians(60))
-                .waitSeconds(0.4)
+                .waitSeconds(0.5)
                 .turnTo(Math.toRadians(90))
                 .lineToY(66)
-                .waitSeconds(0.2)
+                .waitSeconds(0.5)
                 .strafeToLinearHeading(new Vector2d(52, 10), Math.toRadians(155))
                 .afterDisp(65, new InstantFunction() {
                     @Override
@@ -129,7 +127,7 @@ public class RedVeryFar3x6 extends OpMode {
                 })
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(52, 10, Math.toRadians(155)))
-                .splineToSplineHeading(new Pose2d(39,28,Math.toRadians(90)),Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(36,28,Math.toRadians(90)),Math.toRadians(90))
                 .afterDisp(1,IntakePickup)
                 .waitSeconds(0.2)
                 .lineToY(41)
@@ -145,7 +143,7 @@ public class RedVeryFar3x6 extends OpMode {
 
     @Override
     public void start(){
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 200);
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 225);
         Actions.runBlocking(turnToLaunch);
     }
 
@@ -165,12 +163,12 @@ public class RedVeryFar3x6 extends OpMode {
                 break;
 
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 200);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 225);
                 state = AutoState.LAUNCH_ONE;
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                 break;
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 200){ // do not change this time
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 225){ // do not change this time
                     IntakeMotor.setPower(0.75);
                     ConveyorMotor.setPower(0.75);
                     LeftSideFeedRoller.setPower(INTAKE_POWER);
@@ -184,11 +182,10 @@ public class RedVeryFar3x6 extends OpMode {
                     IntakeMotor.setPower(0);
                     ConveyorMotor.setPower(0);
                     LeftSideFeedRoller.setPower(0);
-                    state = AutoState.DRIVE_TO_INTAKE_ONE;
+                    state = AutoState.PARK;
                 }
                 break;
             case DRIVE_TO_INTAKE_ONE:
-
                 LauncherSafetyServo.setPosition(SAFETY_HOLDING);
                 state = AutoState.DRIVE_TO_LAUNCH_TWO;
                 Actions.runBlocking(driveToIntakeOne);

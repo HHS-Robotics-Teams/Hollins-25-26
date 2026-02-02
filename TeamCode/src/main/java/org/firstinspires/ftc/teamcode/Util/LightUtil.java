@@ -16,6 +16,12 @@ public class LightUtil {
     private LightState lightState;
     private final ArrayList<LED> greens = new ArrayList<>();
     private final ArrayList<LED> reds = new ArrayList<>();
+
+    /**
+     * Constructor for LightUtil obj
+     * @param numLights number of lights on robot
+     * @param hardwareMap the hardwaremap
+     */
     public LightUtil(int numLights, HardwareMap hardwareMap){
         this.numLights = numLights;
         for(int i = 1; i <= numLights; i++){
@@ -24,6 +30,12 @@ public class LightUtil {
         }
         lightState = LightState.OFF;
     }
+
+    /**
+     * main updating method for lights
+     * to change color call one of makeColor()
+     * and then run this method each loop
+     */
     public void updateLights() {
         switch (lightState){
             case OFF:

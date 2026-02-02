@@ -127,7 +127,7 @@ public class BlueNear3x9 extends OpMode {
                 .splineToLinearHeading(new Pose2d(-23,-19,Math.toRadians(-133)),Math.toRadians(-90))
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-19, -13, Math.toRadians(-133)))
-                .splineToLinearHeading(new Pose2d(9,-28,Math.toRadians(-90)),Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(11.5,-28,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(1, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-38)
@@ -137,7 +137,7 @@ public class BlueNear3x9 extends OpMode {
                 .build();
         //driveToIntakeThree = factory.blueGPPPickupPath(blueNearLaunchPose);
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-22, -19, Math.toRadians(-132)))
-                .splineToLinearHeading(new Pose2d(30,-28,Math.toRadians(-90)),Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(12+20,-28,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(20, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(-41)
@@ -258,16 +258,16 @@ public class BlueNear3x9 extends OpMode {
                         state = AutoState.DRIVE_TO_LAUNCH_THREE;
                         break;
                     case DRIVE_TO_LAUNCH_THREE:
-                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 140);
+                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 160);
                         //Actions.runBlocking(driveToLaunchThree);
                         state = AutoState.SPIN_UP_THREE;
                         break;
                     case SPIN_UP_THREE:
-                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 140);
+                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 160);
                         state = AutoState.LAUNCH_THREE;
                         break;
                     case LAUNCH_THREE:
-                        if (LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 140)) {
+                        if (LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 160)) {
                             IntakeMotor.setPower(INTAKE_POWER);
                             ConveyorMotor.setPower(INTAKE_POWER);
                             LeftSideFeedRoller.setPower(1);

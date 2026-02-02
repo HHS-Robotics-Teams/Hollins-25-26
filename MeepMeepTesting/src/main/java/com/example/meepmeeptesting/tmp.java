@@ -1,6 +1,7 @@
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.DriveTrainType;
@@ -10,8 +11,8 @@ public class tmp {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(600);
 
-        Pose2d startPos = new Pose2d(63.5, -6, Math.toRadians(180));
-        Pose2d blueFarLaunchPose = new Pose2d(50, -10, Math.toRadians(-153));
+        Pose2d startPos = new Pose2d(72 - (16.25/2), (13 / 2) + 16.7, Math.toRadians(180));
+        Pose2d blueFarLaunchPose = new Pose2d(-55,50,Math.toRadians(135));
         double intakeWaitTime = 0.2;
         double launchWaitTime = 4;
 
@@ -24,28 +25,8 @@ public class tmp {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(startPos)
-                .splineToLinearHeading(blueFarLaunchPose, Math.toRadians(-175))
-                .waitSeconds(4)
-                .splineToSplineHeading(new Pose2d(36,-30,Math.toRadians(-90)),Math.toRadians(-90))
-                .lineToY(-36)
-                .waitSeconds(.3)
-                .lineToY(-40)
-                .waitSeconds(.3)
-                .lineToY(-46)
-                .waitSeconds(.3)
-                .lineToYConstantHeading(-35)
-                .splineToSplineHeading(new Pose2d(-24,-20,Math.toRadians(-130)), Math.toRadians(-125))
-                .waitSeconds(4)
-                .splineToSplineHeading(new Pose2d(12,-30,Math.toRadians(-90)),Math.toRadians(-90))
-                .lineToY(-36)
-                .waitSeconds(.3)
-                .lineToY(-40)
-                .waitSeconds(.3)
-                .lineToY(-46)
-                .waitSeconds(.3)
-                .lineToYConstantHeading(-35)
-                .splineToLinearHeading(new Pose2d(-24,-20,Math.toRadians(-130)), Math.toRadians(-125))
-                .waitSeconds(4)
+                .waitSeconds(5)
+                .splineToLinearHeading(new Pose2d(50, 10, Math.toRadians(155)), Math.toRadians(175))
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_JUICE_BLACK)

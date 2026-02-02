@@ -74,28 +74,22 @@ public class BlueVeryFar3x6 extends OpMode {
         END
     }
     AutoState state = AutoState.START;
-    AprilTagMethod aprilTagMethod = new AprilTagMethod();
     Action turnToLaunch;
     Action driveToIntakeOne;
-    Action driveToLaunchOne;
     Action driveToIntakeTwo;
-    Action driveToLaunchThree;
     PathFactory factory;
-
-
 
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
-
-
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), -(13 / 2), Math.toRadians(180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), -(13 / 2) - 24, Math.toRadians(180)));
         factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -(13 / 2), Math.toRadians(180)))
+        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -(13 / 2) - 24, Math.toRadians(180)))
+                .waitSeconds(5)
                 .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(-155)), Math.toRadians(-175))
                 .afterDisp(0.01, new InstantFunction() {
                     @Override
@@ -116,12 +110,12 @@ public class BlueVeryFar3x6 extends OpMode {
                 .waitSeconds(.2)
                 //.lineToYConstantHeading(-58)
                 .strafeToLinearHeading(new Vector2d(66,-58),Math.toRadians(-60))
-                .waitSeconds(0.4)
+                .waitSeconds(0.5)
                 .turnTo(Math.toRadians(-90))
                 .lineToY(-60)
-                .waitSeconds(0.2)
-                .strafeToLinearHeading(new Vector2d(52, -10), Math.toRadians(-155))
-                .afterDisp(50, new InstantFunction() {
+                .waitSeconds(0.5)
+                .strafeToLinearHeading(new Vector2d(56, -60), Math.toRadians(-155))
+                .afterDisp(40, new InstantFunction() {
                     @Override
                     public void run() {
                         IntakeMotor.setPower(0);
@@ -130,12 +124,12 @@ public class BlueVeryFar3x6 extends OpMode {
                 })
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(52, -10, Math.toRadians(-155)))
-                .splineToSplineHeading(new Pose2d(39,-28,Math.toRadians(-90)),Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(38,-28,Math.toRadians(-90)),Math.toRadians(-90))
                 .afterDisp(1,IntakePickup)
                 .waitSeconds(0.2)
                 .lineToY(-41)
                 .lineToY(-59)
-                .splineToLinearHeading(new Pose2d(52, -10, Math.toRadians(-154)),Math.toRadians(-155.75))
+                .splineToLinearHeading(new Pose2d(53, -10, Math.toRadians(-154)),Math.toRadians(-155.75))
                 .build();
         telemetry.addLine("Ready to Launch");
         LightUtil util = new LightUtil(2, hardwareMap);
@@ -160,18 +154,18 @@ public class BlueVeryFar3x6 extends OpMode {
 
         switch (state){
             case START:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 250);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 340);
                 intakeTimer.reset();
                 state = AutoState.SPIN_UP;
                 break;
 
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 250);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 340);
                 state = AutoState.LAUNCH_ONE;
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                 break;
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 250){ // do not change this time
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 340){ // do not change this time
                     IntakeMotor.setPower(0.75);
                     ConveyorMotor.setPower(0.75);
                     LeftSideFeedRoller.setPower(INTAKE_POWER);
@@ -196,7 +190,7 @@ public class BlueVeryFar3x6 extends OpMode {
                 break;
             case DRIVE_TO_LAUNCH_TWO:
                 intakeTimer.reset();
-                state = AutoState.SPIN_UP_TWO;
+                state = AutoState.END;
                 break;
             case SPIN_UP_TWO:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 275);
@@ -219,7 +213,7 @@ public class BlueVeryFar3x6 extends OpMode {
                     IntakeMotor.setPower(0);
                     ConveyorMotor.setPower(0);
                     LeftSideFeedRoller.setPower(0);
-                    state = AutoState.DRIVE_TO_INTAKE_TWO;
+                    state = AutoState.PARK;
                 }
                 break;
             case DRIVE_TO_INTAKE_TWO:

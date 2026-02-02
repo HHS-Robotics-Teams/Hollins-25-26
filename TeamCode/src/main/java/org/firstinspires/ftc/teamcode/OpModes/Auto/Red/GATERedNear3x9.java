@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
-public class RedNear3x9 extends OpMode {
+public class GATERedNear3x9 extends OpMode {
     MecanumDrive drive;
 
     InstantAction runIntake = new InstantAction(new InstantFunction() {
@@ -134,6 +134,7 @@ public class RedNear3x9 extends OpMode {
                 .waitSeconds(intakeWaitTime)
                 .lineToY(56)
                 .afterDisp(50, offIntake)
+                .strafeToConstantHeading(new Vector2d(4,60))
                 .splineToLinearHeading(new Pose2d(-24,24,Math.toRadians(134)),Math.toRadians(-90))
                 .build();
         //driveToIntakeTwo = factory.redPGPPickupPath(new Pose2d(-24,19,Math.toRadians(132.5)));;
@@ -142,11 +143,11 @@ public class RedNear3x9 extends OpMode {
                 .afterDisp(1, runIntake)
                 .waitSeconds(intakeWaitTime)
                 .lineToY(38)
-                .lineToY(60)
+                .lineToY(66)
                 .waitSeconds(0.1)
                 .afterDisp(70, offIntake)
-                .lineToY(52)
-                .splineToLinearHeading(new Pose2d(-24,24,Math.toRadians(125)),Math.toRadians(-90))
+                .lineToY(50)
+                .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(135))
                 .build();
 //        //driveToIntakeThree = factory.blueGPPPickupPath(blueNearLaunchPose);
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(125)))
