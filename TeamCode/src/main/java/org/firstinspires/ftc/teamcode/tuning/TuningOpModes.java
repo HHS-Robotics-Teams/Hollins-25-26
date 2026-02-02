@@ -52,8 +52,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Deprecated
-@Disabled
 public final class TuningOpModes {
     // TODO: change this to TankDrive.class if you're using tank
     public static final Class<?> DRIVE_CLASS = MecanumDrive.class;
@@ -296,7 +294,7 @@ public final class TuningOpModes {
         } else {
             throw new RuntimeException();
         }
-/* todo get rid of comments if ever need to retune
+/* todo uncomment if needed
         manager.register(metaForClass(AngularRampLogger.class), new AngularRampLogger(dvf));
         manager.register(metaForClass(ForwardPushTest.class), new ForwardPushTest(dvf));
         manager.register(metaForClass(ForwardRampLogger.class), new ForwardRampLogger(dvf));
@@ -326,5 +324,6 @@ public final class TuningOpModes {
         });
 
  */
+
     }
 }
