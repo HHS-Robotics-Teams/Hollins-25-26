@@ -13,52 +13,35 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRIN
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
-import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD.PathFactory;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
 public class GATERedNear3x9 extends OpMode {
     MecanumDrive drive;
-
-    InstantAction runIntake = new InstantAction(new InstantFunction() {
-        @Override
-        public void run() {
-            LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-            IntakeMotor.setPower(1);
-            ConveyorMotor.setPower(1);
-            LeftSideFeedRoller.setPower(0);
-            LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-        }
+    InstantAction runIntake = new InstantAction(() -> {
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+        IntakeMotor.setPower(1);
+        ConveyorMotor.setPower(1);
+        LeftSideFeedRoller.setPower(0);
+        LauncherSafetyServo.setPosition(SAFETY_HOLDING);
     });
-    InstantAction offIntake = new InstantAction(new InstantFunction() {
-        @Override
-        public void run() {
-            LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 50);
-            IntakeMotor.setPower(0);
-            ConveyorMotor.setPower(0);
-            LeftSideFeedRoller.setPower(0);
-            LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-        }
+    InstantAction offIntake = new InstantAction(() -> {
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 50);
+        IntakeMotor.setPower(0);
+        ConveyorMotor.setPower(0);
+        LeftSideFeedRoller.setPower(0);
+        LauncherSafetyServo.setPosition(SAFTEY_FIRING);
     });
-    InstantAction setVelocity = new InstantAction(new InstantFunction() {
-        @Override
-        public void run() {
-            LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 15);
-
-        }
-    });
-
+    InstantAction setVelocity = new InstantAction(() -> LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 15));
     enum AutoState{
         START,
         LAUNCH_ONE,

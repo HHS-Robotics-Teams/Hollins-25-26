@@ -13,7 +13,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRIN
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
-import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -23,21 +22,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD.PathFactory;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
 public class BlueVeryFarMysteria3x6 extends OpMode {
     MecanumDrive drive;
-    InstantAction IntakePickup = new InstantAction(new InstantFunction() {
-        @Override
-        public void run() {
-            IntakeMotor.setPower(INTAKE_POWER);
-            ConveyorMotor.setPower(0.75);
-            LeftSideFeedRoller.setPower(0);
-
-        }
+    InstantAction IntakePickup = new InstantAction(() -> {
+        IntakeMotor.setPower(INTAKE_POWER);
+        ConveyorMotor.setPower(0.75);
+        LeftSideFeedRoller.setPower(0);
     });
 
     enum AutoState{
@@ -76,7 +70,6 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
     Action turnToLaunch;
     Action driveToIntakeOne;
     Action driveToIntakeTwo;
-    PathFactory factory;
 
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
@@ -85,34 +78,25 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
 
     @Override
     public void stop () {
-        Thread.currentThread().interrupt(); //todo add to all opmodes
+        Thread.currentThread().interrupt();
         requestOpModeStop();
     }
 
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), -(13 / 2) - 24, Math.toRadians(180)));
-        factory = new PathFactory(drive);
+        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), -((double) 13 / 2) - 24, Math.toRadians(180)));
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -(13 / 2) - 24, Math.toRadians(180)))
+        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -((double) 13 / 2) - 24, Math.toRadians(180)))
                 .waitSeconds(5)
                 .splineToLinearHeading(new Pose2d(50, -10, Math.toRadians(-155)), Math.toRadians(-175))
-                .afterDisp(0.01, new InstantFunction() {
-                    @Override
-                    public void run() {
-                        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR );
-                    }
-                })
+                .afterDisp(0.01, () -> LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR ))
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(50, -10, Math.toRadians(-155)))
-                .afterDisp(20, new InstantFunction() {
-                    @Override
-                    public void run() {
-                        IntakeMotor.setPower(1);
-                        ConveyorMotor.setPower(1);
-                    }
+                .afterDisp(20, () -> {
+                    IntakeMotor.setPower(1);
+                    ConveyorMotor.setPower(1);
                 })
                 .strafeToLinearHeading(new Vector2d(62,-50),Math.toRadians(-75))
                 .waitSeconds(.2)
@@ -123,12 +107,9 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
                 .lineToY(-60)
                 .waitSeconds(0.5)
                 .strafeToLinearHeading(new Vector2d(52, -10), Math.toRadians(-155))
-                .afterDisp(65, new InstantFunction() {
-                    @Override
-                    public void run() {
-                        IntakeMotor.setPower(0);
-                        ConveyorMotor.setPower(0);
-                    }
+                .afterDisp(65, () -> {
+                    IntakeMotor.setPower(0);
+                    ConveyorMotor.setPower(0);
                 })
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(52, -10, Math.toRadians(-155)))
