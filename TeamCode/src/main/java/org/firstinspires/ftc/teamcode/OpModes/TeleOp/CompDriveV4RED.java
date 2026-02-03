@@ -58,7 +58,6 @@ public class CompDriveV4RED extends OpMode {
     @Override
     public void init_loop() {
         // April Tag Detector
-        aprilTagDetector = new AprilTagMethod();
         aprilTagDetector.updateAndShowTelemetry(telemetry);
     }
 
@@ -82,6 +81,7 @@ public class CompDriveV4RED extends OpMode {
     public void loop() {
         input.pollGamepad(gamepad1);
 
+        launcherUtil.spinUp();
         launcherUtil.updateLights();
         /* ---------- Drivetrain ---------- */
 
@@ -171,7 +171,6 @@ public class CompDriveV4RED extends OpMode {
                 launcherUtil.cancelLaunch();
             }
         } else {
-            LauncherMotor.setVelocity(1000);
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
             if(launcherUtil.getLaunchState() != LauncherUtilV2.LaunchState.FIND_TAG){
                 launcherUtil.cancelLaunch();

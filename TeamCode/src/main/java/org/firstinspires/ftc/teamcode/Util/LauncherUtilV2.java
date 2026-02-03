@@ -105,9 +105,9 @@ public class LauncherUtilV2 {
         lightUtil.makeOff();
         lightUtil.updateLights();
         if (!aprilTagMethod.isTagVisible() && !isAuto) {
-            if(timeout.seconds() > 0.85){
+            if(timeout.seconds() > 0.85) {
                 launchState = LaunchState.FIND_TAG;
-                LauncherMotor.setVelocity(1000);
+                LauncherMotor.setVelocity(1100);
                 IntakeMotor.setPower(0);
                 ConveyorMotor.setPower(0);
                 LeftSideFeedRoller.setPower(0);
@@ -115,7 +115,7 @@ public class LauncherUtilV2 {
             }
             return "No Tag Visible" + "\nState:" + launchState +"\nTimeout:" + timeout.seconds();
         } else {
-            isSpunUp();
+            spinUp();
             timeout.reset();
         }
         switch (launchState) {
@@ -198,24 +198,24 @@ public class LauncherUtilV2 {
             double margin;
             if (range >= 90) {
                 phi = 2.75;
-                margin = 3;
+                margin = 4;
                 if (color.equals("RED")) {
                     phi = 2.5;
                 }
             } else {
                 phi = 0;
-                margin = 6;
+                margin = 8;
                 if (color.equals("RED")) {
                     phi = 1;
                 }
             }
             double turnPower = 0.375;
-            if (theta >= phi + 2) {
+            if (theta >= phi + margin) {
                 leftFront.setPower(-turnPower);
                 rightBack.setPower(turnPower);
                 leftBack.setPower(-turnPower);
                 rightFront.setPower(turnPower);
-            } else if (theta <= phi - 2) {
+            } else if (theta <= phi - margin) {
                 leftFront.setPower(turnPower);
                 rightBack.setPower(-turnPower);
                 leftBack.setPower(turnPower);
@@ -247,7 +247,23 @@ public class LauncherUtilV2 {
             target = 940.08429 * pow((1.00383), range);
         }
         LauncherMotor.setVelocity(target);
-        return abs(LauncherMotor.getVelocity() - target) <= LAUNCH_TICK_VEL_THRESHOLD;
+        return abs(LauncherMotor.getVelocity() - target) <= 50;
+    }
+
+    /**
+     * TeleOp always spin up when tag is visible
+     * else if not visible idle is 1100
+     */
+    public void spinUp() {
+        if(aprilTagMethod.isTagVisible() && aprilTagMethod.tagMatchesAlliance(color)){
+            double range = aprilTagMethod.getTagDistance();
+            target = 940.08429 * pow((1.00383), range);
+        } else if (isAuto) {
+            target = 925;
+        } else {
+            target = 1100;
+        }
+        LauncherMotor.setVelocity(target);
     }
 
     public void setLightRed() {

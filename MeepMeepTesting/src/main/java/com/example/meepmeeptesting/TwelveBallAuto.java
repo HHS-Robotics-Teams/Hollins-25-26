@@ -29,8 +29,6 @@ public class TwelveBallAuto {
                 .strafeToLinearHeading(new Vector2d(-12,28),Math.toRadians(90))
                 .strafeToConstantHeading(new Vector2d(-12,56))
                 .waitSeconds(.3)
-                .lineToYConstantHeading(50)
-                .strafeToConstantHeading(new Vector2d(2,58))
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(134))
 
                 .waitSeconds(3)
@@ -39,6 +37,7 @@ public class TwelveBallAuto {
                 .strafeToConstantHeading(new Vector2d(12, 65))
                 .waitSeconds(.3)
                 .lineToYConstantHeading(50)
+                .strafeToConstantHeading(new Vector2d(2,58))
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(135))
 
                 .waitSeconds(3)

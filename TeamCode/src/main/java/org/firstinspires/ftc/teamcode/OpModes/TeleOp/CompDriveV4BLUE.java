@@ -58,7 +58,6 @@ public class CompDriveV4BLUE extends OpMode {
     @Override
     public void init_loop() {
         // April Tag Detector
-        aprilTagDetector = new AprilTagMethod();
         aprilTagDetector.updateAndShowTelemetry(telemetry);
     }
 
@@ -81,8 +80,9 @@ public class CompDriveV4BLUE extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
-        launcherUtil.updateLights();
 
+        launcherUtil.spinUp();
+        launcherUtil.updateLights();
         /* ---------- Drivetrain ---------- */
 
         //Drivetrain movement values
@@ -164,8 +164,7 @@ public class CompDriveV4BLUE extends OpMode {
         }
 
         if (INTAKE_LEVEL_TWO_RUN) {
-            double power = INTAKE_REVERSED ? -1 : 1;
-            ConveyorMotor.setPower(power);
+            ConveyorMotor.setPower(INTAKE_REVERSED ? -1 : 1);
         } else {
             ConveyorMotor.setPower(0);
         }

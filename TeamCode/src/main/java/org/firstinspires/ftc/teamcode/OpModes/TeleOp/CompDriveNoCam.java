@@ -80,6 +80,9 @@ public class CompDriveNoCam extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
+        input.pollGamepad(gamepad2);
+
+        launcherUtil.spinUp();
         launcherUtil.updateLights();
 
         /* ---------- Drivetrain ---------- */
