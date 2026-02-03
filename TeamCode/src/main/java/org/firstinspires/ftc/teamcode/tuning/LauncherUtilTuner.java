@@ -8,17 +8,14 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifac
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearSideDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_FAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Util.AprilTagHelper;
-import org.firstinspires.ftc.teamcode.Util.AprilTagMethod;
+import org.firstinspires.ftc.teamcode._Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
-import org.firstinspires.ftc.teamcode._Proccedural.Constants;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 @TeleOp
