@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode._OpModes.Auto.Blue;
+package org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD;
 
 import static org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD.PathFactory.intakeWaitTime;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
@@ -17,16 +17,18 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD.PathFactory;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
+@Deprecated
+@Disabled
 public class BlueNear3x9 extends OpMode {
     MecanumDrive drive;
 

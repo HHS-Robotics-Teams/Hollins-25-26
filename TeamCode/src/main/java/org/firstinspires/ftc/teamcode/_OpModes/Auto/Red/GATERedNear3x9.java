@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode._OpModes.Auto.Red;
 
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
@@ -21,27 +18,26 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode._Util.AutoUtil;
+import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
 public class GATERedNear3x9 extends OpMode {
+
+    IntakeUtil intakeUtil = new IntakeUtil();
     MecanumDrive drive;
     InstantAction runIntake = new InstantAction(() -> {
         LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-        IntakeMotor.setPower(1);
-        ConveyorMotor.setPower(1);
-        LeftSideFeedRoller.setPower(0);
+        intakeUtil.intakeOn();
         LauncherSafetyServo.setPosition(SAFETY_HOLDING);
     });
     InstantAction offIntake = new InstantAction(() -> {
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 50);
-        IntakeMotor.setPower(0);
-        ConveyorMotor.setPower(0);
-        LeftSideFeedRoller.setPower(0);
+        intakeUtil.intakeOff();
         LauncherSafetyServo.setPosition(SAFTEY_FIRING);
     });
-    InstantAction setVelocity = new InstantAction(() -> LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 15));
+    InstantAction setVelocity = new InstantAction(() -> LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR));
     enum AutoState{
         START,
         LAUNCH_ONE,
@@ -57,6 +53,7 @@ public class GATERedNear3x9 extends OpMode {
         DRIVE_TO_INTAKE_THREE,
         DRIVE_TO_LAUNCH_FOUR,
         LAUNCH_FOUR,
+        RESET_FOUR,
         PARK,
         END
     }
@@ -67,44 +64,42 @@ public class GATERedNear3x9 extends OpMode {
     Action driveToIntakeThree;
     Action park;
     LightUtil util;
-
+    AutoUtil autoUtil;
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime faultTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     @Override
     public void init() {
-
+        autoUtil = new AutoUtil(0.4);
         drive = new MecanumDrive(hardwareMap, new Pose2d(-57,49,Math.toRadians(135)));
         state = AutoState.START;
         Components.initComponents(hardwareMap);
         turnToLaunch = drive.actionBuilder(new Pose2d(-57,49,Math.toRadians(135)))
-                .strafeToLinearHeading(new Vector2d(-24, 24),Math.toRadians(135))
+                .strafeToLinearHeading(new Vector2d(-46.5, 38.25),Math.toRadians(130))
                 .afterTime(0.05, setVelocity)
                 .build();
-        driveToIntakeOne = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(135)))
+        driveToIntakeOne = drive.actionBuilder(new Pose2d(-46.5,38.25,Math.toRadians(130)))
                 .strafeToLinearHeading(new Vector2d(-12,28),Math.toRadians(90))
                 .afterTime(0.1, runIntake)
                 .afterDisp(55, offIntake)
                 .strafeToConstantHeading(new Vector2d(-12,56))
-                .waitSeconds(0.2)
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(135))
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(135)))
                 .strafeToLinearHeading(new Vector2d(12,28),Math.toRadians(90))
                 .afterTime(0.1, runIntake)
-                .afterDisp(75, offIntake)
                 .strafeToConstantHeading(new Vector2d(12, 63))
-                .waitSeconds(.3)
+                .waitSeconds(0.05)
                 .lineToYConstantHeading(50)
+                .afterDisp(90, offIntake)
                 .strafeToConstantHeading(new Vector2d(-4,58))
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(135))
                 .build();
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(135)))
-                .strafeToLinearHeading(new Vector2d(36, 28), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(31, 28), Math.toRadians(90))
                 .afterTime(0.1, runIntake)
-                .afterDisp(90, offIntake)
-                .strafeToConstantHeading(new Vector2d(36, 63))
-                .waitSeconds(.3)
+                .strafeToConstantHeading(new Vector2d(31, 63))
+                .afterDisp(100, offIntake)
                 .strafeToLinearHeading(new Vector2d(-24, 24), Math.toRadians(135))
                 .build();
         park = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(135)))
@@ -118,13 +113,14 @@ public class GATERedNear3x9 extends OpMode {
 
     @Override
     public void start(){
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 70);
+        LauncherHoodServo.setPosition(0);
         util.makeOff();
         util.updateLights();
         faultTimer.reset();
         LauncherMotor.setPower(1);
         Actions.runBlocking(turnToLaunch);
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 70);
     }
 
     @Override
@@ -143,28 +139,27 @@ public class GATERedNear3x9 extends OpMode {
         //   telemetry.addData("Intake timer", intakeTimer.seconds());
         //   telemetry.addData("Launcher Current", LauncherMotor.getCurrent(CurrentUnit.AMPS));
         //   telemetry.update();
+        telemetry.addData("is bot empty?", autoUtil.isBotEmpty());
 
         switch (state){
             case START:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 40);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 70);
                 state = AutoState.LAUNCH_ONE;
                 break;
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR + 40){
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 70){
                     LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                    IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
-                    LeftSideFeedRoller.setPower(1);
+                    intakeUtil.launchStart();
                     launchTimer.reset();
                     state = AutoState.RESET_ONE;
+                    autoUtil.resetEmptyTimer();
                 }
                 break;
             case RESET_ONE:
-                if (launchTimer.seconds() >= Launch_Time) {
-                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-                    IntakeMotor.setPower(0);
-                    ConveyorMotor.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
+                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 110);
+                    LauncherHoodServo.setPosition(0.2);
+                    intakeUtil.launchEnd();
                     state = AutoState.DRIVE_TO_INTAKE_ONE;
                 }
                 break;
@@ -178,26 +173,23 @@ public class GATERedNear3x9 extends OpMode {
                 break;
             case LAUNCH_TWO:
                 if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 110)){
-                    IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
-                    LeftSideFeedRoller.setPower(1);
+                    intakeUtil.launchStart();
                     state = AutoState.RESET_TWO;
                     launchTimer.reset();
+                    autoUtil.resetEmptyTimer();
                 }
                 break;
             case RESET_TWO:
-                if (launchTimer.seconds() >= Launch_Time) {
-                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-                    IntakeMotor.setPower(0);
-                    ConveyorMotor.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
+                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 140);
+                    intakeUtil.launchEnd();
                     state = AutoState.DRIVE_TO_INTAKE_TWO;
                     launchTimer.reset();
                 }
                 break;
 
             case DRIVE_TO_INTAKE_TWO:
-                IntakeMotor.setPower(INTAKE_POWER);
+                intakeUtil.intakeOn();
                 Actions.runBlocking(driveToIntakeTwo);
                 state = AutoState.DRIVE_TO_LAUNCH_THREE;
                 break;
@@ -207,19 +199,16 @@ public class GATERedNear3x9 extends OpMode {
                 break;
             case LAUNCH_THREE:
                 if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 140 )) {
-                    IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
-                    LeftSideFeedRoller.setPower(1);
+                    intakeUtil.launchStart();
                     state = AutoState.RESET_THREE;
                     launchTimer.reset();
+                    autoUtil.resetEmptyTimer();
                 }
                 break;
             case RESET_THREE:
-                if (launchTimer.seconds() >= Launch_Time) {
-                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-                    IntakeMotor.setPower(0);
-                    ConveyorMotor.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
+                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 130);
+                    intakeUtil.launchEnd();
                     state = AutoState.DRIVE_TO_INTAKE_THREE;
                     launchTimer.reset();
                 }
@@ -232,7 +221,7 @@ public class GATERedNear3x9 extends OpMode {
                     }
                     break;
                 }
-                IntakeMotor.setPower(INTAKE_POWER);
+                intakeUtil.intakeOn();
                 Actions.runBlocking(driveToIntakeThree);
                 state = AutoState.DRIVE_TO_LAUNCH_FOUR;
                 if(faultTimer.seconds() > 29.5 - Launch_Time){
@@ -245,18 +234,20 @@ public class GATERedNear3x9 extends OpMode {
                 break;
             case LAUNCH_FOUR:
                 if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 130)) {
-                    IntakeMotor.setPower(INTAKE_POWER);
-                    ConveyorMotor.setPower(INTAKE_POWER);
-                    LeftSideFeedRoller.setPower(1);
-                    state = AutoState.PARK;
+                    intakeUtil.launchStart();
                     launchTimer.reset();
+                    autoUtil.resetEmptyTimer();
+                }
+                break;
+            case RESET_FOUR:
+                if(LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR + 130 || autoUtil.isBotEmpty()){
+                    intakeUtil.launchEnd();
+                    state = AutoState.PARK;
                 }
                 break;
             case PARK:
                 LauncherMotor.setVelocity(0);
-                LeftSideFeedRoller.setPower(0);
-                IntakeMotor.setPower(0);
-                ConveyorMotor.setPower(0);
+                intakeUtil.intakeOff();
                 Actions.runBlocking(park);
                 state = AutoState.END;
                 break;

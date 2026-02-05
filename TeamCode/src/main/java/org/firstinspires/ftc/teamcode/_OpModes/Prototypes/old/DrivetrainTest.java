@@ -15,8 +15,6 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 //testing opmode disabled
-@Disabled
-@Deprecated
 @TeleOp
 public class DrivetrainTest extends OpMode {
 
@@ -54,14 +52,14 @@ public class DrivetrainTest extends OpMode {
         if(input.y.down()){
             power -= 0.01;
         }
-        if(input.dpad_up.down()){
-            leftFront.setPower(.5);
-        } else if(input.dpad_down.down()){
-            leftBack.setPower(.5);
-        }else if(input.dpad_left.down()){
-            rightFront.setPower(.5);
-        }else if(input.dpad_right.down()){
-            rightBack.setPower(.5);
+        if(input.dpad_up.held()){
+            leftFront.setPower(input.b.held() ? 1 : -1);
+        } else if(input.dpad_down.held()){
+            leftBack.setPower(input.b.held() ? 1 : -1);
+        }else if(input.dpad_left.held()){
+            rightFront.setPower(input.b.held() ? 1 : -1);
+        }else if(input.dpad_right.held()){
+            rightBack.setPower(input.b.held() ? 1 : -1);
         } else {
 
             //Power fixer

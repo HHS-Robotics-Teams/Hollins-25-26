@@ -42,6 +42,7 @@ public class Components {
     public static Servo LauncherFingerServo;
     public static Servo LauncherSafetyServo;
     public static CRServo LeftSideFeedRoller;
+    public static CRServo rightSideFeedRoller;
     public static Servo cameraTiltServo;
     public static Servo LauncherHoodServo;
 
@@ -105,11 +106,14 @@ public class Components {
         Parking_Motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //Initialize Servos
-        //LauncherHoodServo = hardwareMap.get(Servo.class, "LauncherHoodServo");
+        LauncherHoodServo = hardwareMap.get(Servo.class, "LauncherHoodServo");
         //LauncherFingerServo = hardwareMap.get(Servo.class, "LauncherFingerServo");
         LauncherSafetyServo = hardwareMap.get(Servo.class, "LauncherSafetyServo");
         LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
-        LeftSideFeedRoller.setDirection(DcMotorSimple.Direction.FORWARD);
+        LeftSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        rightSideFeedRoller = hardwareMap.get(CRServo.class, "rightSideFeedRoller");
+        rightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Initialize Sensors
         imu = hardwareMap.get(IMU.class, "imu");

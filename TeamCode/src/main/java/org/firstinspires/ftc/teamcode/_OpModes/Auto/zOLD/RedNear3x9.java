@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode._OpModes.Auto.Red;
+package org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD;
 
 import static org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD.PathFactory.intakeWaitTime;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
@@ -19,26 +19,27 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD.PathFactory;
+import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
+@Deprecated
+@Disabled
 public class RedNear3x9 extends OpMode {
     MecanumDrive drive;
-
+    IntakeUtil intakeUtil = new IntakeUtil();
     InstantAction runIntake = new InstantAction(new InstantFunction() {
         @Override
         public void run() {
             LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-            IntakeMotor.setPower(1);
-            ConveyorMotor.setPower(1);
-            LeftSideFeedRoller.setPower(0);
+            intakeUtil.intakeOn();
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
         }
     });
@@ -46,9 +47,7 @@ public class RedNear3x9 extends OpMode {
         @Override
         public void run() {
             LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 50);
-            IntakeMotor.setPower(0);
-            ConveyorMotor.setPower(0);
-            LeftSideFeedRoller.setPower(0);
+            intakeUtil.intakeOff();
             LauncherSafetyServo.setPosition(SAFTEY_FIRING);
         }
     });

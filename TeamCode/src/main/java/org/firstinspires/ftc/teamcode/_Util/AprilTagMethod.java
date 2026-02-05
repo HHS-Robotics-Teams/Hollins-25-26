@@ -65,6 +65,9 @@ public class AprilTagMethod {
         return tagHelper.getFirstTag() != null;
     }
     public boolean tagMatchesAlliance(String allianceColor){
+        if(!isTagVisible()){
+            return false;
+        }
         if(Objects.equals(allianceColor, "RED") && tagHelper.getFirstTag().metadata.id == 24){
             return true;
         }

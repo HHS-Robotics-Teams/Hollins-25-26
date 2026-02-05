@@ -34,6 +34,7 @@ import org.firstinspires.ftc.teamcode._Util.LauncherUtilV2;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
+import org.firstinspires.ftc.teamcode._Util.TeleOpDrive;
 
 @TeleOp
 public class CompDriveV4BLUE extends OpMode {
@@ -80,30 +81,7 @@ public class CompDriveV4BLUE extends OpMode {
         launcherUtil.spinUp();
         launcherUtil.updateLights();
         /* ---------- Drivetrain ---------- */
-
-        //Drivetrain movement values
-        double forward = -gamepad1.left_stick_y;
-        double strafes = gamepad1.left_stick_x * 1.1;
-        double rotates = gamepad1.right_stick_x;
-
-        if (abs(forward) <= 0.15) {
-            forward = 0;
-        }
-        if (abs(strafes) <= 0.15) {
-            strafes = 0;
-        }
-        if (abs(rotates) <= 0.15) {
-            rotates = 0;
-        }
-
-        //Power fixer
-        double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 1.75);
-
-        //Setting Powers
-        leftFront.setPower((forward + strafes + rotates) / denominator);
-        rightFront.setPower((forward - strafes - rotates) / denominator);
-        leftBack.setPower((forward - strafes + rotates) / denominator);
-        rightBack.setPower((forward + strafes - rotates) / denominator);
+        TeleOpDrive.run(-gamepad1.left_stick_y,gamepad1.left_stick_x * 1.1, gamepad1.right_stick_x);
 
         /* ---------- Launch ---------- */
         if (input.right_trigger.down()) {
@@ -125,13 +103,11 @@ public class CompDriveV4BLUE extends OpMode {
         if (!LAUNCHER_RUN) INTAKE_RUN = input.left_trigger.held();
         if (!LAUNCHER_RUN) INTAKE_LEVEL_TWO_RUN = input.left_bumper.held() || input.left_trigger.held();
 
-
         if(intakeTimer.seconds() > 0.25){
             launcherUtil.setLightGreen();
         } else {
             launcherUtil.setLightRed();
         }
-
 
         if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7) {
             intakeTimer.reset();

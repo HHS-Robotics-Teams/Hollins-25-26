@@ -24,19 +24,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD.PathFactory;
+import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
 public class RedVeryFarMysteria extends OpMode {
     MecanumDrive drive;
+    IntakeUtil intakeUtil = new IntakeUtil();
     InstantAction IntakePickup = new InstantAction(new InstantFunction() {
         @Override
         public void run() {
-            IntakeMotor.setPower(INTAKE_POWER);
-            ConveyorMotor.setPower(0.75);
-            LeftSideFeedRoller.setPower(0);
-
+            intakeUtil.intakeOn();
         }
     });
 
@@ -76,19 +75,12 @@ public class RedVeryFarMysteria extends OpMode {
     Action turnToLaunch;
     Action driveToIntakeOne;
     Action driveToIntakeTwo;
-    PathFactory factory;
-
-
-
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
-
-
 
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), (13 / 2) + 24, Math.toRadians(180)));
-        factory = new PathFactory(drive);
         state = AutoState.START;
         Components.initComponents(hardwareMap);
         turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), (13 / 2) + 24, Math.toRadians(180)))
@@ -105,8 +97,7 @@ public class RedVeryFarMysteria extends OpMode {
                 .afterDisp(20, new InstantFunction() {
                     @Override
                     public void run() {
-                        IntakeMotor.setPower(1);
-                        ConveyorMotor.setPower(1);
+                        intakeUtil.intakeOn();
                     }
                 })
                 .strafeToLinearHeading(new Vector2d(64,54),Math.toRadians(75))
@@ -120,8 +111,7 @@ public class RedVeryFarMysteria extends OpMode {
                 .afterDisp(65, new InstantFunction() {
                     @Override
                     public void run() {
-                        IntakeMotor.setPower(0);
-                        ConveyorMotor.setPower(0);
+                        intakeUtil.intakeOff();
                     }
                 })
                 .build();
@@ -149,7 +139,9 @@ public class RedVeryFarMysteria extends OpMode {
 
     @Override
     public void stop () {
-        Thread.currentThread().interrupt(); //todo add to all opmodes
+        for(int i = 0; i < Thread.activeCount(); i++){
+            Thread.currentThread().interrupt();
+        }
         requestOpModeStop();
     }
 
@@ -176,9 +168,7 @@ public class RedVeryFarMysteria extends OpMode {
                 break;
             case LAUNCH_ONE:
                 if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 225){ // do not change this time
-                    IntakeMotor.setPower(0.75);
-                    ConveyorMotor.setPower(0.75);
-                    LeftSideFeedRoller.setPower(INTAKE_POWER);
+                    intakeUtil.launchStart(0.8, 1);
                     launchTimer.reset();
                     state = AutoState.RESET_ONE;
                 }
@@ -186,9 +176,7 @@ public class RedVeryFarMysteria extends OpMode {
             case RESET_ONE:
                 if (launchTimer.seconds() >= Launch_Time) { // todo change Time
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-                    IntakeMotor.setPower(0);
-                    ConveyorMotor.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                    intakeUtil.launchEnd();
                     state = AutoState.PARK;
                 }
                 break;
@@ -209,9 +197,7 @@ public class RedVeryFarMysteria extends OpMode {
                 break;
             case LAUNCH_TWO:
                 if(LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 275){
-                    IntakeMotor.setPower(0.75);
-                    ConveyorMotor.setPower(0.75);
-                    LeftSideFeedRoller.setPower(INTAKE_POWER);
+                    intakeUtil.launchStart(0.8, 1);
                     launchTimer.reset();
                     state = AutoState.RESET_TWO;
                 }
@@ -219,15 +205,13 @@ public class RedVeryFarMysteria extends OpMode {
             case RESET_TWO:
                 if (launchTimer.seconds() >= Launch_Time) { // todo change Time
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-                    IntakeMotor.setPower(0);
-                    ConveyorMotor.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                    intakeUtil.intakeOff();
                     state = AutoState.DRIVE_TO_INTAKE_TWO;
                 }
                 break;
             case DRIVE_TO_INTAKE_TWO:
                 LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-                IntakeMotor.setPower(INTAKE_POWER);
+                intakeUtil.intakeOn();
                 Actions.runBlocking(driveToIntakeTwo);
                 state = AutoState.INTAKE_TWO;
                 break;
@@ -245,18 +229,14 @@ public class RedVeryFarMysteria extends OpMode {
                 break;
             case LAUNCH_THREE:
                 if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 250) { // todo change Time
-                    IntakeMotor.setPower(0.75);
-                    ConveyorMotor.setPower(0.75);
-                    LeftSideFeedRoller.setPower(INTAKE_POWER);
+                    intakeUtil.launchStart(0.8, 1);
                     launchTimer.reset();
                     state = AutoState.RESET_THREE;
                 }
                 break;
             case RESET_THREE:
                 if(launchTimer.seconds() >= Launch_Time) {
-                    IntakeMotor.setPower(0);
-                    ConveyorMotor.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                    intakeUtil.intakeOff();
                     state = AutoState.PARK;
                 }
                 break;

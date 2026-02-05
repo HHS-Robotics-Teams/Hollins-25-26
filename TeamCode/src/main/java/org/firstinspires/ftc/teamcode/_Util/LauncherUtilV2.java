@@ -261,7 +261,6 @@ public class LauncherUtilV2 {
     public void resetLauncherUtilTimeout() {
         timeout.reset();
     }
-
     public void setLightRed() {
         lightUtil.makeRed();
     }

@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode._Proccedural;
 public class Constants {
 
     /* Constants */
-    public static double Launch_Time = 2;
+    public static double Launch_Time = 2.5;
     public static double INTAKE_POWER = 1;
     public static final double LAUNCHER_IDLE = 0.35;
 

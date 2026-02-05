@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode._OpModes.TeleOp;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Motor;
@@ -183,11 +184,18 @@ public class CompDriveNoCam extends OpMode {
         }
         if (input.dpad_up.down()) {
             Parking_Motor.setTargetPosition(0);
+
+        } if(input.x.down()){
+            LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()+0.05);
+        }
+        if(input.y.down()){
+            LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()-0.05);
         }
 
 
 
         /* ---------- Telemetry ---------- */
+        telemetry.addData("Launcher Hood Pos: ", LauncherHoodServo.getPosition());
         telemetry.addLine("--------- Comp Drive Running ---------");
         telemetry.addData("Drive Slowdown?", DriveSlowdown);
         telemetry.addData("Intake running? ", INTAKE_RUN);

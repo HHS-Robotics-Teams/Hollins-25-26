@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode._OpModes.Auto.Blue;
 
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_FAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
@@ -22,16 +18,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
 public class BlueVeryFarMysteria3x6 extends OpMode {
+
+    IntakeUtil intakeUtil = new IntakeUtil();
     MecanumDrive drive;
     InstantAction IntakePickup = new InstantAction(() -> {
-        IntakeMotor.setPower(INTAKE_POWER);
-        ConveyorMotor.setPower(0.75);
-        LeftSideFeedRoller.setPower(0);
+        intakeUtil.intakeOn();
     });
 
     enum AutoState{
@@ -75,10 +72,11 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime parkable = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
-
     @Override
     public void stop () {
-        Thread.currentThread().interrupt();
+        for(int i = 0; i < Thread.activeCount(); i++){
+            Thread.currentThread().interrupt();
+        }
         requestOpModeStop();
     }
 
@@ -95,8 +93,7 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(50, -10, Math.toRadians(-155)))
                 .afterDisp(20, () -> {
-                    IntakeMotor.setPower(1);
-                    ConveyorMotor.setPower(1);
+                    intakeUtil.intakeOn();
                 })
                 .strafeToLinearHeading(new Vector2d(62,-50),Math.toRadians(-75))
                 .waitSeconds(.2)
@@ -108,8 +105,7 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
                 .waitSeconds(0.5)
                 .strafeToLinearHeading(new Vector2d(52, -10), Math.toRadians(-155))
                 .afterDisp(65, () -> {
-                    IntakeMotor.setPower(0);
-                    ConveyorMotor.setPower(0);
+                    intakeUtil.intakeOff();
                 })
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(52, -10, Math.toRadians(-155)))
@@ -156,9 +152,7 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
                 break;
             case LAUNCH_ONE:
                 if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 340){ // do not change this time
-                    IntakeMotor.setPower(0.75);
-                    ConveyorMotor.setPower(0.75);
-                    LeftSideFeedRoller.setPower(INTAKE_POWER);
+                    intakeUtil.launchStart();
                     launchTimer.reset();
                     state = AutoState.RESET_ONE;
                 }
@@ -166,9 +160,7 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
             case RESET_ONE:
                 if (launchTimer.seconds() >= Launch_Time) { // todo change Time
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-                    IntakeMotor.setPower(0);
-                    ConveyorMotor.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                    intakeUtil.launchEnd();
                     state = AutoState.DRIVE_TO_INTAKE_ONE;
                 }
                 break;
@@ -189,9 +181,7 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
                 break;
             case LAUNCH_TWO:
                 if(LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 275){
-                    IntakeMotor.setPower(0.75);
-                    ConveyorMotor.setPower(0.75);
-                    LeftSideFeedRoller.setPower(INTAKE_POWER);
+                    intakeUtil.launchStart();
                     LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                     launchTimer.reset();
                     state = AutoState.RESET_TWO;
@@ -200,15 +190,13 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
             case RESET_TWO:
                 if (launchTimer.seconds() >= Launch_Time) { // todo change Time
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
-                    IntakeMotor.setPower(0);
-                    ConveyorMotor.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                    intakeUtil.launchEnd();
                     state = AutoState.PARK;
                 }
                 break;
             case DRIVE_TO_INTAKE_TWO:
                 LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-                IntakeMotor.setPower(INTAKE_POWER);
+                intakeUtil.intakeOn();
                 Actions.runBlocking(driveToIntakeTwo);
                 state = AutoState.INTAKE_TWO;
                 break;
@@ -227,18 +215,14 @@ public class BlueVeryFarMysteria3x6 extends OpMode {
             case LAUNCH_THREE:
                 if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 275) { // todo change Time
                     LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                    IntakeMotor.setPower(0.75);
-                    ConveyorMotor.setPower(0.75);
-                    LeftSideFeedRoller.setPower(INTAKE_POWER);
+                    intakeUtil.launchStart();
                     launchTimer.reset();
                     state = AutoState.RESET_THREE;
                 }
                 break;
             case RESET_THREE:
                 if(launchTimer.seconds() >= Launch_Time) {
-                    IntakeMotor.setPower(0);
-                    ConveyorMotor.setPower(0);
-                    LeftSideFeedRoller.setPower(0);
+                    intakeUtil.launchEnd();
                     state = AutoState.PARK;
                 }
                 break;
