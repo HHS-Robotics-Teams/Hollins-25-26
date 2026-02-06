@@ -71,40 +71,40 @@ public class GATERedNear3x9 extends OpMode {
 
     @Override
     public void init() {
-        autoUtil = new AutoUtil(.125);
+        autoUtil = new AutoUtil(.175);
         drive = new MecanumDrive(hardwareMap, new Pose2d(-57,49,Math.toRadians(135)));
         state = AutoState.START;
         Components.initComponents(hardwareMap);
         turnToLaunch = drive.actionBuilder(new Pose2d(-57,49,Math.toRadians(135)))
-                .strafeToLinearHeading(new Vector2d(-46.5, 38.25),Math.toRadians(135))
+                .strafeToLinearHeading(new Vector2d(-46.5, 38.25),Math.toRadians(130))
                 .afterTime(0.05, setVelocity)
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(-46.5,38.25,Math.toRadians(130)))
-                .splineToLinearHeading(new Pose2d(-12,28,Math.toRadians(90)),Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-12.5,28,Math.toRadians(90)),Math.toRadians(90))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(-12,56))
+                .strafeToConstantHeading(new Vector2d(-14,56))
                 .strafeToConstantHeading(new Vector2d(-8, 54))
                 .afterDisp(55, offIntake)
                 .strafeToConstantHeading(new Vector2d(-4,60))
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(135))
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(135)))
-                .strafeToLinearHeading(new Vector2d(11,28),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(10,28),Math.toRadians(90))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(11, 63))
+                .strafeToConstantHeading(new Vector2d(10, 63))
                 .waitSeconds(0.05)
                 .lineToYConstantHeading(50)
                 .afterDisp(90, offIntake)
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(135))
                 .build();
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(135)))
-                .strafeToLinearHeading(new Vector2d(27.75, 28), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(30, 24), Math.toRadians(90))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(27.75, 63.5))
+                .strafeToConstantHeading(new Vector2d(30, 63.5))
                 .afterDisp(100, offIntake)
-                .strafeToLinearHeading(new Vector2d(-26, 24), Math.toRadians(142))
+                .strafeToLinearHeading(new Vector2d(-19, 19), Math.toRadians(135))
                 .build();
-        park = drive.actionBuilder(new Pose2d(-26,24,Math.toRadians(142)))
+        park = drive.actionBuilder(new Pose2d(-19,19,Math.toRadians(135)))
                 .strafeToLinearHeading(new Vector2d(-2, 48), Math.toRadians(90))
                 .build();
         telemetry.addLine("Ready to Launch");
@@ -115,14 +115,14 @@ public class GATERedNear3x9 extends OpMode {
 
     @Override
     public void start(){
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 60);
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 100);
         LauncherHoodServo.setPosition(0.05);
         lightUtil.makeOff();
         lightUtil.updateLights();
         faultTimer.reset();
         LauncherMotor.setPower(1);
         Actions.runBlocking(turnToLaunch);
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 60);
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 100);
     }
 
     @Override
@@ -136,6 +136,7 @@ public class GATERedNear3x9 extends OpMode {
 
     @Override
     public void loop() {
+        telemetry.addLine(autoUtil.currentReadings());
         //   telemetry.addData("State:", state);
         //   telemetry.addData("Launcher Velocity", LauncherMotor.getVelocity());
         //   telemetry.addData("Launch Timer", launchTimer.seconds());
@@ -147,11 +148,11 @@ public class GATERedNear3x9 extends OpMode {
         switch (state){
             case START:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 60);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 100);
                 state = AutoState.LAUNCH_ONE;
                 break;
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 60){
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 100){
                     LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                     intakeUtil.launchStart();
                     launchTimer.reset();
@@ -161,7 +162,7 @@ public class GATERedNear3x9 extends OpMode {
                 break;
             case RESET_ONE:
                 if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
-                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 110);
+                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 145);
                     LauncherHoodServo.setPosition(0.2);
                     intakeUtil.launchEnd();
                     state = AutoState.DRIVE_TO_INTAKE_ONE;
@@ -172,11 +173,11 @@ public class GATERedNear3x9 extends OpMode {
                 state = AutoState.SPIN_UP_TWO;
                 break;
             case SPIN_UP_TWO:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 110);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 145);
                 state = AutoState.LAUNCH_TWO;
                 break;
             case LAUNCH_TWO:
-                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 110)){
+                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 145)){
                     intakeUtil.launchStart();
                     state = AutoState.RESET_TWO;
                     launchTimer.reset();
@@ -185,7 +186,7 @@ public class GATERedNear3x9 extends OpMode {
                 break;
             case RESET_TWO:
                 if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
-                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 140);
+                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 155);
                     intakeUtil.launchEnd();
                     state = AutoState.DRIVE_TO_INTAKE_TWO;
                     launchTimer.reset();
@@ -198,11 +199,11 @@ public class GATERedNear3x9 extends OpMode {
                 state = AutoState.DRIVE_TO_LAUNCH_THREE;
                 break;
             case DRIVE_TO_LAUNCH_THREE:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 140);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 155);
                 state = AutoState.LAUNCH_THREE;
                 break;
             case LAUNCH_THREE:
-                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 140 )) {
+                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 155 )) {
                     intakeUtil.launchStart();
                     state = AutoState.RESET_THREE;
                     launchTimer.reset();
@@ -211,7 +212,7 @@ public class GATERedNear3x9 extends OpMode {
                 break;
             case RESET_THREE:
                 if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
-                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 130);
+                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 155);
                     intakeUtil.launchEnd();
                     state = AutoState.DRIVE_TO_INTAKE_THREE;
                     launchTimer.reset();
@@ -226,11 +227,11 @@ public class GATERedNear3x9 extends OpMode {
                 }
                 break;
             case DRIVE_TO_LAUNCH_FOUR:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 130);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 155);
                 state = AutoState.LAUNCH_FOUR;
                 break;
             case LAUNCH_FOUR:
-                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 130)) {
+                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 155)) {
                     intakeUtil.launchStart();
                     launchTimer.reset();
                     autoUtil.resetEmptyTimer();

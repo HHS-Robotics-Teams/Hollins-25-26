@@ -17,13 +17,17 @@ public class AutoUtil {
         emptyTimer.reset();
     }
     public boolean isBotEmpty() {
-        if( leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7
-            || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7
+        if( leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 6
+            || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 6
             || rearDistance.getDistance(DistanceUnit.INCH) <= 8
             || rearSideDistance.getDistance(DistanceUnit.INCH) <= 4 ) {
             emptyTimer.reset();
         }
         return emptyTimer.seconds() >= timeout;
+    }
+
+    public String currentReadings() {
+        return "---DISTANCE READINGS---\nLeft: " + leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) + "\nRight: " + rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) + "\nRear: " + rearDistance.getDistance(DistanceUnit.INCH) + "\nRear Side" + rearSideDistance.getDistance(DistanceUnit.INCH);
     }
 
     public void resetEmptyTimer() {

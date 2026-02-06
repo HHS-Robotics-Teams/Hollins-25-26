@@ -312,7 +312,7 @@ public final class MecanumDrive {
                 rightBack.setPower(0);
                 rightFront.setPower(0);
                 return false;
-            } else if (t >= timeTrajectory.duration + .575) {
+            } else if (t >= timeTrajectory.duration + .75) {
                 leftFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
