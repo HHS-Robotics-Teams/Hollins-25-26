@@ -42,10 +42,10 @@ public class LauncherUtilTuner extends OpMode {
         input.pollGamepad(gamepad1);
         LauncherMotor.setVelocity(target);
         telemetry.addData("target: ", target);
-        if(input.a.down()){
+        if(input.a_cross.down()){
             target += 50;
         }
-        if(input.b.down()){
+        if(input.b_circle.down()){
             target -= 50;
         }
         if(input.left_trigger.held()){

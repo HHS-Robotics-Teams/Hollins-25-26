@@ -95,7 +95,7 @@ public class BLUEFarSensingSingleStateAuto extends OpMode {
             telemetry.addData("Tag Name", tag.metadata != null ? tag.metadata.name : "N/A");
             telemetry.addData("X (in)", "%.2f", tag.ftcPose.x);
             telemetry.addLine("X = .27");
-            //telemetry.addData("Y (in)", "%.2f", tag.ftcPose.y);
+            //telemetry.addData("Y (in)", "%.2f", tag.ftcPose.y_triangle);
             //telemetry.addData("Z (in)", "%.2f", tag.ftcPose.z);
             telemetry.addData("Yaw (deg)", "%.2f", tag.ftcPose.yaw);
             telemetry.addLine("Yaw = -32");

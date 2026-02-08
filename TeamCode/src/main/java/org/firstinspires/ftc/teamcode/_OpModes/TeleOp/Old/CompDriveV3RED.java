@@ -150,7 +150,7 @@ public class CompDriveV3RED extends OpMode {
         }
 
         /* ---------- Intake ---------- */
-        if (input.b.down()) {
+        if (input.b_circle.down()) {
             // Reverses intake
             INTAKE_REVERSED = !INTAKE_REVERSED;
         }
@@ -183,7 +183,7 @@ public class CompDriveV3RED extends OpMode {
         } else {
             LauncherMotor.setPower(LAUNCHER_IDLE);
             /* ---------- Launcher Finger (Manual) ---------- */
-            if (input.x.held()) {
+            if (input.x_square.held()) {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             } else {

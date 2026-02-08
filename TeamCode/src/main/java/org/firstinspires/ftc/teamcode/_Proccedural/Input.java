@@ -62,10 +62,10 @@ public class Input {
 
     }
 
-    public ButtonState a = new ButtonState();
-    public ButtonState b = new ButtonState();
-    public ButtonState x = new ButtonState();
-    public ButtonState y = new ButtonState();
+    public ButtonState a_cross = new ButtonState();
+    public ButtonState b_circle = new ButtonState();
+    public ButtonState x_square = new ButtonState();
+    public ButtonState y_triangle = new ButtonState();
 
     public DisplacingButtonState left_trigger = new DisplacingButtonState();
     public DisplacingButtonState right_trigger = new DisplacingButtonState();
@@ -96,10 +96,10 @@ public class Input {
      * @param gamepad - the gamepad to scrape inputs from
      */
     public void pollGamepad(Gamepad gamepad) {
-        updateState(a, gamepad.a);
-        updateState(b, gamepad.b);
-        updateState(x, gamepad.x);
-        updateState(y, gamepad.y);
+        updateState(a_cross, gamepad.a || gamepad.cross);
+        updateState(b_circle, gamepad.b || gamepad.circle);
+        updateState(x_square, gamepad.x || gamepad.square);
+        updateState(y_triangle, gamepad.y || gamepad.triangle);
 
         updateState(left_trigger, gamepad.left_trigger > 0.3, gamepad.left_trigger);
         updateState(right_trigger, gamepad.right_trigger > 0.3, gamepad.right_trigger);

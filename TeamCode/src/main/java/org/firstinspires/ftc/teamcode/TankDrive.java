@@ -346,8 +346,8 @@ public final class TankDrive {
                 m.setPower(rightPower);
             }
 
-            p.put("x", localizer.getPose().position.x);
-            p.put("y", localizer.getPose().position.y);
+            p.put("x_square", localizer.getPose().position.x);
+            p.put("y_triangle", localizer.getPose().position.y);
             p.put("heading (deg)", Math.toDegrees(localizer.getPose().heading.toDouble()));
 
             Pose2d error = txWorldTarget.value().minusExp(localizer.getPose());

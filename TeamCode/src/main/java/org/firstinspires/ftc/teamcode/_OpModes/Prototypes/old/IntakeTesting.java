@@ -41,15 +41,15 @@ public class IntakeTesting extends OpMode {
         }
 
         //change power
-        if(input.x.down()){
+        if(input.x_square.down()){
             power += 0.05;
         }
-        if(input.y.down()){
+        if(input.y_triangle.down()){
             power -= 0.05;
         }
 
         //Reverse
-        if(input.b.down()){
+        if(input.b_circle.down()){
             if(intake_motor.getDirection() == DcMotorSimple.Direction.REVERSE){
                 intake_motor.setDirection(DcMotorSimple.Direction.FORWARD);
             } else {
@@ -62,7 +62,7 @@ public class IntakeTesting extends OpMode {
         telemetry.addData("Current power: ", power);
         telemetry.addData("Current speed: ", intake_motor.getVelocity(AngleUnit.RADIANS));
         telemetry.addLine();
-        telemetry.addLine("a to toggle on/off\nx to increase power by delta\ny to decrease power by delta\nb to reverse");
+        telemetry.addLine("a_cross to toggle on/off\nx to increase power by delta\ny to decrease power by delta\nb to reverse");
 
     }
 }

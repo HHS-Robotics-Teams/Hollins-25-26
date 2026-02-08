@@ -25,16 +25,16 @@ public class LightUtilTesting extends OpMode {
         telemetry.addData("State", lightUtil.getLightState());
         input.pollGamepad(gamepad1);
         lightUtil.updateLights();
-        if(input.a.down()){
+        if(input.a_cross.down()){
             lightUtil.makeGreen();
         }
-        if(input.b.down()){
+        if(input.b_circle.down()){
             lightUtil.makeRed();
         }
-        if(input.x.down()){
+        if(input.x_square.down()){
             lightUtil.makeOff();
         }
-        if(input.y.down()){
+        if(input.y_triangle.down()){
             lightUtil.makeAmber();
         }
     }

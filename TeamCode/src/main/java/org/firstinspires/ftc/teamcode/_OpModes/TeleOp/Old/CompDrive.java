@@ -145,7 +145,7 @@ public class CompDrive extends OpMode {
         } else {
             LauncherMotor.setPower(LAUNCHER_IDLE);
             /* ---------- Launcher Finger (Manual) ---------- */
-            if (input.x.held()) {
+            if (input.x_square.held()) {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
             } else {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
@@ -156,7 +156,7 @@ public class CompDrive extends OpMode {
         }
 
         /* ---------- Intake ---------- */
-        if (input.b.down()) {
+        if (input.b_circle.down()) {
             //Reverses intake, side rollers, and launcher
             INTAKE_REVERSED = !INTAKE_REVERSED;
             INTAKE_RUN = !INTAKE_RUN;

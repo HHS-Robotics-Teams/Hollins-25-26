@@ -49,7 +49,7 @@ public class LightIndicatorTesting extends OpMode {
     public void loop() {
         input.pollGamepad(gamepad1);
 
-        if(input.a.down()){
+        if(input.a_cross.down()){
             if(state.equals(State.RED)){
                 state = State.AMBER;
             } else if (state.equals(State.AMBER)){

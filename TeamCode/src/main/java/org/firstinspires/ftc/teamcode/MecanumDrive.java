@@ -85,7 +85,7 @@ public final class MecanumDrive {
         // path controller gains
         public double axialGain = 15;
         public double lateralGain = 10;
-        public double headingGain = 20; // shared with turn
+        public double headingGain = 30; // shared with turn
 
         public double axialVelGain = 1.25;
         public double lateralVelGain = 1.5;
@@ -345,8 +345,8 @@ public final class MecanumDrive {
             rightBack.setPower(rightBackPower);
             rightFront.setPower(rightFrontPower);
 
-            p.put("x", localizer.getPose().position.x);
-            p.put("y", localizer.getPose().position.y);
+            p.put("x_square", localizer.getPose().position.x);
+            p.put("y_triangle", localizer.getPose().position.y);
             p.put("heading (deg)", Math.toDegrees(localizer.getPose().heading.toDouble()));
 
             p.put("xError", error.position.x);

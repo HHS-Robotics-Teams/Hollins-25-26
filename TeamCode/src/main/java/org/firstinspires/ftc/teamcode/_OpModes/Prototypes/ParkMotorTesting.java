@@ -41,10 +41,10 @@ public class ParkMotorTesting extends OpMode {
     public void loop() {
 
 
-        if(input.x.down()){
+        if(input.x_square.down()){
             Parking_Motor.setTargetPosition(Parking_Motor.getCurrentPosition() + 20 );
         }
-        if(input.y.down()){
+        if(input.y_triangle.down()){
             Parking_Motor.setTargetPosition(Parking_Motor.getCurrentPosition() - 20 );
         }
 

@@ -1,15 +1,8 @@
 package org.firstinspires.ftc.teamcode._OpModes.Prototypes.old;
 
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -50,10 +43,10 @@ public class LauncherHoodServoTesting extends OpMode {
         if (input.dpad_down.down()){
             LauncherMotor.setVelocity(LauncherMotor.getVelocity() - 50);
         }
-        if(input.x.down()){
+        if(input.x_square.down()){
             LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()+0.05);
         }
-        if(input.y.down()){
+        if(input.y_triangle.down()){
             LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()-0.05);
         }
 

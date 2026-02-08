@@ -119,7 +119,7 @@ public class LauncherUtilTest extends OpMode {
         } else {
             launcherUtil.cancelLaunch();
             /* ---------- Launcher Finger (Manual) ---------- */
-            if (input.x.held()) {
+            if (input.x_square.held()) {
                 LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
                 LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             } else {
@@ -128,7 +128,7 @@ public class LauncherUtilTest extends OpMode {
         }
 
         /* ---------- Intake ---------- */
-        if (input.b.down()) {
+        if (input.b_circle.down()) {
             // Reverses intake
             INTAKE_REVERSED = !INTAKE_REVERSED;
         }

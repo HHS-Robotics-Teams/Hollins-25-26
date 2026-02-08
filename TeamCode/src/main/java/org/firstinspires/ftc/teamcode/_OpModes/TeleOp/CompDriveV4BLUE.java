@@ -7,11 +7,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSaf
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Motor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.CAMERA_START_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_LEVEL_TWO_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
@@ -30,6 +26,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode._Util.AprilTagMethod;
+import org.firstinspires.ftc.teamcode._Util.HoodUtil;
 import org.firstinspires.ftc.teamcode._Util.LauncherUtilV2;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
@@ -93,8 +90,12 @@ public class CompDriveV4BLUE extends OpMode {
             INTAKE_REVERSED = false;
         }
 
+        if(input.a_cross.down()){
+            launcherUtil.overwriteHoodState(HoodUtil.HoodState.Far);
+        }
+
         /* ---------- Intake ---------- */
-        if (input.b.down()) {
+        if (input.b_circle.down()) {
             // Reverses intake
             INTAKE_REVERSED = !INTAKE_REVERSED;
         }
@@ -134,6 +135,7 @@ public class CompDriveV4BLUE extends OpMode {
             }
         } else {
             launcherUtil.resetLauncherUtilTimeout();
+            launcherUtil.updateHood();
             LauncherMotor.setVelocity(1000);
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
             if(launcherUtil.getLaunchState() != LauncherUtilV2.LaunchState.FIND_TAG){

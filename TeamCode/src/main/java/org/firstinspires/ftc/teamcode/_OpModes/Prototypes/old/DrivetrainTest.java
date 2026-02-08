@@ -7,7 +7,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -40,26 +39,26 @@ public class DrivetrainTest extends OpMode {
         if(abs(strafes) <= 0.2){strafes = 0;}
         if(abs(rotates) <= 0.2){rotates = 0;}
 
-        if(input.a.held()){
+        if(input.a_cross.held()){
             forward = power;
             strafes = 0;
             rotates = 0;
         }
 
-        if(input.x.down()){
+        if(input.x_square.down()){
             power += 0.01;
         }
-        if(input.y.down()){
+        if(input.y_triangle.down()){
             power -= 0.01;
         }
         if(input.dpad_up.held()){
-            leftFront.setPower(input.b.held() ? 1 : -1);
+            leftFront.setPower(input.b_circle.held() ? 1 : -1);
         } else if(input.dpad_down.held()){
-            leftBack.setPower(input.b.held() ? 1 : -1);
+            leftBack.setPower(input.b_circle.held() ? 1 : -1);
         }else if(input.dpad_left.held()){
-            rightFront.setPower(input.b.held() ? 1 : -1);
+            rightFront.setPower(input.b_circle.held() ? 1 : -1);
         }else if(input.dpad_right.held()){
-            rightBack.setPower(input.b.held() ? 1 : -1);
+            rightBack.setPower(input.b_circle.held() ? 1 : -1);
         } else {
 
             //Power fixer

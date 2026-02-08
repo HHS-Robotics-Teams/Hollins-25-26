@@ -34,7 +34,7 @@ public class AprilTagHelper {
         // The AprilTagProcessor itself should handle returning an empty list if no detections.
         if (visionPortal == null || visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
             // Or if aprilTag is somehow no longer valid after portal closure.
-            // Consider returning an empty list or logging a warning if the portal is not active.
+            // Consider returning an empty list or logging a_cross warning if the portal is not active.
             // For now, relying on aprilTag.getDetections() to handle it.
             // telemetry.addLine("Warning: VisionPortal not streaming. Detections might be stale or empty.");
         }

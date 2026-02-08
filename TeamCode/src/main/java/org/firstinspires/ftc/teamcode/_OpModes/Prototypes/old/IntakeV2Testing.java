@@ -28,14 +28,14 @@ public class IntakeV2Testing extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
-        a = input.a.held();
-        b = input.b.held();
+        a = input.a_cross.held();
+        b = input.b_circle.held();
         updateIntake(a,b);
         telemetry.addData("pos: ", IntakeMotor.getCurrentPosition());
         telemetry.addData("target: ", IntakeMotor.getTargetPosition());
         telemetry.addData("pos on rev: ", IntakeMotor.getCurrentPosition() % INTAKE_PPR);
         telemetry.addData("num revs: ", (int) (IntakeMotor.getCurrentPosition() / INTAKE_PPR));
-        telemetry.addData("a", a);
-        telemetry.addData("b", b);
+        telemetry.addData("a_cross", a);
+        telemetry.addData("b_circle", b);
     }
 }

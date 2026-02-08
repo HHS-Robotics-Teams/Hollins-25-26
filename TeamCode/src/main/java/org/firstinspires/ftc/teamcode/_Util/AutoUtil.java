@@ -11,14 +11,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class AutoUtil {
     ElapsedTime emptyTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
-    private final double timeout;
+    private double timeout;
     public AutoUtil(double timeout) {
         this.timeout = timeout;
         emptyTimer.reset();
     }
     public boolean isBotEmpty() {
-        if( leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 6
-            || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 6
+        if( leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5
+            || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5
             || rearDistance.getDistance(DistanceUnit.INCH) <= 8
             || rearSideDistance.getDistance(DistanceUnit.INCH) <= 4 ) {
             emptyTimer.reset();
@@ -32,6 +32,9 @@ public class AutoUtil {
 
     public void resetEmptyTimer() {
         emptyTimer.reset();
+    }
+    public void changeTimeout(double timeout) {
+        this.timeout = timeout;
     }
 
     public double getTimeout() {

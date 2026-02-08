@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
  *
  * How it works (brief):
  * - Uses only P (I=0, D=0) and gradually increases kP until the velocity
- *   shows a sustained oscillation (detected by repeated sign changes of error).
+ *   shows a_cross sustained oscillation (detected by repeated sign changes of error).
  * - Records oscillation period Tu (from sign-change timestamps) and Ku (the P that caused it).
  * - Calculates Ziegler-Nichols PID values:
  *     Kp = 0.6 * Ku

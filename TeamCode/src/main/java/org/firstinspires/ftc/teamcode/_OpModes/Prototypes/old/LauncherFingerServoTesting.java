@@ -38,13 +38,13 @@ public class LauncherFingerServoTesting extends OpMode {
             LauncherSafetyServo.setPosition(LauncherSafetyServo.getPosition()-.05);
         }
 
-//        if(input.x.down()){
+//        if(input.x_square.down()){
 //            LauncherFingerServo.setPosition(LauncherFingerServo.getPosition()+0.05);
 //        }
-//        if(input.y.down()){
+//        if(input.y_triangle.down()){
 //            LauncherFingerServo.setPosition(LauncherFingerServo.getPosition()-0.05);
 //        }
-        if(input.a.held()){
+        if(input.a_cross.held()){
             LeftSideFeedRoller.setPower(power);
         } else {
             LeftSideFeedRoller.setPower(0);

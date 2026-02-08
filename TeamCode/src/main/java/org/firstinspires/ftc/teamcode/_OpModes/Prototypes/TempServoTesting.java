@@ -24,16 +24,16 @@ public class TempServoTesting extends OpMode {
     public void loop() {
         input.pollGamepad(gamepad1);
 
-        if(input.x.down()){
+        if(input.x_square.down()){
             temp.setPosition(temp.getPosition() + x);
         }
-        if(input.y.down()){
+        if(input.y_triangle.down()){
             temp.setPosition(temp.getPosition() - x);
         }
-        if(input.a.down()){
+        if(input.a_cross.down()){
             x += 0.01;
         }
-        if(input.b.down()){
+        if(input.b_circle.down()){
             x -= 0.01;
         }
         telemetry.addLine("X to increase pos by " + x);

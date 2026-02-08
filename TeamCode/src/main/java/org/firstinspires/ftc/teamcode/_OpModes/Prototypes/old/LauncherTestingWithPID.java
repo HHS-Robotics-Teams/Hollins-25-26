@@ -37,18 +37,18 @@ public class LauncherTestingWithPID extends OpMode {
         telemetry.addData("Target Velocity:", targetVel);
         telemetry.addData("Actual Velocity:", LauncherMotor.getVelocity(AngleUnit.RADIANS));
         telemetry.addLine("X to increase vel,\nY to decrease vel,\nA to raise finger,\nB to toggle intake");
-        if(input.x.down()){
+        if(input.x_square.down()){
             targetVel += delta;
         }
-        if(input.y.down()){
+        if(input.y_triangle.down()){
             targetVel -= delta;
         }
-        if(input.a.held()){
+        if(input.a_cross.held()){
             LauncherFingerServo.setPosition(LAUNCHER_FINGER_UP_POS);
         } else {
             LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
         }
-        if(input.b.held()){
+        if(input.b_circle.held()){
             IntakeMotor.setPower(INTAKE_POWER);
             LeftSideFeedRoller.setPower(1);
 

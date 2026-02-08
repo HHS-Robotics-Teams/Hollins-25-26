@@ -132,7 +132,7 @@ public class CompDriveNoCam extends OpMode {
         }
 
         /* ---------- Intake ---------- */
-        if (input.b.down()) {
+        if (input.b_circle.down()) {
             // Reverses intake
             INTAKE_REVERSED = !INTAKE_REVERSED;
         }
@@ -185,10 +185,10 @@ public class CompDriveNoCam extends OpMode {
         if (input.dpad_up.down()) {
             Parking_Motor.setTargetPosition(0);
 
-        } if(input.x.down()){
+        } if(input.x_square.down()){
             LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()+0.05);
         }
-        if(input.y.down()){
+        if(input.y_triangle.down()){
             LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()-0.05);
         }
 

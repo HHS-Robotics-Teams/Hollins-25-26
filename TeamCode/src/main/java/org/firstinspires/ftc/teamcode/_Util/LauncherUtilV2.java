@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode._Util;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
@@ -13,6 +15,8 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearSideDis
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.CAMERA_START_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
@@ -46,6 +50,7 @@ public class LauncherUtilV2 {
     private double phi;
     private double launchTime;
     private final LightUtil lightUtil;
+    private final HoodUtil hoodUtil;
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime timeout = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
@@ -71,6 +76,7 @@ public class LauncherUtilV2 {
         this.isAuto = isAuto;
         this.lightUtil = lightUtil;
         launchTime = 0.5;
+        hoodUtil = new HoodUtil();
     }
 
     /**
@@ -82,6 +88,7 @@ public class LauncherUtilV2 {
         IntakeMotor.setPower(0);
         ConveyorMotor.setPower(0);
         LeftSideFeedRoller.setPower(0);
+        rightSideFeedRoller.setPower(0);
     }
 
     /**
@@ -91,12 +98,20 @@ public class LauncherUtilV2 {
         return launchState;
     }
 
+    public void overwriteHoodState(HoodUtil.HoodState state){
+        hoodUtil.overwriteHoodState(state);
+    }
+    public void updateHood(){
+        hoodUtil.updateHoodState(aprilTagMethod);
+    }
+
     /**
      * Main method for launcher
      * Call every loop while launching
      * @return String of telemetry
      */
     public String runLauncher() {
+        hoodUtil.updateHoodState(aprilTagMethod);
         LauncherSafetyServo.setPosition(SAFTEY_FIRING);
         lightUtil.makeOff();
         lightUtil.updateLights();
@@ -107,10 +122,12 @@ public class LauncherUtilV2 {
                 IntakeMotor.setPower(0);
                 ConveyorMotor.setPower(0);
                 LeftSideFeedRoller.setPower(0);
+                rightSideFeedRoller.setPower(0);
                 LAUNCHER_RUN = false;
             }
             return "No Tag Visible" + "\nState:" + launchState +"\nTimeout:" + timeout.seconds();
         } else {
+            hoodUtil.resetTimeout();
             spinUp();
             timeout.reset();
         }
@@ -119,6 +136,7 @@ public class LauncherUtilV2 {
                 IntakeMotor.setPower(0);
                 ConveyorMotor.setPower(0);
                 LeftSideFeedRoller.setPower(0);
+                rightSideFeedRoller.setPower(0);
                 launchState = LaunchState.FIND_TAG;
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
                 leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -149,6 +167,7 @@ public class LauncherUtilV2 {
                 IntakeMotor.setPower(INTAKE_POWER);
                 ConveyorMotor.setPower(INTAKE_POWER);
                 LeftSideFeedRoller.setPower(1);
+                rightSideFeedRoller.setPower(1);
                 if (launchTimer.seconds() >= launchTime) { //todo check this time
                     launchState = LaunchState.DISTANCE_CHECK;
                 }
@@ -197,11 +216,11 @@ public class LauncherUtilV2 {
                 phi = 2.75;
                 margin = 3;
                 if (color.equals("RED")) {
-                    phi = 2.5;
+                    phi = 3.75;
                 }
             } else {
                 phi = 0;
-                margin = 7;
+                margin = 5;
                 if (color.equals("RED")) {
                     phi = 1;
                 }

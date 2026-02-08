@@ -124,10 +124,10 @@ public class LauncherTesting extends OpMode {
         } else {
             LauncherFingerServo.setPosition(LAUNCHER_FINGER_DOWN_POS);
         }
-        if(input.x.down()){
+        if(input.x_square.down()){
             LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()+0.05);
         }
-        if(input.y.down()){
+        if(input.y_triangle.down()){
             LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()-0.05);
         }
 
@@ -140,7 +140,7 @@ public class LauncherTesting extends OpMode {
         }
 
         //Reverse
-        if(input.b.down()){
+        if(input.b_circle.down()){
             if(launcher_motor.getDirection() == DcMotorSimple.Direction.REVERSE){
                 launcher_motor.setDirection(DcMotorSimple.Direction.FORWARD);
                 intake_motor.setDirection(DcMotorSimple.Direction.FORWARD);
