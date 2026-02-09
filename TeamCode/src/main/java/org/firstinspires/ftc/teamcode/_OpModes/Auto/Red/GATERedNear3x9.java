@@ -31,7 +31,6 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 public class GATERedNear3x9 extends OpMode {
     IntakeUtil intakeUtil = new IntakeUtil();
     MecanumDrive drive;
-
     InstantAction runIntake = new InstantAction(() -> {
         LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
         intakeUtil.intakeOn();

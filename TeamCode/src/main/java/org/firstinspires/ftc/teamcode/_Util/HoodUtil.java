@@ -49,12 +49,14 @@ public class HoodUtil {
             }
         } else {
             timeout.reset();
-            if(aprilTagMethod.getTagDistance() < 50){
-                hoodState = HoodState.Near1;
-            } else if (aprilTagMethod.getTagDistance() < 80) {
-                hoodState = HoodState.Near2;
-            } else {
-                hoodState = HoodState.Far;
+            if(aprilTagMethod.isTagVisible()) {
+                if (aprilTagMethod.getTagDistance() < 50) {
+                    hoodState = HoodState.Near1;
+                } else if (aprilTagMethod.getTagDistance() < 80) {
+                    hoodState = HoodState.Near2;
+                } else {
+                    hoodState = HoodState.Far;
+                }
             }
         }
         updateHoodPose();

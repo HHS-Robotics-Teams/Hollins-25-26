@@ -10,15 +10,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class AutoUtil {
-    ElapsedTime emptyTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
+    ElapsedTime emptyTimer;
     private double timeout;
     public AutoUtil(double timeout) {
         this.timeout = timeout;
+        emptyTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
         emptyTimer.reset();
     }
     public boolean isBotEmpty() {
-        if( leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5
-            || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5
+        if( leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5.5
+            || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5.5
             || rearDistance.getDistance(DistanceUnit.INCH) <= 8
             || rearSideDistance.getDistance(DistanceUnit.INCH) <= 4 ) {
             emptyTimer.reset();
@@ -27,7 +28,7 @@ public class AutoUtil {
     }
 
     public String currentReadings() {
-        return "---DISTANCE READINGS---\nLeft: " + leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) + "\nRight: " + rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) + "\nRear: " + rearDistance.getDistance(DistanceUnit.INCH) + "\nRear Side" + rearSideDistance.getDistance(DistanceUnit.INCH);
+        return "---DISTANCE READINGS---\nLeft: " + leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) + "\nRight: " + rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) + "\nRear: " + rearDistance.getDistance(DistanceUnit.INCH) + "\nRear Side" + rearSideDistance.getDistance(DistanceUnit.INCH) +"\nTimer time" + emptyTimer.seconds();
     }
 
     public void resetEmptyTimer() {

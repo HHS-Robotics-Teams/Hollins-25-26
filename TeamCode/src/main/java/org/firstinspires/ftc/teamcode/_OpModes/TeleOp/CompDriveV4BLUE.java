@@ -110,7 +110,7 @@ public class CompDriveV4BLUE extends OpMode {
             launcherUtil.setLightRed();
         }
 
-        if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 7) {
+        if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 5.5 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 5.5) {
             intakeTimer.reset();
         }
 

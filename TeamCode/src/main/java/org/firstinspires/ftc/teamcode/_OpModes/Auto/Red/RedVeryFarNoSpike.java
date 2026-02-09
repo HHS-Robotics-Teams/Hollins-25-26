@@ -108,14 +108,14 @@ public class RedVeryFarNoSpike extends OpMode {
                 .strafeToLinearHeading(new Vector2d(74,67),Math.toRadians(45))
                 .waitSeconds(0.1)
                 .strafeToLinearHeading(new Vector2d(50, 12), Math.toRadians(152.5))
-                .afterDisp(65, () -> intakeUtil.intakeOff())
+                .afterDisp(75, () -> intakeUtil.intakeOff())
                 .build();
 
         telemetry.addLine("Ready to Launch");
         lightUtil = new LightUtil(2, hardwareMap);
         lightUtil.makeGreen();
         lightUtil.updateLights();
-        autoUtil = new AutoUtil(0.2);
+        autoUtil = new AutoUtil(0.4);
     }
 
     @Override

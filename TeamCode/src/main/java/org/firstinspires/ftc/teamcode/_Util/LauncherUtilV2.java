@@ -49,6 +49,7 @@ public class LauncherUtilV2 {
     private double theta;
     private double phi;
     private double launchTime;
+    private int numLaunches;
     private final LightUtil lightUtil;
     private final HoodUtil hoodUtil;
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
@@ -77,6 +78,7 @@ public class LauncherUtilV2 {
         this.lightUtil = lightUtil;
         launchTime = 0.5;
         hoodUtil = new HoodUtil();
+        numLaunches = 0;
     }
 
     /**
@@ -111,6 +113,7 @@ public class LauncherUtilV2 {
      * @return String of telemetry
      */
     public String runLauncher() {
+        setLightOff();
         hoodUtil.updateHoodState(aprilTagMethod);
         LauncherSafetyServo.setPosition(SAFTEY_FIRING);
         lightUtil.makeOff();
@@ -133,6 +136,7 @@ public class LauncherUtilV2 {
         }
         switch (launchState) {
             case EXIT:
+                numLaunches = 0;
                 IntakeMotor.setPower(0);
                 ConveyorMotor.setPower(0);
                 LeftSideFeedRoller.setPower(0);
@@ -158,6 +162,7 @@ public class LauncherUtilV2 {
                     return "No Tag Visible";
                 } else if ((moveToLaunch()) && isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
+                    numLaunches++;
                     launchTimer.reset();
                 }
                 break;
@@ -173,14 +178,17 @@ public class LauncherUtilV2 {
                 }
                 break;
             case DISTANCE_CHECK:
-                setLightAmber();
                 launchState = LaunchState.SPIN_UP_AND_MOVE;
-                if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 7){
+                if(numLaunches > 2) {
+                    launchState = LaunchState.EXIT;
+                } else if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5.5 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5.5){
                     launchTime = 2.5;
                 } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 4 || rearSideDistance.getDistance(DistanceUnit.INCH) <= 4){
                     launchTime = 0.75;
-                } else {
+                } else if (numLaunches > 0) {
                     launchState = LaunchState.EXIT;
+                } else {
+                    launchTime = 0.75;
                 }
                 break;
 
@@ -214,13 +222,13 @@ public class LauncherUtilV2 {
             double margin;
             if (range >= 90) {
                 phi = 2.75;
-                margin = 3;
+                margin = 2.75;
                 if (color.equals("RED")) {
                     phi = 3.75;
                 }
             } else {
                 phi = 0;
-                margin = 5;
+                margin = 4.5;
                 if (color.equals("RED")) {
                     phi = 1;
                 }
@@ -244,6 +252,9 @@ public class LauncherUtilV2 {
                 return true;
             }
             target = 940.08429 * pow((1.00383), range);
+            if(range >= 95){
+                target += 75;
+            }
             LauncherMotor.setVelocity(target);
             return abs(theta - phi) <= margin;
         }
@@ -263,8 +274,9 @@ public class LauncherUtilV2 {
      * else if not visible idle is 1100
      */
     public void spinUp() {
+        double range = 0;
         if(aprilTagMethod.isTagVisible() && aprilTagMethod.tagMatchesAlliance(color)){
-            double range = aprilTagMethod.getTagDistance();
+            range = aprilTagMethod.getTagDistance();
             target = 940.08429 * pow((1.00383), range);
         } else if (isAuto) {
             target = 925;
@@ -273,6 +285,9 @@ public class LauncherUtilV2 {
         }
         if(launchState != LaunchState.SPIN_UP_AND_MOVE && launchState != LaunchState.FIND_TAG){
             target += 25;
+            if(range >= 95){
+                target += 75;
+            }
         }
         LauncherMotor.setVelocity(target);
     }

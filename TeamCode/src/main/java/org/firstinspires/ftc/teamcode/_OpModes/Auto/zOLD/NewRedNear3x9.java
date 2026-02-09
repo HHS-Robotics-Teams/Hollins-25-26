@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode._OpModes.Auto.Red;
+package org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD;
 
 import static org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD.PathFactory.intakeWaitTime;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
@@ -16,6 +16,7 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -26,7 +27,9 @@ import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 
 @Autonomous
-public class SpecialRedNear3x9 extends OpMode {
+@Deprecated
+@Disabled
+public class NewRedNear3x9 extends OpMode {
     IntakeUtil intakeUtil = new IntakeUtil();
     MecanumDrive drive;
 
@@ -81,9 +84,15 @@ public class SpecialRedNear3x9 extends OpMode {
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(-46.5,38.25,Math.toRadians(125)))
                 .strafeToLinearHeading(new Vector2d(-12.5,24),Math.toRadians(89))
+                //.splineToLinearHeading(new Pose2d(-12.5,28,Math.toRadians(89)),Math.toRadians(89))
                 .afterDisp(.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(-12,56), new TranslationalVelConstraint(50))
+                .waitSeconds(intakeWaitTime)
+                //.lineToY(56)
+                .afterTime(0.1, runIntake)
+                //.strafeToConstantHeading(new Vector2d(-14,56))
+                //.strafeToConstantHeading(new Vector2d(-8, 54))
                 .afterDisp(25, offIntake)
+                //.strafeToConstantHeading(new Vector2d(-2.5,59))
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(130))
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(130)))
@@ -91,17 +100,20 @@ public class SpecialRedNear3x9 extends OpMode {
                 .afterTime(0.1, runIntake)
                 .strafeToConstantHeading(new Vector2d(10, 58),new TranslationalVelConstraint(50))
                 .waitSeconds(0.05)
-                .lineToYConstantHeading(50) // to save time lessen this distance
+                .lineToYConstantHeading(48)
                 .afterDisp(65, offIntake)
-                .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(135))
+                .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(130))
+                //.splineToLinearHeading(new Pose2d(-24,24,Math.toRadians(130)),Math.toRadians(270))
                 .build();
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(130)))
                 .strafeToLinearHeading(new Vector2d(32, 24), Math.toRadians(89))
                 .afterTime(0.1, runIntake)
                 .strafeToConstantHeading(new Vector2d(33,63.5),new TranslationalVelConstraint(50))
-                .lineToYConstantHeading(58)
+                //.strafeToConstantHeading(new Vector2d(33, 63.5))
                 .afterDisp(110, offIntake)
+                .lineToYConstantHeading(56)
                 .strafeToLinearHeading(new Vector2d(-36, 26), Math.toRadians(120))
+                //.strafeToLinearHeading(new Vector2d(0,0), Math.toRadians(120))
                 .build();
         telemetry.addLine("Ready to Launch");
         lightUtil = new LightUtil(2, hardwareMap);
