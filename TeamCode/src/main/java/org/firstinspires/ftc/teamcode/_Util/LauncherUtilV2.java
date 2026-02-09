@@ -253,7 +253,7 @@ public class LauncherUtilV2 {
             }
             target = 940.08429 * pow((1.00383), range);
             if(range >= 95){
-                target += 75;
+                target += 65;
             }
             LauncherMotor.setVelocity(target);
             return abs(theta - phi) <= margin;
@@ -286,7 +286,7 @@ public class LauncherUtilV2 {
         if(launchState != LaunchState.SPIN_UP_AND_MOVE && launchState != LaunchState.FIND_TAG){
             target += 25;
             if(range >= 95){
-                target += 75;
+                target += 65;
             }
         }
         LauncherMotor.setVelocity(target);
