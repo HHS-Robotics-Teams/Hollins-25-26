@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 
 @Autonomous
-public class RedNear3x9 extends OpMode {
+public class NewRedNear3x9 extends OpMode {
     IntakeUtil intakeUtil = new IntakeUtil();
     MecanumDrive drive;
 
@@ -84,7 +84,7 @@ public class RedNear3x9 extends OpMode {
                 //.splineToLinearHeading(new Pose2d(-12.5,28,Math.toRadians(89)),Math.toRadians(89))
                 .afterDisp(.1, runIntake)
                 .waitSeconds(intakeWaitTime)
-                .lineToY(56)
+                //.lineToY(56)
                 .afterTime(0.1, runIntake)
                 //.strafeToConstantHeading(new Vector2d(-14,56))
                 //.strafeToConstantHeading(new Vector2d(-8, 54))
@@ -133,7 +133,7 @@ public class RedNear3x9 extends OpMode {
     @Override
     public void stop () {
         int x = Thread.activeCount();
-        for(int i = 0; i < x;  i++){    
+        for(int i = 0; i < x;  i++){
             Thread.currentThread().interrupt();
         }
         requestOpModeStop();
