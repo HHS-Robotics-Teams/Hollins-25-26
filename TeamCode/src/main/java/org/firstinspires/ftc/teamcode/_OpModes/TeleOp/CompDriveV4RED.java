@@ -82,10 +82,12 @@ public class CompDriveV4RED extends OpMode {
 
         /* ---------- Launch ---------- */
         if (input.right_trigger.down()) {
+            launcherUtil.resetLauncherUtilTimeout();
             LAUNCHER_RUN = !LAUNCHER_RUN;
             INTAKE_REVERSED = false;
         }
         if (input.right_bumper.down()) {
+            launcherUtil.resetLauncherUtilTimeout();
             LAUNCHER_RUN = !LAUNCHER_RUN;
             INTAKE_REVERSED = false;
         }
