@@ -99,6 +99,7 @@ public class GATERedNear3x9 extends OpMode {
                 .strafeToConstantHeading(new Vector2d(10, 58),new TranslationalVelConstraint(50))
                 .waitSeconds(0.05)
                 .lineToYConstantHeading(48)
+                .strafeToConstantHeading(new Vector2d(-2.5, 59))
                 .afterDisp(65, offIntake)
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(130))
                 //.splineToLinearHeading(new Pose2d(-24,24,Math.toRadians(130)),Math.toRadians(270))
@@ -109,7 +110,7 @@ public class GATERedNear3x9 extends OpMode {
                 .strafeToConstantHeading(new Vector2d(33,63.5),new TranslationalVelConstraint(50))
                 //.strafeToConstantHeading(new Vector2d(33, 63.5))
                 .afterDisp(110, offIntake)
-                .lineToYConstantHeading(56)
+                .lineToYConstantHeading(54)
                 .strafeToLinearHeading(new Vector2d(-36, 26), Math.toRadians(120))
                 //.strafeToLinearHeading(new Vector2d(0,0), Math.toRadians(120))
                 .build();

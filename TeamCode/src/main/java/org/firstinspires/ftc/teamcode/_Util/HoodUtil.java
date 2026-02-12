@@ -11,7 +11,8 @@ public class HoodUtil {
         Near1,
         Near2,
         Idle,
-        Far
+        Far,
+        Far2
     }
     private static HoodState hoodState;
     ElapsedTime timeout = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
@@ -37,6 +38,9 @@ public class HoodUtil {
                 cameraTiltServo.setPosition(0.9);
                 LauncherHoodServo.setPosition(0.8);
                 break;
+            case Far2:
+                cameraTiltServo.setPosition(0.9);
+                LauncherHoodServo.setPosition(0.55);
         }
     }
     public void resetTimeout() {
@@ -54,8 +58,10 @@ public class HoodUtil {
                     hoodState = HoodState.Near1;
                 } else if (aprilTagMethod.getTagDistance() < 80) {
                     hoodState = HoodState.Near2;
-                } else {
+                } else if (aprilTagMethod.getTagDistance() < 100) {
                     hoodState = HoodState.Far;
+                } else {
+                    hoodState = HoodState.Far2;
                 }
             }
         }

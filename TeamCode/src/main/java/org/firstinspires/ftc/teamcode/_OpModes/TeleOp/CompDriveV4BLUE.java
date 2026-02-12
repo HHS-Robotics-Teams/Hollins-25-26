@@ -80,6 +80,12 @@ public class CompDriveV4BLUE extends OpMode {
         /* ---------- Drivetrain ---------- */
         TeleOpDrive.run(-gamepad1.left_stick_y,gamepad1.left_stick_x * 1.1, gamepad1.right_stick_x);
 
+        if(LAUNCHER_RUN){
+            if(input.right_trigger.down() || input.right_bumper.down()){
+                launcherUtil.cancelLaunch();
+            }
+        }
+
         /* ---------- Launch ---------- */
         if (input.right_trigger.down()) {
             launcherUtil.resetLauncherUtilTimeout();
@@ -132,9 +138,6 @@ public class CompDriveV4BLUE extends OpMode {
         //while LAUNCHER_RUN flag is true launch
         if (LAUNCHER_RUN) {
             telemetry.addLine("Launch Status:" + launcherUtil.runLauncher());
-            if(input.right_trigger.down() || input.right_bumper.down()){
-                launcherUtil.cancelLaunch();
-            }
         } else {
             launcherUtil.resetLauncherUtilTimeout();
             launcherUtil.updateHood();

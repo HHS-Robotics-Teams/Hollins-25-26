@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
 
+
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -79,25 +80,25 @@ public class RedNear3x9Gateless extends OpMode {
                 .afterTime(0.05, setVelocity)
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(-46.5,38.25,Math.toRadians(125)))
-                .strafeToLinearHeading(new Vector2d(-13,24),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-14,24),Math.toRadians(89))
                 .afterDisp(.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(-13,56), new TranslationalVelConstraint(50))
+                .strafeToConstantHeading(new Vector2d(-14,54), new TranslationalVelConstraint(80))
                 .afterDisp(25, offIntake)
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(130))
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(130)))
-                .strafeToLinearHeading(new Vector2d(10,28),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(12,28),Math.toRadians(89))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(10, 61),new TranslationalVelConstraint(50))
+                .strafeToConstantHeading(new Vector2d(12, 66),new TranslationalVelConstraint(80))
                 .waitSeconds(0.05)
                 .lineToYConstantHeading(50) // to save time lessen this distance
                 .afterDisp(65, offIntake)
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(130))
                 .build();
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(130)))
-                .strafeToLinearHeading(new Vector2d(31.5, 24), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(29.7, 24), Math.toRadians(89))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(31.5,63.5),new TranslationalVelConstraint(50))
+                .strafeToConstantHeading(new Vector2d(29.7,63.5),new TranslationalVelConstraint(80))
                 .lineToYConstantHeading(50)
                 .afterDisp(110, offIntake)
                 .strafeToLinearHeading(new Vector2d(-36, 26), Math.toRadians(107.5))
@@ -143,11 +144,11 @@ public class RedNear3x9Gateless extends OpMode {
         switch (state){
             case START:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 125);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 120);
                 state = AutoState.LAUNCH_ONE;
                 break;
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 125){
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 120){
                     LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                     intakeUtil.launchStart();
                     launchTimer.reset();

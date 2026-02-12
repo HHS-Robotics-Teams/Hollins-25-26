@@ -54,6 +54,7 @@ public class LauncherUtilV2 {
     private final HoodUtil hoodUtil;
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime timeout = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
+    ElapsedTime emptyLaunchCheck = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     /**
      * Sets target vel manually
@@ -91,6 +92,12 @@ public class LauncherUtilV2 {
         ConveyorMotor.setPower(0);
         LeftSideFeedRoller.setPower(0);
         rightSideFeedRoller.setPower(0);
+        numLaunches = 0;
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        LAUNCHER_RUN = false;
     }
 
     /**
@@ -119,7 +126,7 @@ public class LauncherUtilV2 {
         lightUtil.makeOff();
         lightUtil.updateLights();
         if (!aprilTagMethod.isTagVisible() && !isAuto) {
-            if(timeout.seconds() > 0.25) {
+            if(timeout.seconds() > 0.5) {
                 launchState = LaunchState.FIND_TAG;
                 spinUp();
                 IntakeMotor.setPower(0);
@@ -159,11 +166,13 @@ public class LauncherUtilV2 {
                 break;
             case SPIN_UP_AND_MOVE:
                 if (!aprilTagMethod.isTagVisible() && !isAuto) {
+                    launchState = LaunchState.FIND_TAG;
                     return "No Tag Visible";
                 } else if ((moveToLaunch()) && isSpunUp()) {
                     launchState = LaunchState.LAUNCH;
                     numLaunches++;
                     launchTimer.reset();
+                    emptyLaunchCheck.reset();
                 }
                 break;
             case LAUNCH:
@@ -176,17 +185,25 @@ public class LauncherUtilV2 {
                 if (launchTimer.seconds() >= launchTime) { //todo check this time
                     launchState = LaunchState.DISTANCE_CHECK;
                 }
+                if (launchTimer.seconds() >= 0.15){
+                    target *= 1.3;
+                }
+                if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 5.5 && rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 5.5 && rearDistance.getDistance(DistanceUnit.INCH) >= 10 && rearSideDistance.getDistance(DistanceUnit.INCH) >= 4 && launchTimer.seconds() >= 0.5){
+                    if(emptyLaunchCheck.seconds() >= 0.3){
+                        launchState = LaunchState.DISTANCE_CHECK;
+                    }
+                } else {
+                    emptyLaunchCheck.reset();
+                }
                 break;
             case DISTANCE_CHECK:
                 launchState = LaunchState.SPIN_UP_AND_MOVE;
-                if(numLaunches > 2) {
+                if(numLaunches > 0) {
                     launchState = LaunchState.EXIT;
                 } else if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5.5 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5.5){
                     launchTime = 2.5;
                 } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 4 || rearSideDistance.getDistance(DistanceUnit.INCH) <= 4){
                     launchTime = 0.75;
-                } else if (numLaunches > 0) {
-                    launchState = LaunchState.EXIT;
                 } else {
                     launchTime = 0.75;
                 }
@@ -220,20 +237,22 @@ public class LauncherUtilV2 {
             theta = aprilTagMethod.getTagBearing() - 4.75;
             double range = aprilTagMethod.getTagDistance();
             double margin;
+            double turnPower;
             if (range >= 90) {
-                phi = 2.75;
+                phi = 2;
                 margin = 2.75;
                 if (color.equals("RED")) {
                     phi = 3.75;
                 }
+                turnPower = 0.3;
             } else {
                 phi = 0;
                 margin = 4.5;
                 if (color.equals("RED")) {
                     phi = 1;
                 }
+                turnPower = 0.375;
             }
-            double turnPower = 0.375;
             if (theta >= phi + margin) {
                 leftFront.setPower(-turnPower);
                 rightBack.setPower(turnPower);
@@ -251,9 +270,12 @@ public class LauncherUtilV2 {
                 rightFront.setPower(0);
                 return true;
             }
-            target = 940.08429 * pow((1.00383), range);
+            target = 1050 * pow((1.00383), range); //940.08429
             if(range >= 95){
-                target += 65;
+                target += 115;//change this if far is high/low
+            }
+            if(launchState != LaunchState.SPIN_UP_AND_MOVE && launchState != LaunchState.FIND_TAG) {
+                target += 20;
             }
             LauncherMotor.setVelocity(target);
             return abs(theta - phi) <= margin;
@@ -283,10 +305,13 @@ public class LauncherUtilV2 {
         } else {
             target = 1100;
         }
+        if(range >= 95){
+            target += 30;//change this if far is high/low
+        }
         if(launchState != LaunchState.SPIN_UP_AND_MOVE && launchState != LaunchState.FIND_TAG){
             target += 25;
             if(range >= 95){
-                target += 65;
+                target += 125;//change this if far is high/low
             }
         }
         LauncherMotor.setVelocity(target);

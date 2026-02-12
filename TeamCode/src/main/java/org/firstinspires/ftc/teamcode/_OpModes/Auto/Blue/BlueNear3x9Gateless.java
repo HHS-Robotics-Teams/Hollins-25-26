@@ -79,28 +79,28 @@ public class BlueNear3x9Gateless extends OpMode {
                 .afterTime(0.05, setVelocity)
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(-46.5,-38.25,Math.toRadians(-125)))
-                .strafeToLinearHeading(new Vector2d(-13,-24),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(-14,-24),Math.toRadians(-90))
                 .afterDisp(.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(-13,-56), new TranslationalVelConstraint(50))
+                .strafeToConstantHeading(new Vector2d(-14,-56), new TranslationalVelConstraint(50))
                 .afterDisp(25, offIntake)
                 .strafeToLinearHeading(new Vector2d(-24,-24),Math.toRadians(-130))
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,-24,Math.toRadians(-130)))
-                .strafeToLinearHeading(new Vector2d(10,-28),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(9,-28),Math.toRadians(-90))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(10, -61),new TranslationalVelConstraint(50))
+                .strafeToConstantHeading(new Vector2d(9, -61),new TranslationalVelConstraint(50))
                 .waitSeconds(0.05)
                 .lineToYConstantHeading(-50) // to save time lessen this distance
                 .afterDisp(65, offIntake)
                 .strafeToLinearHeading(new Vector2d(-24,-24),Math.toRadians(-130))
                 .build();
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, -24, Math.toRadians(-130)))
-                .strafeToLinearHeading(new Vector2d(31.5, -24), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(29.7, -24), Math.toRadians(-90))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(31.5,-63.5),new TranslationalVelConstraint(50))
+                .strafeToConstantHeading(new Vector2d(29.7,-63.5),new TranslationalVelConstraint(50))
                 .lineToYConstantHeading(-50)
                 .afterDisp(110, offIntake)
-                .strafeToLinearHeading(new Vector2d(-36, -26), Math.toRadians(-110))
+                .strafeToLinearHeading(new Vector2d(-36, -26), Math.toRadians(-122.5))
                 .build();
         telemetry.addLine("Ready to Launch");
         lightUtil = new LightUtil(2, hardwareMap);

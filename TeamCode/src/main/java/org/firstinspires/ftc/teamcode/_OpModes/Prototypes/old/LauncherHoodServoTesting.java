@@ -24,7 +24,7 @@ public class LauncherHoodServoTesting extends OpMode {
     }
 
     public void start() {
-        LauncherHoodServo.setPosition(0);
+        LauncherHoodServo.setPosition(.2);
     }
 
 
