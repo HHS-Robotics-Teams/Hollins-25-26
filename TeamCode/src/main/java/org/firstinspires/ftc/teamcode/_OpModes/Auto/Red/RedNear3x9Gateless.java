@@ -84,21 +84,21 @@ public class RedNear3x9Gateless extends OpMode {
                 .afterDisp(.1, runIntake)
                 .strafeToConstantHeading(new Vector2d(-14,54), new TranslationalVelConstraint(80))
                 .afterDisp(25, offIntake)
-                .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(130))
+                .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(125))
                 .build();
-        driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(130)))
+        driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,24,Math.toRadians(125)))
                 .strafeToLinearHeading(new Vector2d(12,28),Math.toRadians(89))
                 .afterTime(0.1, runIntake)
                 .strafeToConstantHeading(new Vector2d(12, 66),new TranslationalVelConstraint(80))
                 .waitSeconds(0.05)
                 .lineToYConstantHeading(50) // to save time lessen this distance
                 .afterDisp(65, offIntake)
-                .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(130))
+                .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(125))
                 .build();
-        driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(130)))
-                .strafeToLinearHeading(new Vector2d(29.7, 24), Math.toRadians(89))
+        driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(125)))
+                .strafeToLinearHeading(new Vector2d(33, 24), Math.toRadians(89))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(29.7,63.5),new TranslationalVelConstraint(80))
+                .strafeToConstantHeading(new Vector2d(33,63.5),new TranslationalVelConstraint(80))
                 .lineToYConstantHeading(50)
                 .afterDisp(110, offIntake)
                 .strafeToLinearHeading(new Vector2d(-36, 26), Math.toRadians(107.5))
@@ -144,11 +144,11 @@ public class RedNear3x9Gateless extends OpMode {
         switch (state){
             case START:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 120);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 110);
                 state = AutoState.LAUNCH_ONE;
                 break;
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 120){
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 110){
                     LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                     intakeUtil.launchStart();
                     launchTimer.reset();
