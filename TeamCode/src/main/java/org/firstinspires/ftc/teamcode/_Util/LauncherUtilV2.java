@@ -52,6 +52,7 @@ public class LauncherUtilV2 {
     private int numLaunches;
     private final LightUtil lightUtil;
     private final HoodUtil hoodUtil;
+    private final double FAR_OFFSET = 115; //change this if far is high/low
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime timeout = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime emptyLaunchCheck = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
@@ -272,7 +273,7 @@ public class LauncherUtilV2 {
             }
             target = 1050 * pow((1.00383), range); //940.08429
             if(range >= 95){
-                target += 115;//change this if far is high/low
+                target += FAR_OFFSET;
             }
             if(launchState != LaunchState.SPIN_UP_AND_MOVE && launchState != LaunchState.FIND_TAG) {
                 target += 20;
@@ -306,12 +307,12 @@ public class LauncherUtilV2 {
             target = 1100;
         }
         if(range >= 95){
-            target += 30;//change this if far is high/low
+            target += 30;//change this if far 2nd shot is high/low
         }
         if(launchState != LaunchState.SPIN_UP_AND_MOVE && launchState != LaunchState.FIND_TAG){
             target += 25;
             if(range >= 95){
-                target += 125;//change this if far is high/low
+                target += FAR_OFFSET;
             }
         }
         LauncherMotor.setVelocity(target);
