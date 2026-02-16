@@ -7,10 +7,10 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.timeoutTime;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
-import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 
 @Autonomous
-public class RedVeryFarNoSpike extends OpMode {
+public class NewRedVeryFarNoSpike extends OpMode {
     MecanumDrive drive;
     IntakeUtil intakeUtil = new IntakeUtil();
     InstantAction IntakePickup = new InstantAction(() -> intakeUtil.intakeOn());
@@ -95,20 +95,20 @@ public class RedVeryFarNoSpike extends OpMode {
                 .afterDisp(65, () -> intakeUtil.intakeOff())
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(50, 12, Math.toRadians(152.5)))
-                .turnTo(Math.toRadians(60))
+                .strafeToLinearHeading(new Vector2d(60, 25),Math.toRadians(45))
                 .afterDisp(20, () -> intakeUtil.intakeOn())
-                .splineToLinearHeading(new Pose2d(74,67,Math.toRadians(45)),Math.toRadians(50))
+                .splineToConstantHeading(new Vector2d(74,67),Math.toRadians(50))
                 .waitSeconds(0.1)
                 .strafeToLinearHeading(new Vector2d(50, 12), Math.toRadians(152.5))
                 .afterDisp(65, () -> intakeUtil.intakeOff())
                 .build();
         driveToIntakeThree = drive.actionBuilder(new Pose2d(50, 12, Math.toRadians(152.5)))
-                .turnTo(Math.toRadians(60))
+                .strafeToLinearHeading(new Vector2d(60, 25),Math.toRadians(45))
                 .afterDisp(20, () -> intakeUtil.intakeOn())
-                .strafeToLinearHeading(new Vector2d(74,67),Math.toRadians(45))
+                .splineToConstantHeading(new Vector2d(74,67),Math.toRadians(50))
                 .waitSeconds(0.1)
                 .strafeToLinearHeading(new Vector2d(50, 12), Math.toRadians(152.5))
-                .afterDisp(75, () -> intakeUtil.intakeOff())
+                .afterDisp(65, () -> intakeUtil.intakeOff())
                 .build();
 
         telemetry.addLine("Ready to Launch");
@@ -241,6 +241,7 @@ public class RedVeryFarNoSpike extends OpMode {
             case DRIVE_TO_INTAKE_THREE:
                 LauncherSafetyServo.setPosition(SAFETY_HOLDING);
                 intakeUtil.intakeOn();
+                timeoutTime = 1.35;
                 Actions.runBlocking(driveToIntakeThree);
                 intakeUtil.intakeOff();
                 state = AutoState.LAUNCH_FOUR;

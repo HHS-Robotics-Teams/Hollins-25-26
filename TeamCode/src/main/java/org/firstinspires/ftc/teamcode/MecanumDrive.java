@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.timeoutTime;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -218,6 +220,7 @@ public final class MecanumDrive {
     }
 
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
+        timeoutTime = 0.75;
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -312,7 +315,7 @@ public final class MecanumDrive {
                 rightBack.setPower(0);
                 rightFront.setPower(0);
                 return false;
-            } else if (t >= timeTrajectory.duration + 0.75) {
+            } else if (t >= timeTrajectory.duration + timeoutTime) {
                 leftFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);

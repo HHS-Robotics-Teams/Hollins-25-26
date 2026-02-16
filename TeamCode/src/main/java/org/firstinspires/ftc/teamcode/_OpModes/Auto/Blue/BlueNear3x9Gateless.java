@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.timeoutTime;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -99,7 +100,7 @@ public class BlueNear3x9Gateless extends OpMode {
                 .afterTime(0.1, runIntake)
                 .strafeToConstantHeading(new Vector2d(29.7,-63.5),new TranslationalVelConstraint(50))
                 .lineToYConstantHeading(-50)
-                .afterDisp(110, offIntake)
+                .afterDisp(25, offIntake)
                 .strafeToLinearHeading(new Vector2d(-36, -26), Math.toRadians(-122.5))
                 .build();
         telemetry.addLine("Ready to Launch");
@@ -213,6 +214,7 @@ public class BlueNear3x9Gateless extends OpMode {
                 }
                 break;
             case DRIVE_TO_INTAKE_THREE:
+                timeoutTime = 1.25;
                 Actions.runBlocking(driveToIntakeThree);
                 state = AutoState.DRIVE_TO_LAUNCH_FOUR;
 //                if(faultTimer.seconds() > 29.95){

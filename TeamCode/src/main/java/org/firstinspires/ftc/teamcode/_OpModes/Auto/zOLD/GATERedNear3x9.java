@@ -1,11 +1,9 @@
-package org.firstinspires.ftc.teamcode._OpModes.Auto.Red;
+package org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD;
 
 import static org.firstinspires.ftc.teamcode._OpModes.Auto.zOLD.PathFactory.intakeWaitTime;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.imu;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHING_TIME;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
@@ -18,6 +16,7 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -28,6 +27,8 @@ import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
+@Deprecated
+@Disabled
 public class GATERedNear3x9 extends OpMode {
     IntakeUtil intakeUtil = new IntakeUtil();
     MecanumDrive drive;

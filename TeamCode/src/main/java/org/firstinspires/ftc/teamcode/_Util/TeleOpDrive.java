@@ -12,18 +12,18 @@ public class TeleOpDrive {
     @SuppressWarnings("ReassignedVariable")
     public static void run(double forward, double strafes, double rotates){
         //thresholds
-        if (abs(forward) <= 0.15) {
+        if (abs(forward) <= 0.05) {
             forward = 0;
         }
-        if (abs(strafes) <= 0.15) {
+        if (abs(strafes) <= 0.05) {
             strafes = 0;
         }
-        if (abs(rotates) <= 0.15) {
+        if (abs(rotates) <= 0.05) {
             rotates = 0;
         }
 
         //Power fixer
-        double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 1.75);
+        double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 1.90);
 
         //Setting Powers
         leftFront.setPower((forward + strafes + rotates) / denominator);

@@ -50,10 +50,11 @@ public class Components {
     public static IMU imu;
     public static WebcamName webcam;
     public static AprilTagHelper tagHelper;
-    public static DistanceSensor rightArtifactCounterDistance;
-    public static DistanceSensor leftArtifactCounterDistance;
+    public static DistanceSensor frontDistance;
+    public static ColorRangeSensor centerDistance;
     public static DistanceSensor rearDistance;
     public static ColorRangeSensor rearSideDistance;
+    public static DistanceSensor rearTopDistance;
 
     /**
      * Method to initialize components
@@ -120,11 +121,12 @@ public class Components {
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
         webcam = hardwareMap.get(WebcamName.class, "Webcam");
         tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
-        rightArtifactCounterDistance = hardwareMap.get(DistanceSensor.class, "rightArtifactCounter");
-        leftArtifactCounterDistance = hardwareMap.get(DistanceSensor.class, "leftArtifactCounter");
+        frontDistance = hardwareMap.get(DistanceSensor.class, "frontDistance");
+        centerDistance = hardwareMap.get(ColorRangeSensor.class, "centerDistance");
         rearDistance = hardwareMap.get(DistanceSensor.class, "rearDistance");
         cameraTiltServo = hardwareMap.get(Servo.class, "cameraTiltServo");
         rearSideDistance = hardwareMap.get(ColorRangeSensor.class, "rearSideDistance");
+        rearTopDistance = hardwareMap.get(DistanceSensor.class, "rearTopDistance");
 
         //other
         for (LynxModule m : hardwareMap.getAll(LynxModule.class)){

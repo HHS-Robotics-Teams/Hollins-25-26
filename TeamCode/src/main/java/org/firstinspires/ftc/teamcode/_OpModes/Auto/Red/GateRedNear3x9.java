@@ -8,7 +8,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
 
-
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -26,7 +25,7 @@ import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 
 @Autonomous
-public class RedNear3x9Gateless extends OpMode {
+public class GateRedNear3x9 extends OpMode {
     IntakeUtil intakeUtil = new IntakeUtil();
     MecanumDrive drive;
 
@@ -92,7 +91,8 @@ public class RedNear3x9Gateless extends OpMode {
                 .strafeToConstantHeading(new Vector2d(12, 64),new TranslationalVelConstraint(80))
                 .waitSeconds(0.05)
                 .lineToYConstantHeading(50) // to save time lessen this distance
-                .afterDisp(65, offIntake)
+                .strafeToConstantHeading(new Vector2d(-4,60))
+                .afterDisp(10, offIntake)
                 .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(125))
                 .build();
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(125)))

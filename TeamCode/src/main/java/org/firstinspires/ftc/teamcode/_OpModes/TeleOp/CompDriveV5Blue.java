@@ -6,8 +6,9 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMot
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Motor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.centerDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.CAMERA_START_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_LEVEL_TWO_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
@@ -91,7 +92,6 @@ public class CompDriveV5Blue extends OpMode {
                 launcherUtil.cancelLaunch();
             }
         }
-
         if(input.a_cross.down()){
             launcherUtil.overwriteHoodState(HoodUtil.HoodState.Far);
         }
@@ -112,7 +112,7 @@ public class CompDriveV5Blue extends OpMode {
             launcherUtil.setLightRed();
         }
 
-        if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 5.5 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 5.5) {
+        if(centerDistance.getDistance(DistanceUnit.INCH) >= 4 || frontDistance.getDistance(DistanceUnit.INCH) >= 6.5 || rearDistance.getDistance(DistanceUnit.INCH) >= 11) {
             intakeTimer.reset();
         }
 

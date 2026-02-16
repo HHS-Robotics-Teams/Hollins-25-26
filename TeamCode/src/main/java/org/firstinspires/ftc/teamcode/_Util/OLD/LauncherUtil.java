@@ -4,12 +4,12 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherFingerServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.centerDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearSideDistance;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
@@ -179,8 +179,8 @@ public class LauncherUtil {
                     if (rearDistance.getDistance(DistanceUnit.INCH) <= 6 || rearSideDistance.getDistance(DistanceUnit.INCH) <= 4) {
                         launchState = LaunchState.CHECK_AGAIN;
                     } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 11
-                           || leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5
-                           || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5) {
+                           || centerDistance.getDistance(DistanceUnit.INCH) <= 5
+                           || frontDistance.getDistance(DistanceUnit.INCH) <= 5) {
                         launchState = LaunchState.INTAKE;
                         intakeTimer.reset();
                         isSpunUp();
@@ -194,8 +194,8 @@ public class LauncherUtil {
         return "Launch In Progress, current state: " + launchState
                 + "\n" + "PHI: " + phi
                 + "\n" + "Theta: " + theta
-                + "\n" + "Distance Measurements:\n(left) " + leftArtifactCounterDistance.getDistance(DistanceUnit.INCH)
-                + "\n(right) " + rightArtifactCounterDistance.getDistance(DistanceUnit.INCH)
+                + "\n" + "Distance Measurements:\n(left) " + centerDistance.getDistance(DistanceUnit.INCH)
+                + "\n(right) " + frontDistance.getDistance(DistanceUnit.INCH)
                 + "\n(rear) " + rearDistance.getDistance(DistanceUnit.INCH)
                 + "\nTargetVel: " + target
                 + "\nCurrentVel: " + LauncherMotor.getVelocity();

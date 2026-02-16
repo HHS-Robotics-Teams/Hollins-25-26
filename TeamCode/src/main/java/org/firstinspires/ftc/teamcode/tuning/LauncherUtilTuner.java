@@ -4,10 +4,10 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMot
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.centerDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearSideDistance;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -31,8 +31,8 @@ public class LauncherUtilTuner extends OpMode {
     @Override
     public void init_loop() {
         telemetry.addLine("--- Distance Sensor Readings ---");
-        telemetry.addData("Front Left", leftArtifactCounterDistance.getDistance(DistanceUnit.INCH));
-        telemetry.addData("Front Right", rightArtifactCounterDistance.getDistance(DistanceUnit.INCH));
+        telemetry.addData("Front Left", centerDistance.getDistance(DistanceUnit.INCH));
+        telemetry.addData("Front Right", frontDistance.getDistance(DistanceUnit.INCH));
         telemetry.addData("Rear 1", rearDistance.getDistance(DistanceUnit.INCH));
         telemetry.addData("Rear Side", rearSideDistance.getDistance(DistanceUnit.INCH));
     }

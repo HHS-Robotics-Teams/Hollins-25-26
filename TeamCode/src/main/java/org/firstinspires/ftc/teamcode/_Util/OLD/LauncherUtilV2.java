@@ -1,22 +1,19 @@
-package org.firstinspires.ftc.teamcode._Util;
+package org.firstinspires.ftc.teamcode._Util.OLD;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.centerDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearSideDistance;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Constants.CAMERA_START_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
@@ -28,11 +25,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode._Util.AprilTagMethod;
+import org.firstinspires.ftc.teamcode._Util.HoodUtil;
+import org.firstinspires.ftc.teamcode._Util.LightUtil;
 
 /**
  * Runs flywheel style launcher logic to make teleOp code more readable
  * Includes camera vision & automatic alignment
  */
+@Deprecated
 public class LauncherUtilV2 {
     AprilTagMethod aprilTagMethod;
     public enum LaunchState {
@@ -188,7 +189,7 @@ public class LauncherUtilV2 {
                 if (launchTimer.seconds() >= 0.15){
                     target *= 1.3;
                 }
-                if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 5.5 && rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 5.5 && rearDistance.getDistance(DistanceUnit.INCH) >= 10 && rearSideDistance.getDistance(DistanceUnit.INCH) >= 4 && launchTimer.seconds() >= 0.5){
+                if(centerDistance.getDistance(DistanceUnit.INCH) >= 5.5 && frontDistance.getDistance(DistanceUnit.INCH) >= 5.5 && rearDistance.getDistance(DistanceUnit.INCH) >= 10 && rearSideDistance.getDistance(DistanceUnit.INCH) >= 4 && launchTimer.seconds() >= 0.5){
                     if(emptyLaunchCheck.seconds() >= 0.3){
                         launchState = LaunchState.DISTANCE_CHECK;
                     }
@@ -200,7 +201,7 @@ public class LauncherUtilV2 {
                 launchState = LaunchState.SPIN_UP_AND_MOVE;
                 if(numLaunches > 0) {
                     launchState = LaunchState.EXIT;
-                } else if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5.5 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) <= 5.5){
+                } else if(centerDistance.getDistance(DistanceUnit.INCH) <= 5.5 || frontDistance.getDistance(DistanceUnit.INCH) <= 5.5){
                     launchTime = 2.5;
                 } else if (rearDistance.getDistance(DistanceUnit.INCH) <= 4 || rearSideDistance.getDistance(DistanceUnit.INCH) <= 4){
                     launchTime = 0.75;
@@ -214,8 +215,8 @@ public class LauncherUtilV2 {
         return "Launch In Progress, current state: " + launchState
                 + "\n" + "PHI: " + phi
                 + "\n" + "Theta: " + theta
-                + "\n" + "Distance Measurements:\n(left) " + leftArtifactCounterDistance.getDistance(DistanceUnit.INCH)
-                + "\n(right) " + rightArtifactCounterDistance.getDistance(DistanceUnit.INCH)
+                + "\n" + "Distance Measurements:\n(left) " + centerDistance.getDistance(DistanceUnit.INCH)
+                + "\n(right) " + frontDistance.getDistance(DistanceUnit.INCH)
                 + "\n(rear) " + rearDistance.getDistance(DistanceUnit.INCH)
                 + "\n(rear side)" + rearSideDistance.getDistance(DistanceUnit.INCH)
                 + "\nTargetVel: " + target

@@ -5,12 +5,8 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearDistance;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearSideDistance;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightSideFeedRoller;
@@ -23,8 +19,6 @@ import static java.lang.Math.pow;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * Runs flywheel style launcher logic to make teleOp code more readable
@@ -40,6 +34,7 @@ public class LauncherUtilV3 {
         DISTANCE_CHECK
     }
     private LaunchState launchState;
+    private AutoUtil autoUtil = new AutoUtil(0.25);
     private double target;
     private final String color;
     private final boolean isAuto;
@@ -83,7 +78,6 @@ public class LauncherUtilV3 {
      * Ends launch & resets state machine
      */
     public void cancelLaunch() {
-        launchState = LaunchState.EXIT;
         LauncherMotor.setVelocity(1000);
         IntakeMotor.setPower(0);
         ConveyorMotor.setPower(0);
@@ -123,7 +117,7 @@ public class LauncherUtilV3 {
         lightUtil.makeOff();
         lightUtil.updateLights();
         if (!aprilTagMethod.isTagVisible() && !isAuto) {
-            if(timeout.seconds() > 0.5) {
+            if(timeout.seconds() > 0.25) {
                 launchState = LaunchState.FIND_TAG;
                 spinUp();
                 IntakeMotor.setPower(0);
@@ -150,6 +144,7 @@ public class LauncherUtilV3 {
                 rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                launchState = LaunchState.FIND_TAG;
                 LAUNCHER_RUN = false;
                 break;
             case FIND_TAG:
@@ -161,21 +156,18 @@ public class LauncherUtilV3 {
                         launchState = LaunchState.LAUNCH;
                         numLaunches++;
                         launchTimer.reset();
-                        emptyLaunchCheck.reset();
+                        autoUtil.resetEmptyTimer();
                     }
                 }
                 break;
             case LAUNCH:
                 setLightOff();
-                spinUp();
                 IntakeMotor.setPower(INTAKE_POWER);
                 ConveyorMotor.setPower(INTAKE_POWER);
                 LeftSideFeedRoller.setPower(1);
                 rightSideFeedRoller.setPower(1);
-                if (launchTimer.seconds() >= 2.5) { //todo check this time
+                if (launchTimer.seconds() >= 2.5 || autoUtil.isBotEmpty()) { //todo check this time
                     launchState = LaunchState.EXIT;
-                } else {
-                    emptyLaunchCheck.reset();
                 }
                 break;
 
@@ -184,10 +176,6 @@ public class LauncherUtilV3 {
         return "Launch In Progress, current state: " + launchState
                 + "\n" + "PHI: " + phi
                 + "\n" + "Theta: " + theta
-                + "\n" + "Distance Measurements:\n(left) " + leftArtifactCounterDistance.getDistance(DistanceUnit.INCH)
-                + "\n(right) " + rightArtifactCounterDistance.getDistance(DistanceUnit.INCH)
-                + "\n(rear) " + rearDistance.getDistance(DistanceUnit.INCH)
-                + "\n(rear side)" + rearSideDistance.getDistance(DistanceUnit.INCH)
                 + "\nTargetVel: " + target
                 + "\nCurrentVel: " + LauncherMotor.getVelocity();
     }
@@ -240,14 +228,6 @@ public class LauncherUtilV3 {
                 rightFront.setPower(0);
                 return true;
             }
-            target = 1050 * pow((1.00383), range); //940.08429
-            if(range >= 95){
-                target += 115;//change this if far is high/low
-            }
-            if(launchState != LaunchState.SPIN_UP_AND_MOVE && launchState != LaunchState.FIND_TAG) {
-                target += 20;
-            }
-            LauncherMotor.setVelocity(target);
             return abs(theta - phi) <= margin;
         }
     }

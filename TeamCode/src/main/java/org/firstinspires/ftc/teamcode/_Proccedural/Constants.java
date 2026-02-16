@@ -6,6 +6,7 @@ public class Constants {
     public static double Launch_Time = 2.0;
     public static double INTAKE_POWER = 1;
     public static final double LAUNCHER_IDLE = 0.35;
+    public static double timeoutTime = 0.75;
 
     public static final double INTAKE_PPR = 537.7;
     public static final double INTAKE_HOLD_POS = 0;

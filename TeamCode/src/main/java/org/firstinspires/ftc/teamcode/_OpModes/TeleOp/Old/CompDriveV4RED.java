@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode._OpModes.TeleOp;
+package org.firstinspires.ftc.teamcode._OpModes.TeleOp.Old;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
@@ -6,8 +6,8 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMot
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Motor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftArtifactCounterDistance;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightArtifactCounterDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.centerDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.CAMERA_START_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_LEVEL_TWO_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
@@ -19,6 +19,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.park_Pos;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,14 +28,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode._Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode._Util.HoodUtil;
-import org.firstinspires.ftc.teamcode._Util.LauncherUtilV2;
+import org.firstinspires.ftc.teamcode._Util.OLD.LauncherUtilV2;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
 import org.firstinspires.ftc.teamcode._Util.TeleOpDrive;
 
 @TeleOp
-public class CompDriveV4BLUE extends OpMode {
+@Deprecated
+@Disabled
+public class CompDriveV4RED extends OpMode {
     //Instantiated new input
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
@@ -46,7 +49,7 @@ public class CompDriveV4BLUE extends OpMode {
         //Initialize Components
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
-        launcherUtil = new LauncherUtilV2("BLUE", false, new LightUtil(2, hardwareMap));
+        launcherUtil = new LauncherUtilV2("RED", false, new LightUtil(2, hardwareMap));
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
     }
@@ -118,7 +121,7 @@ public class CompDriveV4BLUE extends OpMode {
             launcherUtil.setLightRed();
         }
 
-        if(leftArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 5.5 || rightArtifactCounterDistance.getDistance(DistanceUnit.INCH) >= 5.5) {
+        if(centerDistance.getDistance(DistanceUnit.INCH) >= 5.5 || frontDistance.getDistance(DistanceUnit.INCH) >= 5.5) {
             intakeTimer.reset();
         }
 
@@ -130,7 +133,8 @@ public class CompDriveV4BLUE extends OpMode {
         }
 
         if (INTAKE_LEVEL_TWO_RUN) {
-            ConveyorMotor.setPower(INTAKE_REVERSED ? -1 : 1);
+            double power = INTAKE_REVERSED ? -1 : 1;
+            ConveyorMotor.setPower(power);
         } else {
             ConveyorMotor.setPower(0);
         }
@@ -139,10 +143,10 @@ public class CompDriveV4BLUE extends OpMode {
         if (LAUNCHER_RUN) {
             telemetry.addLine("Launch Status:" + launcherUtil.runLauncher());
         } else {
-            launcherUtil.resetLauncherUtilTimeout();
             launcherUtil.updateHood();
-            LauncherMotor.setVelocity(1000);
+            launcherUtil.resetLauncherUtilTimeout();
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
+            LauncherMotor.setVelocity(1000);
             if(launcherUtil.getLaunchState() != LauncherUtilV2.LaunchState.FIND_TAG){
                 launcherUtil.cancelLaunch();
             }
@@ -154,6 +158,8 @@ public class CompDriveV4BLUE extends OpMode {
         if (input.dpad_up.down()) {
             Parking_Motor.setTargetPosition(0);
         }
+
+
 
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Comp Drive Running ---------");
