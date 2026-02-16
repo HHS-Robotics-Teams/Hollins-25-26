@@ -16,8 +16,6 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.park_Pos;
-import static java.lang.Math.abs;
-import static java.lang.Math.max;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -25,20 +23,20 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode._Util.AprilTagMethod;
-import org.firstinspires.ftc.teamcode._Util.HoodUtil;
-import org.firstinspires.ftc.teamcode._Util.LauncherUtilV2;
-import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
+import org.firstinspires.ftc.teamcode._Util.AprilTagMethod;
+import org.firstinspires.ftc.teamcode._Util.HoodUtil;
+import org.firstinspires.ftc.teamcode._Util.LauncherUtilV3;
+import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Util.TeleOpDrive;
 
 @TeleOp
-public class CompDriveV4BLUE extends OpMode {
+public class CompDriveV5Blue extends OpMode {
     //Instantiated new input
     Input input = new Input();
     AprilTagMethod aprilTagDetector;
-    LauncherUtilV2 launcherUtil;
+    LauncherUtilV3 launcherUtil;
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     @Override
@@ -46,7 +44,7 @@ public class CompDriveV4BLUE extends OpMode {
         //Initialize Components
         Components.initComponents(hardwareMap);
         aprilTagDetector = new AprilTagMethod();
-        launcherUtil = new LauncherUtilV2("BLUE", false, new LightUtil(2, hardwareMap));
+        launcherUtil = new LauncherUtilV3("BLUE", false, new LightUtil(2, hardwareMap));
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
     }
@@ -80,11 +78,7 @@ public class CompDriveV4BLUE extends OpMode {
         /* ---------- Drivetrain ---------- */
         TeleOpDrive.run(-gamepad1.left_stick_y,gamepad1.left_stick_x * 1.1, gamepad1.right_stick_x);
 
-        if(LAUNCHER_RUN){
-            if(input.right_trigger.down() || input.right_bumper.down()){
-                launcherUtil.cancelLaunch();
-            }
-        }
+
 
         /* ---------- Launch ---------- */
         if (input.right_trigger.down()) {
@@ -92,10 +86,10 @@ public class CompDriveV4BLUE extends OpMode {
             LAUNCHER_RUN = !LAUNCHER_RUN;
             INTAKE_REVERSED = false;
         }
-        if (input.right_bumper.down()) {
-            launcherUtil.resetLauncherUtilTimeout();
-            LAUNCHER_RUN = !LAUNCHER_RUN;
-            INTAKE_REVERSED = false;
+        if(LAUNCHER_RUN){
+            if( input.right_bumper.down()){
+                launcherUtil.cancelLaunch();
+            }
         }
 
         if(input.a_cross.down()){
@@ -143,7 +137,7 @@ public class CompDriveV4BLUE extends OpMode {
             launcherUtil.updateHood();
             LauncherMotor.setVelocity(1000);
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-            if(launcherUtil.getLaunchState() != LauncherUtilV2.LaunchState.FIND_TAG){
+            if(launcherUtil.getLaunchState() != LauncherUtilV3.LaunchState.FIND_TAG){
                 launcherUtil.cancelLaunch();
             }
         }
