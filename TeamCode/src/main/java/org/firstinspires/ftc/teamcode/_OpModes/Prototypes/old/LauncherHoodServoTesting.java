@@ -8,7 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
+import org.firstinspires.ftc.teamcode._Util.AprilTagMethod;
 import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
+import org.firstinspires.ftc.teamcode._Util.TeleOpDrive;
 
 //testing opmode disabled
 @TeleOp
@@ -17,6 +19,7 @@ public class LauncherHoodServoTesting extends OpMode {
     Input input = new Input();
     double power = 0.5;
     double TargetVel;
+    AprilTagMethod aprilTagMethod = new AprilTagMethod();
     IntakeUtil intakeUtil = new IntakeUtil();
     @Override
     public void init() {
@@ -30,6 +33,7 @@ public class LauncherHoodServoTesting extends OpMode {
 
     @Override
     public void loop() {
+        telemetry.addData("distance", aprilTagMethod.getTagDistance());
         input.pollGamepad(gamepad1);
         //LauncherMotor.setVelocity(TargetVel);
         if (input.left_trigger.held()) {
@@ -49,6 +53,8 @@ public class LauncherHoodServoTesting extends OpMode {
         if(input.y_triangle.down()){
             LauncherHoodServo.setPosition(LauncherHoodServo.getPosition()-0.05);
         }
+
+        TeleOpDrive.run(-gamepad1.left_stick_y,gamepad1.left_stick_x * 1.1, gamepad1.right_stick_x);
 
 
         telemetry.addLine("X to increase");

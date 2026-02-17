@@ -20,6 +20,8 @@ import static java.lang.Math.pow;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.ftccommon.internal.manualcontrol.commands.AnalogCommands;
+
 /**
  * Runs flywheel style launcher logic to make teleOp code more readable
  * Includes camera vision & automatic alignment
@@ -166,6 +168,12 @@ public class LauncherUtilV3 {
                 ConveyorMotor.setPower(INTAKE_POWER);
                 LeftSideFeedRoller.setPower(1);
                 rightSideFeedRoller.setPower(1);
+                if(target > 1500) {
+                    IntakeMotor.setPower(0.6);
+                    ConveyorMotor.setPower(0.6);
+                    LeftSideFeedRoller.setPower(0.6);
+                    rightSideFeedRoller.setPower(0.6);
+                }
                 if (launchTimer.seconds() >= 2.5 || autoUtil.isBotEmpty()) { //todo check this time
                     launchState = LaunchState.EXIT;
                 }
@@ -198,18 +206,18 @@ public class LauncherUtilV3 {
             double turnPower;
             if (range >= 90) {
                 phi = 2;
-                margin = 2.75;
+                margin = 2;
                 if (color.equals("RED")) {
                     phi = 3.75;
                 }
-                turnPower = 0.3;
+                turnPower = 0.4;
             } else {
                 phi = 0;
-                margin = 4.5;
+                margin = 3;
                 if (color.equals("RED")) {
                     phi = 1;
                 }
-                turnPower = 0.375;
+                turnPower = 0.45;
             }
             if (theta >= phi + margin) {
                 leftFront.setPower(-turnPower);
@@ -246,23 +254,23 @@ public class LauncherUtilV3 {
      * else if not visible idle is 1100
      */
     public void spinUp() {
-        double range = 0;
+        double range;
         if(aprilTagMethod.isTagVisible() && aprilTagMethod.tagMatchesAlliance(color)){
             range = aprilTagMethod.getTagDistance();
-            target = 940.08429 * pow((1.00383), range);
+            //target = 940.08429 * pow((1.00383), range);
+            if(range < 105) {
+                target = 976 * pow(range, 0.0844869);
+                if(range < 55){
+                    target -= 60;
+                }
+            } else {
+                target = 252 * pow(range, 0.406511);
+            }
+            target -= 105;
         } else if (isAuto) {
             target = 925;
         } else {
             target = 1100;
-        }
-        if(range >= 95){
-            target += 30;//change this if far is high/low
-        }
-        if(launchState != LaunchState.SPIN_UP_AND_MOVE && launchState != LaunchState.FIND_TAG){
-            target += 25;
-            if(range >= 95){
-                target += 125;//change this if far is high/low
-            }
         }
         LauncherMotor.setVelocity(target);
     }

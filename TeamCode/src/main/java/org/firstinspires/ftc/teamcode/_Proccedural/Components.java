@@ -87,7 +87,7 @@ public class Components {
         type.setAchieveableMaxRPMFraction(1.0); //DO NOT TOUCH
         LauncherMotor.setMotorType(type); //DO NOT TOUCH
         //LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(120, 5, 4.5, 15)); //DO NOT TOUCH
-        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(130, 5, 50, 20)); //DO NOT TOUCH
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(150, 12, 55, 17.5)); //DO NOT TOUCH
 
 
         //Initialize Intake Motor
