@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -55,6 +56,7 @@ public class Components {
     public static DistanceSensor rearDistance;
     public static ColorRangeSensor rearSideDistance;
     public static DistanceSensor rearTopDistance;
+    public static VoltageSensor voltageSensor;
 
     /**
      * Method to initialize components
@@ -127,6 +129,7 @@ public class Components {
         cameraTiltServo = hardwareMap.get(Servo.class, "cameraTiltServo");
         rearSideDistance = hardwareMap.get(ColorRangeSensor.class, "rearSideDistance");
         rearTopDistance = hardwareMap.get(DistanceSensor.class, "rearTopDistance");
+        voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         //other
         for (LynxModule m : hardwareMap.getAll(LynxModule.class)){

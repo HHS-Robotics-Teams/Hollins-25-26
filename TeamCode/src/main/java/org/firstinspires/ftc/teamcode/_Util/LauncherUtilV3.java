@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.voltageSensor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
@@ -266,12 +267,16 @@ public class LauncherUtilV3 {
             } else {
                 target = 252 * pow(range, 0.406511);
             }
-            target -= 105;
+            target -= 125;
         } else if (isAuto) {
             target = 925;
         } else {
             target = 1100;
         }
+        if(launchState.equals(LaunchState.LAUNCH)){
+            target += 50;
+        }
+        //target *= 11.85 / voltageSensor.getVoltage();
         LauncherMotor.setVelocity(target);
     }
 

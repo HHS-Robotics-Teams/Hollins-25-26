@@ -51,10 +51,14 @@ public class HoodUtil {
                 double range = aprilTagMethod.getTagDistance();
                 if(range > 105){
                     hoodState = HoodState.Far;
-                    LauncherHoodServo.setPosition(0.00714286*range);
+                    LauncherHoodServo.setPosition(0.8);// 0.00714286*range*1.25
                 } else {
                     hoodState = HoodState.Near2;
-                    LauncherHoodServo.setPosition(0.0072926*range);
+                    if (range < 55) {
+                        LauncherHoodServo.setPosition(0.4);
+                    } else {
+                        LauncherHoodServo.setPosition(0.6);
+                    }
                 }
             }
         }
