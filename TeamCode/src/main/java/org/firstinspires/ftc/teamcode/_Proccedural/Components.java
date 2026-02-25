@@ -44,6 +44,7 @@ public class Components {
     public static Servo LauncherSafetyServo;
     public static CRServo LeftSideFeedRoller;
     public static CRServo rightSideFeedRoller;
+    public static CRServo frontFeedRoller;
     public static Servo cameraTiltServo;
     public static Servo LauncherHoodServo;
 
@@ -114,7 +115,8 @@ public class Components {
         LauncherSafetyServo = hardwareMap.get(Servo.class, "LauncherSafetyServo");
         LeftSideFeedRoller = hardwareMap.get(CRServo.class, "LeftSideFeedRoller");
         LeftSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        frontFeedRoller = hardwareMap.get(CRServo.class, "frontFeedRoller");
+        frontFeedRoller.setDirection(DcMotorSimple.Direction.FORWARD);
         rightSideFeedRoller = hardwareMap.get(CRServo.class, "rightSideFeedRoller");
         rightSideFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
 

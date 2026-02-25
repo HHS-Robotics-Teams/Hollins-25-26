@@ -76,14 +76,14 @@ public class GateBlueNear3x9 extends OpMode {
         state = AutoState.START;
         Components.initComponents(hardwareMap);
         turnToLaunch = drive.actionBuilder(new Pose2d(-55,-49,Math.toRadians(-135)))
-                .strafeToLinearHeading(new Vector2d(-46.5, -38.25),Math.toRadians(-125))
+                .strafeToLinearHeading(new Vector2d(-46.5, -38.25),Math.toRadians(-125),new TranslationalVelConstraint(60))
                 .afterTime(0.05, setVelocity)
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(-46.5,-38.25,Math.toRadians(-125)))
                 .strafeToLinearHeading(new Vector2d(-14,-24),Math.toRadians(-90))
                 .afterDisp(.1, runIntake)
                 .strafeToConstantHeading(new Vector2d(-14,-56), new TranslationalVelConstraint(50))
-                .afterDisp(25, offIntake)
+                .afterDisp(7.5, offIntake)
                 .strafeToLinearHeading(new Vector2d(-24,-24),Math.toRadians(-130))
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,-24,Math.toRadians(-130)))
@@ -93,7 +93,7 @@ public class GateBlueNear3x9 extends OpMode {
                 .waitSeconds(0.05)
                 .lineToYConstantHeading(-50) // to save time lessen this distance
                 .strafeToConstantHeading(new Vector2d(-4,-60))
-                .afterDisp(65, offIntake)
+                .afterDisp(7.5, offIntake)
                 .strafeToLinearHeading(new Vector2d(-24,-24),Math.toRadians(-130))
                 .build();
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, -24, Math.toRadians(-130)))
@@ -101,7 +101,7 @@ public class GateBlueNear3x9 extends OpMode {
                 .afterTime(0.1, runIntake)
                 .strafeToConstantHeading(new Vector2d(29.7,-63.5),new TranslationalVelConstraint(50))
                 .lineToYConstantHeading(-50)
-                .afterDisp(25, offIntake)
+                .afterDisp(7.5, offIntake)
                 .strafeToLinearHeading(new Vector2d(-36, -26), Math.toRadians(-122.5))
                 .build();
         telemetry.addLine("Ready to Launch");

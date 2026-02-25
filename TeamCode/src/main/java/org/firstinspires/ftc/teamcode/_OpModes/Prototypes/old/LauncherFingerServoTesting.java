@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode._OpModes.Prototypes.old;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode._Proccedural.Input;
 
 //testing opmode disabled
 @TeleOp
-
+@Disabled
 @Deprecated
 public class LauncherFingerServoTesting extends OpMode {
 

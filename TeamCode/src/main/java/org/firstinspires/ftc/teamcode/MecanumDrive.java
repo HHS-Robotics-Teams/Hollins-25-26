@@ -67,16 +67,16 @@ public final class MecanumDrive {
 
         // drive model parameters
         public double inPerTick = 0.000470651886525;
-        public double lateralInPerTick = 0.0003068462431022833;
-        public double trackWidthTicks =  22197.90949690222; //todo
+        public double lateralInPerTick = 0.0002994966472111091;
+        public double trackWidthTicks =  26652.47903764635;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.8683568802505355;
-        public double kV = 0.000060130694722164984;
-        public double kA = 0.00002;
+        public double kS = 1.334137840356623;
+        public double kV = 0.00006254983369412086;
+        public double kA = 0.00003;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 150;
+        public double maxWheelVel = 105;
         public double minProfileAccel = -150;
         public double maxProfileAccel = 150;
 
@@ -85,13 +85,13 @@ public final class MecanumDrive {
         public double maxAngAccel = 1.5 * Math.PI;
 
         // path controller gains
-        public double axialGain = 15;
-        public double lateralGain = 10;
-        public double headingGain = 30; // shared with turn
+        public double axialGain = 40;
+        public double lateralGain = 25;
+        public double headingGain = 40; // shared with turn
 
-        public double axialVelGain = 1.25;
-        public double lateralVelGain = 1.5;
-        public double headingVelGain = 0.25; // shared with turn
+        public double axialVelGain = 3;
+        public double lateralVelGain = 2.5;
+        public double headingVelGain = 1.75; // shared with turn
     }
 
     public static Params PARAMS = new Params();
@@ -309,7 +309,7 @@ public final class MecanumDrive {
 
             Pose2d error = txWorldTarget.value().minusExp(localizer.getPose());
 
-            if (t >= timeTrajectory.duration && error.heading.toDouble() <= .05 && error.position.norm() < 1 && robotVelRobot.linearVel.norm() < 1) {
+            if (t >= timeTrajectory.duration && error.heading.toDouble() <= .25 && error.position.norm() < 1 && robotVelRobot.linearVel.norm() < 1.5) {
                 leftFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);

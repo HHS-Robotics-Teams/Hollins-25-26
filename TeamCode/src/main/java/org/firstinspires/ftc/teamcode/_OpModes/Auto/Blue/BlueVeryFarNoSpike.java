@@ -75,40 +75,37 @@ public class BlueVeryFarNoSpike extends OpMode {
 
     @Override
     public void init() {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), -((double) 13 / 2) - 24, Math.toRadians(-180)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), -(13 / 2) - 24, Math.toRadians(-180)));
         state = AutoState.START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -((double) 13 / 2) - 24, Math.toRadians(-180)))
+        turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), -(13 / 2) - 24, Math.toRadians(-180)))
                 .waitSeconds(0.75)
                 .strafeToLinearHeading(new Vector2d(50, -12), Math.toRadians(-152.5))
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(50, -12, Math.toRadians(-150)))
                 .afterDisp(20, () -> intakeUtil.intakeOn())
-                .strafeToLinearHeading(new Vector2d(61,-55),Math.toRadians(-90))
-                .waitSeconds(0.15)
-                .strafeToLinearHeading(new Vector2d(67,-58),Math.toRadians(-75))
-                .waitSeconds(0.25)
-                .turnTo(Math.toRadians(-90))
-                .strafeToConstantHeading(new Vector2d(70, -59))
-                .waitSeconds(0.25)
+                .strafeToLinearHeading(new Vector2d(65,-55),Math.toRadians(-90))
+                .waitSeconds(0.1)
+                .strafeToConstantHeading(new Vector2d(68,-60))
                 .strafeToLinearHeading(new Vector2d(50, -12), Math.toRadians(-152.5))
-                .afterDisp(65, () -> intakeUtil.intakeOff())
+                .afterDisp(5, () -> intakeUtil.intakeOff())
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(50, -12, Math.toRadians(-152.5)))
-                .strafeToLinearHeading(new Vector2d(60, -25),Math.toRadians(-45))
                 .afterDisp(20, () -> intakeUtil.intakeOn())
-                .splineToConstantHeading(new Vector2d(74,-67),Math.toRadians(-50))
+                //.splineToLinearHeading(new Pose2d(74,-67,Math.toRadians(-90)), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(65,-55),Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(68, -65),Math.toRadians(-90))
                 .waitSeconds(0.1)
-                .strafeToLinearHeading(new Vector2d(50, -12), Math.toRadians(-152.5))
-                .afterDisp(65, () -> intakeUtil.intakeOff())
+                .strafeToLinearHeading(new Vector2d(50, -12), Math.toRadians(-152.49))
+                .afterDisp(5, () -> intakeUtil.intakeOff())
                 .build();
         driveToIntakeThree = drive.actionBuilder(new Pose2d(50, -12, Math.toRadians(-152.5)))
-                .strafeToLinearHeading(new Vector2d(60, -25),Math.toRadians(-45))
                 .afterDisp(20, () -> intakeUtil.intakeOn())
-                .splineToConstantHeading(new Vector2d(74,-67),Math.toRadians(-50))
+                .strafeToLinearHeading(new Vector2d(65,-55),Math.toRadians(-90))
+                .strafeToSplineHeading(new Vector2d(68, -65),Math.toRadians(-90))
                 .waitSeconds(0.1)
-                .strafeToLinearHeading(new Vector2d(50, -12), Math.toRadians(-152.5))
-                .afterDisp(65, () -> intakeUtil.intakeOff())
+                .strafeToLinearHeading(new Vector2d(50, -12), Math.toRadians(-152.49))
+                .afterDisp(5, () -> intakeUtil.intakeOff())
                 .build();
 
         telemetry.addLine("Ready to Launch");

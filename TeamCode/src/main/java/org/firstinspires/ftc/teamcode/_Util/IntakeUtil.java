@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMot
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
@@ -32,6 +33,7 @@ public class IntakeUtil {
         LauncherSafetyServo.setPosition(SAFTEY_FIRING);
         LeftSideFeedRoller.setPower(rollers);
         rightSideFeedRoller.setPower(rollers);
+        frontFeedRoller.setPower(intake);
         IntakeMotor.setPower(intake);
         ConveyorMotor.setPower(intake);
     }
@@ -42,6 +44,7 @@ public class IntakeUtil {
     public void launchEnd() {
         LeftSideFeedRoller.setPower(0);
         rightSideFeedRoller.setPower(0);
+        frontFeedRoller.setPower(0);
         IntakeMotor.setPower(0);
         ConveyorMotor.setPower(0);
     }
@@ -61,6 +64,7 @@ public class IntakeUtil {
         LauncherSafetyServo.setPosition(SAFETY_HOLDING);
         LeftSideFeedRoller.setPower(0);
         rightSideFeedRoller.setPower(0);
+        frontFeedRoller.setPower(power);
         IntakeMotor.setPower(power);
         ConveyorMotor.setPower(power);
     }

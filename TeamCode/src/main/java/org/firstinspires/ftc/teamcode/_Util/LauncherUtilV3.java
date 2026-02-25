@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
@@ -86,6 +87,7 @@ public class LauncherUtilV3 {
         ConveyorMotor.setPower(0);
         LeftSideFeedRoller.setPower(0);
         rightSideFeedRoller.setPower(0);
+        frontFeedRoller.setPower(0);
         numLaunches = 0;
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -127,6 +129,7 @@ public class LauncherUtilV3 {
                 ConveyorMotor.setPower(0);
                 LeftSideFeedRoller.setPower(0);
                 rightSideFeedRoller.setPower(0);
+                frontFeedRoller.setPower(0);
                 LAUNCHER_RUN = false;
             }
             return "No Tag Visible" + "\nState:" + launchState +"\nTimeout:" + timeout.seconds();
@@ -142,6 +145,7 @@ public class LauncherUtilV3 {
                 ConveyorMotor.setPower(0);
                 LeftSideFeedRoller.setPower(0);
                 rightSideFeedRoller.setPower(0);
+                frontFeedRoller.setPower(0);
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
                 leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -169,11 +173,13 @@ public class LauncherUtilV3 {
                 ConveyorMotor.setPower(INTAKE_POWER);
                 LeftSideFeedRoller.setPower(1);
                 rightSideFeedRoller.setPower(1);
+                frontFeedRoller.setPower(1);
                 if(target > 1500) {
                     IntakeMotor.setPower(0.6);
                     ConveyorMotor.setPower(0.6);
                     LeftSideFeedRoller.setPower(0.6);
                     rightSideFeedRoller.setPower(0.6);
+                    frontFeedRoller.setPower(0.6);
                 }
                 if (launchTimer.seconds() >= 2.5 || autoUtil.isBotEmpty()) { //todo check this time
                     launchState = LaunchState.EXIT;

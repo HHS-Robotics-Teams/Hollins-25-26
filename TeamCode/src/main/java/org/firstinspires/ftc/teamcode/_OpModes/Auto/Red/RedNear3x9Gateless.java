@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode._OpModes.Auto.Red;
 
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontFeedRoller;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
@@ -11,10 +16,13 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.timeoutTime;
 
 
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.CompositeVelConstraint;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -25,6 +33,9 @@ import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Util.AutoUtil;
 import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 @Autonomous
 public class RedNear3x9Gateless extends OpMode {
@@ -38,6 +49,11 @@ public class RedNear3x9Gateless extends OpMode {
     });
     InstantAction offIntake = new InstantAction(() -> {
         intakeUtil.intakeOff();
+        LeftSideFeedRoller.setPower(0);
+        rightSideFeedRoller.setPower(0);
+        frontFeedRoller.setPower(0);
+        IntakeMotor.setPower(0);
+        ConveyorMotor.setPower(0);
         LauncherSafetyServo.setPosition(SAFTEY_FIRING);
     });
     InstantAction setVelocity = new InstantAction(() -> LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR));
@@ -72,40 +88,41 @@ public class RedNear3x9Gateless extends OpMode {
 
     @Override
     public void init() {
-        autoUtil = new AutoUtil(.175);
+        autoUtil = new AutoUtil(.2);
         drive = new MecanumDrive(hardwareMap, new Pose2d(-57,49,Math.toRadians(135)));
         state = AutoState.START;
         Components.initComponents(hardwareMap);
         turnToLaunch = drive.actionBuilder(new Pose2d(-57,49,Math.toRadians(135)))
-                .strafeToLinearHeading(new Vector2d(-44, 36),Math.toRadians(125))
+                .strafeToLinearHeading(new Vector2d(-44, 36),Math.toRadians(125),new TranslationalVelConstraint(60))
                 .afterTime(0.05, setVelocity)
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(-46.5,38.25,Math.toRadians(125)))
                 .strafeToLinearHeading(new Vector2d(-14,26),Math.toRadians(90))
-                .afterDisp(.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(-14,53))
-                .afterDisp(25, offIntake)
+                .waitSeconds(0.03)
+                .afterDisp(0, runIntake)
+                .strafeToConstantHeading(new Vector2d(-14,53),new TranslationalVelConstraint(120))
+                .afterDisp(15, offIntake)
                 .strafeToLinearHeading(new Vector2d(-36,36),Math.toRadians(133))
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(-36,36,Math.toRadians(133)))
-                .strafeToLinearHeading(new Vector2d(12,24),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(10,24),Math.toRadians(90))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(12, 61),new TranslationalVelConstraint(120))
+                .strafeToConstantHeading(new Vector2d(10, 61),new TranslationalVelConstraint(120))
                 .setTangent(Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(-24,24, Math.toRadians(132)),Math.toRadians(90))
+                .afterDisp(15, offIntake)
+                //.splineToLinearHeading(new Pose2d(-24,24, Math.toRadians(132)),Math.toRadians(90))
                 //.strafeToConstantHeading(new Vector2d(12,50))
-                .afterDisp(67, offIntake)
-                //.strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(132))
+                .strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(132))
                 .build();
         driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(132)))
-                .strafeToLinearHeading(new Vector2d(32, 24), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(31, 24), Math.toRadians(90))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(32,59),new TranslationalVelConstraint(120))
+                .strafeToConstantHeading(new Vector2d(31,58),new TranslationalVelConstraint(120))
                 .setTangent(-90)
-                .splineToLinearHeading(new Pose2d(-36,26, Math.toRadians(125)),Math.toRadians(90))
+                .afterDisp(15, offIntake)
+                //.splineToLinearHeading(new Pose2d(-36,26, Math.toRadians(125)),Math.toRadians(90))
                 //.strafeToConstantHeading(new Vector2d(32.5,50))
-                .afterDisp(110, offIntake)
-                //.strafeToLinearHeading(new Vector2d(-36, 26), Math.toRadians(120))
+                .strafeToLinearHeading(new Vector2d(-36, 26), Math.toRadians(120))
                 .build();
         telemetry.addLine("Ready to Launch");
         lightUtil = new LightUtil(2, hardwareMap);
