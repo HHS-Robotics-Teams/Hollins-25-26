@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode._Proccedural;
 
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -51,6 +52,7 @@ public class Components {
     //Instantiate Sensors
     public static IMU imu;
     public static WebcamName webcam;
+    public static Limelight3A limelight;
     public static AprilTagHelper tagHelper;
     public static DistanceSensor frontDistance;
     public static ColorRangeSensor centerDistance;
@@ -123,8 +125,10 @@ public class Components {
         //Initialize Sensors
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
-        webcam = hardwareMap.get(WebcamName.class, "Webcam");
-        tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
+        //webcam = hardwareMap.get(WebcamName.class, "Webcam");
+        //tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.setPollRateHz(120);
         frontDistance = hardwareMap.get(DistanceSensor.class, "frontDistance");
         centerDistance = hardwareMap.get(ColorRangeSensor.class, "centerDistance");
         rearDistance = hardwareMap.get(DistanceSensor.class, "rearDistance");
