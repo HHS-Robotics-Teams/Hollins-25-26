@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode._OpModes.Prototypes;
+package org.firstinspires.ftc.teamcode._OpModes.Prototypes.old;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;

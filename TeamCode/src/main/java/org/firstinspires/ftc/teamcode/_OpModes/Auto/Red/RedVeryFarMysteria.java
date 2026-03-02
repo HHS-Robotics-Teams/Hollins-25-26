@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode._OpModes.Auto.Red;
 
+import static org.firstinspires.ftc.teamcode._OpModes.Auto.Red.RedVeryFarMysteria.AutoState.*;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
@@ -64,7 +65,7 @@ public class RedVeryFarMysteria extends OpMode {
         PARK,
         END
     }
-    AutoState state = AutoState.START;
+    AutoState state = START;
     Action turnToLaunch;
     Action driveToIntakeOne;
     Action driveToIntakeTwo;
@@ -74,7 +75,7 @@ public class RedVeryFarMysteria extends OpMode {
     @Override
     public void init() {
         drive = new MecanumDrive(hardwareMap, new Pose2d(72 - (16.25/2), (13 / 2) + 24, Math.toRadians(180)));
-        state = AutoState.START;
+        state = START;
         Components.initComponents(hardwareMap);
         turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), (13 / 2) + 24, Math.toRadians(180)))
                 .waitSeconds(3)
@@ -135,12 +136,12 @@ public class RedVeryFarMysteria extends OpMode {
         switch (state){
             case START:
                 intakeTimer.reset();
-                state = AutoState.SPIN_UP;
+                state = SPIN_UP;
                 break;
 
             case SPIN_UP:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 380);
-                state = AutoState.LAUNCH_ONE;
+                state = LAUNCH_ONE;
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                 break;
             case LAUNCH_ONE:
@@ -148,30 +149,30 @@ public class RedVeryFarMysteria extends OpMode {
                     intakeUtil.launchStart(0.6, 0.6);
                     launchTimer.reset();
                     autoUtil.resetEmptyTimer();
-                    state = AutoState.RESET_ONE;
+                    state = RESET_ONE;
                 }
                 break;
             case RESET_ONE:
                 if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty() ) { // todo change Time
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
                     intakeUtil.launchEnd();
-                    state = AutoState.DRIVE_TO_INTAKE_ONE;
+                    state = DRIVE_TO_INTAKE_ONE;
                 }
                 break;
             case DRIVE_TO_INTAKE_ONE:
                 LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-                state = AutoState.DRIVE_TO_LAUNCH_TWO;
+                state = DRIVE_TO_LAUNCH_TWO;
                 Actions.runBlocking(driveToIntakeOne);
                 intakeUtil.intakeOff();
                 break;
             case DRIVE_TO_LAUNCH_TWO:
                 intakeTimer.reset();
-                state = AutoState.SPIN_UP_TWO;
+                state = SPIN_UP_TWO;
                 break;
             case SPIN_UP_TWO:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 400);
-                state = AutoState.LAUNCH_TWO;
+                state = LAUNCH_TWO;
                 launchTimer.reset();
                 autoUtil.resetEmptyTimer();
                 break;
@@ -180,14 +181,14 @@ public class RedVeryFarMysteria extends OpMode {
                     intakeUtil.launchStart(0.8, 0.8);
                     launchTimer.reset();
                     autoUtil.resetEmptyTimer();
-                    state = AutoState.RESET_TWO;
+                    state = RESET_TWO;
                 }
                 break;
             case RESET_TWO:
                 if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) { // todo change Time
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
                     intakeUtil.intakeOff();
-                    state = AutoState.DRIVE_TO_INTAKE_TWO;
+                    state = DRIVE_TO_INTAKE_TWO;
                 }
                 break;
             case DRIVE_TO_INTAKE_TWO:
@@ -195,19 +196,19 @@ public class RedVeryFarMysteria extends OpMode {
                 intakeUtil.intakeOn();
                 Actions.runBlocking(driveToIntakeTwo);
                 intakeUtil.intakeOff();
-                state = AutoState.INTAKE_TWO;
+                state = INTAKE_TWO;
                 break;
             case INTAKE_TWO:
-                state = AutoState.DRIVE_TO_LAUNCH_THREE;
+                state = DRIVE_TO_LAUNCH_THREE;
                 break;
             case DRIVE_TO_LAUNCH_THREE:
                 intakeTimer.reset();
-                state = AutoState.SPIN_UP_THREE;
+                state = SPIN_UP_THREE;
                 break;
             case SPIN_UP_THREE:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 400);
-                state = AutoState.LAUNCH_THREE;
+                state = LAUNCH_THREE;
                 break;
             case LAUNCH_THREE:
                 if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 400) { // todo change Time
@@ -215,20 +216,20 @@ public class RedVeryFarMysteria extends OpMode {
                     intakeUtil.launchStart(0.8, 0.8);
                     launchTimer.reset();
                     autoUtil.resetEmptyTimer();
-                    state = AutoState.RESET_THREE;
+                    state = RESET_THREE;
                 }
                 break;
             case RESET_THREE:
                 if(launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
                     intakeUtil.intakeOff();
-                    state = AutoState.PARK;
+                    state = PARK;
                 }
                 break;
             case PARK:
                 LauncherSafetyServo.setPosition(SAFETY_HOLDING);
                 LauncherMotor.setVelocity(400);
                 Actions.runBlocking(drive.actionBuilder(new Pose2d(50, 12, Math.toRadians(162.5))).lineToX(40).build());
-                state = AutoState.END;
+                state = END;
                 break;
             case END:
                 requestOpModeStop();

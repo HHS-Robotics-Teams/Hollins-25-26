@@ -20,7 +20,7 @@ public class AutoUtil {
     }
     public boolean isBotEmpty() {
         if( centerDistance.getDistance(DistanceUnit.INCH) <= 5.5
-            || frontDistance.getDistance(DistanceUnit.INCH) <= 7
+            //|| frontDistance.getDistance(DistanceUnit.INCH) <= 7
             || rearDistance.getDistance(DistanceUnit.INCH) <= 11.5
             || rearSideDistance.getDistance(DistanceUnit.INCH) <= 6
             || rearTopDistance.getDistance(DistanceUnit.INCH) <= 9) {

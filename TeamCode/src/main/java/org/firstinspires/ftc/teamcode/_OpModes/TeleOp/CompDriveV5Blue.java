@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.Parking_Mot
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.centerDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontDistance;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rearDistance;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.CAMERA_START_POS;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_LEVEL_TWO_RUN;
@@ -112,18 +113,23 @@ public class CompDriveV5Blue extends OpMode {
             launcherUtil.setLightRed();
         }
 
-        if(centerDistance.getDistance(DistanceUnit.INCH) >= 4 || frontDistance.getDistance(DistanceUnit.INCH) >= 6.5 || rearDistance.getDistance(DistanceUnit.INCH) >= 11) {
+        if(centerDistance.getDistance(DistanceUnit.INCH) >= 4
+                //|| frontDistance.getDistance(DistanceUnit.INCH) >= 6.5
+            || rearDistance.getDistance(DistanceUnit.INCH) >= 11) {
             intakeTimer.reset();
         }
 
         // Control the main intake motor
         if (INTAKE_RUN) {
+            frontFeedRoller.setPower(INTAKE_REVERSED ? -1 : 1);
             IntakeMotor.setPower(INTAKE_REVERSED ? -INTAKE_POWER : INTAKE_POWER);
         } else {
             IntakeMotor.setPower(0);
+            frontFeedRoller.setPower(0);
         }
 
         if (INTAKE_LEVEL_TWO_RUN) {
+            frontFeedRoller.setPower(INTAKE_REVERSED ? -1 : 1);
             ConveyorMotor.setPower(INTAKE_REVERSED ? -1 : 1);
         } else {
             ConveyorMotor.setPower(0);

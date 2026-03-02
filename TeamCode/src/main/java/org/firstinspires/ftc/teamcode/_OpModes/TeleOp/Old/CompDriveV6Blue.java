@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode._OpModes.TeleOp;
+package org.firstinspires.ftc.teamcode._OpModes.TeleOp.Old;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
@@ -18,7 +18,10 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.park_Pos;
+import static org.firstinspires.ftc.teamcode._Util.OLD.HoodUtilV2.*;
+import static org.firstinspires.ftc.teamcode._Util.OLD.LauncherUtilV4Limelight.LaunchState.*;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,24 +30,24 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 import org.firstinspires.ftc.teamcode._Proccedural.Input;
-import org.firstinspires.ftc.teamcode._Util.AprilTagMethod;
-import org.firstinspires.ftc.teamcode._Util.HoodUtil;
-import org.firstinspires.ftc.teamcode._Util.LauncherUtilV3;
+import org.firstinspires.ftc.teamcode._Util.OLD.LauncherUtilV4Limelight;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Util.TeleOpDrive;
 
 @TeleOp
+@Disabled
+@Deprecated
 public class CompDriveV6Blue extends OpMode {
     //Instantiated new input
     Input input = new Input();
-    LauncherUtilV3 launcherUtil;
+    LauncherUtilV4Limelight launcherUtil;
     ElapsedTime intakeTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     @Override
     public void init() {
         //Initialize Components
         Components.initComponents(hardwareMap);
-        launcherUtil = new LauncherUtilV3("BLUE", false, new LightUtil(2, hardwareMap));
+        launcherUtil = new LauncherUtilV4Limelight("BLUE", false, new LightUtil(2, hardwareMap),hardwareMap);
         /* ---------- Telemetry ---------- */
         telemetry.addLine("--------- Init Complete ---------");
     }
@@ -52,6 +55,7 @@ public class CompDriveV6Blue extends OpMode {
     @Override
     public void start() {
         limelight.start();
+        limelight.pipelineSwitch(0);
         //resets from other flags
         INTAKE_RUN = false;
         INTAKE_LEVEL_TWO_RUN = false;
@@ -88,7 +92,7 @@ public class CompDriveV6Blue extends OpMode {
             }
         }
         if(input.a_cross.down()){
-            launcherUtil.overwriteHoodState(HoodUtil.HoodState.Far);
+            launcherUtil.overwriteHoodState(HoodState.Far);
         }
 
         /* ---------- Intake ---------- */
@@ -132,7 +136,7 @@ public class CompDriveV6Blue extends OpMode {
             launcherUtil.updateHood();
             LauncherMotor.setVelocity(1000);
             LauncherSafetyServo.setPosition(SAFETY_HOLDING);
-            if(launcherUtil.getLaunchState() != LauncherUtilV3.LaunchState.FIND_TAG){
+            if(launcherUtil.getLaunchState() != FIND_TAG){
                 launcherUtil.cancelLaunch();
             }
         }

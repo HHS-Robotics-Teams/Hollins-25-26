@@ -1,26 +1,34 @@
-package org.firstinspires.ftc.teamcode._Util;
+package org.firstinspires.ftc.teamcode._Util.OLD;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.limelight;
+
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+@Deprecated
 public class thanksJedison {
     Limelight3A ll;
 
     double mountingPitchAngle = 0.0;
     double height = 0.0;
 
+    public static double llAngle;
+    public static double llDistance;
+
     thanksJedison(HardwareMap hw) {
-        ll = hw.get(Limelight3A.class, "name");
+        ll = limelight;
+        llDistance = 0;
+        llAngle = 0;
     }
 
     void update() {
         LLResult r = ll.getLatestResult();
 
-        if(r==null) return; // make sure the result is valid and we detected an april-tag
+        if(r==null || !r.isValid()) return; // make sure the result is valid and we detected an april-tag
 
-        double angle = r.getTx(); // This is the angle to the detection
+        llAngle = r.getTx(); // This is the angle to the detection
 
-        double distance = getDistance(r);
+        llDistance = getDistance(r);
     }
 
     double getDistance(LLResult r) {

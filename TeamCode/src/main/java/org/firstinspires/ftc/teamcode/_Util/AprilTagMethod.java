@@ -65,13 +65,14 @@ public class AprilTagMethod {
         return tagHelper.getFirstTag() != null;
     }
     public boolean tagMatchesAlliance(String allianceColor){
-        if(!isTagVisible()){
+        return true;
+        /*if(!isTagVisible()){
             return false;
         }
         if(Objects.equals(allianceColor, "RED") && tagHelper.getFirstTag().metadata.id == 24){
             return true;
         }
-        return Objects.equals(allianceColor, "BLUE") && tagHelper.getFirstTag().metadata.id == 20;
+        return Objects.equals(allianceColor, "BLUE") && tagHelper.getFirstTag().metadata.id == 20;*/
     }
     public double getTagDistance() {
         if(!isTagVisible()){

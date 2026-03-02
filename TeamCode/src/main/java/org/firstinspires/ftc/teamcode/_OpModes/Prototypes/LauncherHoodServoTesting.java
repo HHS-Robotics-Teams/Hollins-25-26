@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode._OpModes.Prototypes.old;
+package org.firstinspires.ftc.teamcode._OpModes.Prototypes;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
@@ -33,12 +33,17 @@ public class LauncherHoodServoTesting extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addData("distance", aprilTagMethod.getTagDistance());
+        //telemetry.addData("distance", aprilTagMethod.getTagDistance());
         input.pollGamepad(gamepad1);
         //LauncherMotor.setVelocity(TargetVel);
         if (input.left_trigger.held()) {
-            intakeUtil.launchStart();
+            intakeUtil.intakeOn();
          } else if (input.left_trigger.up()){
+            intakeUtil.intakeOff();
+        }
+        if (input.right_trigger.held()) {
+            intakeUtil.launchStart();
+        }else if (input.right_trigger.up()){
             intakeUtil.launchEnd();
         }
         if (input.dpad_up.down()){

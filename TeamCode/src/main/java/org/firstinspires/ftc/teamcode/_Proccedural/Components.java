@@ -125,10 +125,10 @@ public class Components {
         //Initialize Sensors
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
-        //webcam = hardwareMap.get(WebcamName.class, "Webcam");
-        //tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.setPollRateHz(120);
+        webcam = hardwareMap.get(WebcamName.class, "Webcam");
+        tagHelper = new AprilTagHelper(hardwareMap, "Webcam");
+        //limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        //limelight.setPollRateHz(120);
         frontDistance = hardwareMap.get(DistanceSensor.class, "frontDistance");
         centerDistance = hardwareMap.get(ColorRangeSensor.class, "centerDistance");
         rearDistance = hardwareMap.get(DistanceSensor.class, "rearDistance");

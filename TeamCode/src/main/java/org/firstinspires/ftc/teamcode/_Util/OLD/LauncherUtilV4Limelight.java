@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode._Util;
+package org.firstinspires.ftc.teamcode._Util.OLD;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
@@ -16,23 +16,24 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.INTAKE_POWER
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
+import static org.firstinspires.ftc.teamcode._Util.OLD.LauncherUtilV4Limelight.LaunchState.*;
+import static org.firstinspires.ftc.teamcode._Util.OLD.thanksJedison.llAngle;
+import static org.firstinspires.ftc.teamcode._Util.OLD.thanksJedison.llDistance;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode._Util.AutoUtil;
+import org.firstinspires.ftc.teamcode._Util.LightUtil;
 
 /**
  * Runs flywheel style launcher logic to make teleOp code more readable
  * Includes camera vision & automatic alignment
  */
+@Deprecated
 public class LauncherUtilV4Limelight {
     public enum LaunchState {
         FIND_TAG,
@@ -51,9 +52,7 @@ public class LauncherUtilV4Limelight {
     private final LightUtil lightUtil;
     private final HoodUtilV2 hoodUtil;
     private volatile LLResult result;
-    private double dist;
-    private Position pos;
-    private YawPitchRollAngles angles;
+    private thanksJedison jedison;
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime timeout = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
@@ -72,17 +71,18 @@ public class LauncherUtilV4Limelight {
      * @param color "BLUE" or "RED" for camera logic
      * @param isAuto true for auto, false for not
      */
-    public LauncherUtilV4Limelight(String color, boolean isAuto, LightUtil lightUtil) {
+    public LauncherUtilV4Limelight(String color, boolean isAuto, LightUtil lightUtil, HardwareMap hw) {
         if (color.equals("BLUE")) {
             limelight.pipelineSwitch(0);
         } else if (color.equals("RED")) {
             limelight.pipelineSwitch(1);
         }
-        launchState = LaunchState.FIND_TAG;
+        launchState = FIND_TAG;
         this.color = color;
         this.isAuto = isAuto;
         this.lightUtil = lightUtil;
         hoodUtil = new HoodUtilV2();
+        jedison = new thanksJedison(hw);
     }
 
     /**
@@ -95,10 +95,6 @@ public class LauncherUtilV4Limelight {
         LeftSideFeedRoller.setPower(0);
         rightSideFeedRoller.setPower(0);
         frontFeedRoller.setPower(0);
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         LAUNCHER_RUN = false;
     }
 
@@ -122,21 +118,18 @@ public class LauncherUtilV4Limelight {
      * @return String of telemetry
      */
     public String runLauncher() {
-        if (limelight.getLatestResult().isValid()) {
+        if (limelight.getLatestResult() != null && limelight.getLatestResult().isValid()) {
             result = limelight.getLatestResult();
         }
-        dist = result.getBotposeAvgDist();
-        pos = result.getBotpose_MT2().getPosition();
-        angles = result.getBotpose_MT2().getOrientation();
-        theta = angles.getYaw(AngleUnit.DEGREES);
+        jedison.update();
         setLightOff();
         hoodUtil.updateHoodState(result);
         LauncherSafetyServo.setPosition(SAFTEY_FIRING);
         lightUtil.makeOff();
         lightUtil.updateLights();
-        if (result.isValid() && !isAuto) {
+        if ((result == null) || (result.isValid() && !isAuto)) {
             if(timeout.seconds() > 0.25) {
-                launchState = LaunchState.FIND_TAG;
+                launchState = FIND_TAG;
                 spinUp();
                 IntakeMotor.setPower(0);
                 ConveyorMotor.setPower(0);
@@ -159,20 +152,16 @@ public class LauncherUtilV4Limelight {
                 rightSideFeedRoller.setPower(0);
                 frontFeedRoller.setPower(0);
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR);
-                leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                launchState = LaunchState.FIND_TAG;
+                launchState = FIND_TAG;
                 LAUNCHER_RUN = false;
                 break;
             case FIND_TAG:
-                if (!result.isValid() && !isAuto) {
-                    launchState = LaunchState.FIND_TAG;
+                if (result == null || !result.isValid() || !isAuto) {
+                    launchState = FIND_TAG;
                     return "No Tag Visible";
                 } else if (result.isValid()) {
                     if ((moveToLaunch()) && isSpunUp()) {
-                        launchState = LaunchState.LAUNCH;
+                        launchState = LAUNCH;
                         launchTimer.reset();
                         autoUtil.resetEmptyTimer();
                     }
@@ -193,7 +182,7 @@ public class LauncherUtilV4Limelight {
                     frontFeedRoller.setPower(0.6);
                 }
                 if (launchTimer.seconds() >= 2.5 || autoUtil.isBotEmpty()) { //todo check this time
-                    launchState = LaunchState.EXIT;
+                    launchState = EXIT;
                 }
                 break;
 
@@ -216,7 +205,8 @@ public class LauncherUtilV4Limelight {
         if (isAuto) {
             return true;
         } else {
-            double range = dist;
+            double theta = llAngle;
+            double range = llDistance;
             double margin;
             double turnPower;
             if (range >= 90) {
@@ -225,25 +215,25 @@ public class LauncherUtilV4Limelight {
                 if (color.equals("RED")) {
                     phi = 3.75;
                 }
-                turnPower = 0.4;
+                turnPower = 0.2;
             } else {
                 phi = 0;
                 margin = 3;
                 if (color.equals("RED")) {
                     phi = 1;
                 }
-                turnPower = 0.45;
+                turnPower = 0.15;
             }
             if (theta >= phi + margin) {
-                leftFront.setPower(-turnPower);
-                rightBack.setPower(turnPower);
-                leftBack.setPower(-turnPower);
-                rightFront.setPower(turnPower);
+                leftFront.setPower(-turnPower * abs(theta - phi));
+                rightBack.setPower(turnPower * abs(theta - phi));
+                leftBack.setPower(-turnPower * abs(theta - phi));
+                rightFront.setPower(turnPower * abs(theta - phi));
             } else if (theta <= phi - margin) {
-                leftFront.setPower(turnPower);
-                rightBack.setPower(-turnPower);
-                leftBack.setPower(turnPower);
-                rightFront.setPower(-turnPower);
+                leftFront.setPower(turnPower * abs(theta - phi));
+                rightBack.setPower(-turnPower * abs(theta - phi));
+                leftBack.setPower(turnPower * abs(theta - phi));
+                rightFront.setPower(-turnPower * abs(theta - phi));
             } else {
                 leftFront.setPower(0);
                 rightBack.setPower(0);
@@ -270,8 +260,8 @@ public class LauncherUtilV4Limelight {
      */
     public void spinUp() {
         double range;
-        if(result.isValid()){
-            range = dist;
+        if(result != null && result.isValid()){
+            range = llDistance;
             //target = 940.08429 * pow((1.00383), range);
             if(range < 105) {
                 target = 976 * pow(range, 0.0844869);
@@ -287,7 +277,7 @@ public class LauncherUtilV4Limelight {
         } else {
             target = 1100;
         }
-        if(launchState.equals(LaunchState.LAUNCH)){
+        if(launchState.equals(LAUNCH)){
             target += 50;
         }
         //target *= 11.85 / voltageSensor.getVoltage();
@@ -309,7 +299,9 @@ public class LauncherUtilV4Limelight {
     public void setLightOff() {
         lightUtil.makeOff();
     }
-    public void updateLights() {lightUtil.updateLights();}
+    public void updateLights() {
+        lightUtil.updateLights();
+    }
     public LightUtil.LightState getLightState() {
         return lightUtil.getLightState();
     }

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode._OpModes.Auto.Red;
 
+import static org.firstinspires.ftc.teamcode._OpModes.Auto.Red.GateRedNear3x9.AutoState.*;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
@@ -76,7 +77,7 @@ public class GateRedNear3x9 extends OpMode {
         PARK,
         END
     }
-    AutoState state = AutoState.START;
+    AutoState state = START;
     Action turnToLaunch;
     Action driveToIntakeOne;
     Action driveToIntakeTwo;
@@ -90,7 +91,7 @@ public class GateRedNear3x9 extends OpMode {
     public void init() {
         autoUtil = new AutoUtil(.2);
         drive = new MecanumDrive(hardwareMap, new Pose2d(-57,49,Math.toRadians(135)));
-        state = AutoState.START;
+        state = START;
         Components.initComponents(hardwareMap);
         turnToLaunch = drive.actionBuilder(new Pose2d(-57,49,Math.toRadians(135)))
                 .strafeToLinearHeading(new Vector2d(-44, 36),Math.toRadians(125),new TranslationalVelConstraint(60))
@@ -168,14 +169,14 @@ public class GateRedNear3x9 extends OpMode {
             case START:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 50);
-                state = AutoState.LAUNCH_ONE;
+                state = LAUNCH_ONE;
                 break;
             case LAUNCH_ONE:
                 if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 50){
                     LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                     intakeUtil.launchStart();
                     launchTimer.reset();
-                    state = AutoState.RESET_ONE;
+                    state = RESET_ONE;
                     autoUtil.resetEmptyTimer();
                 }
                 break;
@@ -184,21 +185,21 @@ public class GateRedNear3x9 extends OpMode {
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 120);
                     LauncherHoodServo.setPosition(0.2);
                     intakeUtil.launchEnd();
-                    state = AutoState.DRIVE_TO_INTAKE_ONE;
+                    state = DRIVE_TO_INTAKE_ONE;
                 }
                 break;
             case DRIVE_TO_INTAKE_ONE:
                 Actions.runBlocking(driveToIntakeOne);
-                state = AutoState.SPIN_UP_TWO;
+                state = SPIN_UP_TWO;
                 break;
             case SPIN_UP_TWO:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 120);
-                state = AutoState.LAUNCH_TWO;
+                state = LAUNCH_TWO;
                 break;
             case LAUNCH_TWO:
                 if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 120)){
                     intakeUtil.launchStart();
-                    state = AutoState.RESET_TWO;
+                    state = RESET_TWO;
                     launchTimer.reset();
                     autoUtil.resetEmptyTimer();
                 }
@@ -207,7 +208,7 @@ public class GateRedNear3x9 extends OpMode {
                 if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 160);
                     intakeUtil.launchEnd();
-                    state = AutoState.DRIVE_TO_INTAKE_TWO;
+                    state = DRIVE_TO_INTAKE_TWO;
                     launchTimer.reset();
                 }
                 break;
@@ -215,16 +216,16 @@ public class GateRedNear3x9 extends OpMode {
             case DRIVE_TO_INTAKE_TWO:
                 timeoutTime = 1.00;
                 Actions.runBlocking(driveToIntakeTwo);
-                state = AutoState.DRIVE_TO_LAUNCH_THREE;
+                state = DRIVE_TO_LAUNCH_THREE;
                 break;
             case DRIVE_TO_LAUNCH_THREE:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 160);
-                state = AutoState.LAUNCH_THREE;
+                state = LAUNCH_THREE;
                 break;
             case LAUNCH_THREE:
                 if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 160 )) {
                     intakeUtil.launchStart();
-                    state = AutoState.RESET_THREE;
+                    state = RESET_THREE;
                     launchTimer.reset();
                     autoUtil.resetEmptyTimer();
                 }
@@ -233,21 +234,21 @@ public class GateRedNear3x9 extends OpMode {
                 if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 175);
                     intakeUtil.launchEnd();
-                    state = AutoState.DRIVE_TO_INTAKE_THREE;
+                    state = DRIVE_TO_INTAKE_THREE;
                     launchTimer.reset();
                 }
                 break;
             case DRIVE_TO_INTAKE_THREE:
                 timeoutTime = 1.25;
                 Actions.runBlocking(driveToIntakeThree);
-                state = AutoState.DRIVE_TO_LAUNCH_FOUR;
+                state = DRIVE_TO_LAUNCH_FOUR;
 //                if(faultTimer.seconds() > 29.95){
 //                    state = AutoState.PARK;
 //                }
 //                break;
             case DRIVE_TO_LAUNCH_FOUR:
                 LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 175);
-                state = AutoState.LAUNCH_FOUR;
+                state = LAUNCH_FOUR;
                 break;
             case LAUNCH_FOUR:
                 if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 175)) {
@@ -255,20 +256,20 @@ public class GateRedNear3x9 extends OpMode {
                     launchTimer.reset();
                     autoUtil.resetEmptyTimer();
                     autoUtil.changeTimeout(.2);
-                    state = AutoState.RESET_FOUR;
+                    state = RESET_FOUR;
                 }
                 break;
             case RESET_FOUR:
                 if(launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()){
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 190);
                     intakeUtil.launchEnd();
-                    state = AutoState.PARK;
+                    state = PARK;
                 }
                 break;
             case PARK:
                 LauncherMotor.setVelocity(0);
                 intakeUtil.intakeOff();
-                state = AutoState.END;
+                state = END;
                 break;
             case END:
                 requestOpModeStop();

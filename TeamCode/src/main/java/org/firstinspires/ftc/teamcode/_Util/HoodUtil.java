@@ -49,13 +49,15 @@ public class HoodUtil {
             timeout.reset();
             if(aprilTagMethod.isTagVisible()) {
                 double range = aprilTagMethod.getTagDistance();
-                if(range > 105){
+                if(range > 95){
                     hoodState = HoodState.Far;
-                    LauncherHoodServo.setPosition(0.8);// 0.00714286*range*1.25
+                    LauncherHoodServo.setPosition(0.85);// 0.00714286*range*1.25
                 } else {
                     hoodState = HoodState.Near2;
                     if (range < 55) {
                         LauncherHoodServo.setPosition(0.4);
+                    } else if (range < 75) {
+                        LauncherHoodServo.setPosition(0.5);
                     } else {
                         LauncherHoodServo.setPosition(0.6);
                     }

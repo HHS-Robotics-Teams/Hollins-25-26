@@ -38,19 +38,16 @@ public class LauncherUtilV3 {
         DISTANCE_CHECK
     }
     private LaunchState launchState;
-    private AutoUtil autoUtil = new AutoUtil(0.25);
+    private final AutoUtil autoUtil = new AutoUtil(0.25);
     private double target;
     private final String color;
     private final boolean isAuto;
     private double theta;
     private double phi;
-    private double launchTime;
-    private int numLaunches;
     private final LightUtil lightUtil;
     private final HoodUtil hoodUtil;
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime timeout = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
-    ElapsedTime emptyLaunchCheck = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
     /**
      * Sets target vel manually
@@ -73,9 +70,7 @@ public class LauncherUtilV3 {
         this.color = color;
         this.isAuto = isAuto;
         this.lightUtil = lightUtil;
-        launchTime = 0.5;
         hoodUtil = new HoodUtil();
-        numLaunches = 0;
     }
 
     /**
@@ -88,7 +83,6 @@ public class LauncherUtilV3 {
         LeftSideFeedRoller.setPower(0);
         rightSideFeedRoller.setPower(0);
         frontFeedRoller.setPower(0);
-        numLaunches = 0;
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -140,7 +134,6 @@ public class LauncherUtilV3 {
         }
         switch (launchState) {
             case EXIT:
-                numLaunches = 0;
                 IntakeMotor.setPower(0);
                 ConveyorMotor.setPower(0);
                 LeftSideFeedRoller.setPower(0);
@@ -161,7 +154,6 @@ public class LauncherUtilV3 {
                 } else if (isAuto || aprilTagMethod.tagMatchesAlliance(color)) {
                     if ((moveToLaunch()) && isSpunUp()) {
                         launchState = LaunchState.LAUNCH;
-                        numLaunches++;
                         launchTimer.reset();
                         autoUtil.resetEmptyTimer();
                     }
@@ -207,24 +199,18 @@ public class LauncherUtilV3 {
         } else if (!aprilTagMethod.isTagVisible() ) {
             return false;
         } else {
-            theta = aprilTagMethod.getTagBearing() - 4.75;
+            theta = aprilTagMethod.getTagBearing();
             double range = aprilTagMethod.getTagDistance();
             double margin;
             double turnPower;
             if (range >= 90) {
-                phi = 2;
-                margin = 2;
-                if (color.equals("RED")) {
-                    phi = 3.75;
-                }
+                margin = 1.25;
+                phi = 4;
                 turnPower = 0.4;
             } else {
-                phi = 0;
-                margin = 3;
-                if (color.equals("RED")) {
-                    phi = 1;
-                }
-                turnPower = 0.45;
+                phi = 8;
+                margin = 2;
+                turnPower = 0.65;
             }
             if (theta >= phi + margin) {
                 leftFront.setPower(-turnPower);
@@ -253,7 +239,7 @@ public class LauncherUtilV3 {
      */
     private boolean isSpunUp() {
         spinUp();
-        return abs(LauncherMotor.getVelocity() - target) <= 50;
+        return abs(LauncherMotor.getVelocity() - target) <= target * .05;
     }
 
     /**
@@ -271,7 +257,10 @@ public class LauncherUtilV3 {
                     target -= 60;
                 }
             } else {
-                target = 252 * pow(range, 0.406511);
+                target = 252 * pow(range, 0.406511) - 125;
+                if(launchTimer.seconds() >= 0.15){
+                    target += 65;
+                }
             }
             target -= 125;
         } else if (isAuto) {
@@ -281,7 +270,7 @@ public class LauncherUtilV3 {
         }
         if(launchState.equals(LaunchState.LAUNCH)){
             target += 50;
-        }
+        } 
         //target *= 11.85 / voltageSensor.getVoltage();
         LauncherMotor.setVelocity(target);
     }
