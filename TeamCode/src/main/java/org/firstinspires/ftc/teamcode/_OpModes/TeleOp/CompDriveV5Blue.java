@@ -78,7 +78,7 @@ public class CompDriveV5Blue extends OpMode {
         launcherUtil.spinUp();
         launcherUtil.updateLights();
         /* ---------- Drivetrain ---------- */
-        TeleOpDrive.run(-gamepad1.left_stick_y,gamepad1.left_stick_x * 1.1, gamepad1.right_stick_x);
+        TeleOpDrive.run(-gamepad1.left_stick_y,gamepad1.left_stick_x * 1.1, gamepad1.right_stick_x * 0.65);
 
 
 

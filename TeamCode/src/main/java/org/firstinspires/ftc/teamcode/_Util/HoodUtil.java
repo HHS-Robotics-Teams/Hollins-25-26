@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode._Util;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.cameraTiltServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.CAMERA_START_POS;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -51,7 +53,10 @@ public class HoodUtil {
                 double range = aprilTagMethod.getTagDistance();
                 if(range > 95){
                     hoodState = HoodState.Far;
-                    LauncherHoodServo.setPosition(0.85);// 0.00714286*range*1.25
+                    if(!LAUNCHER_RUN) {
+                        LauncherMotor.setVelocity(1500);
+                    }
+                    LauncherHoodServo.setPosition(0.875);// 0.00714286*range*1.25
                 } else {
                     hoodState = HoodState.Near2;
                     if (range < 55) {
@@ -59,7 +64,7 @@ public class HoodUtil {
                     } else if (range < 75) {
                         LauncherHoodServo.setPosition(0.5);
                     } else {
-                        LauncherHoodServo.setPosition(0.6);
+                        LauncherHoodServo.setPosition(0.7);
                     }
                 }
             }

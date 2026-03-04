@@ -1,31 +1,23 @@
-package org.firstinspires.ftc.teamcode._OpModes.Auto.Red;
+package org.firstinspires.ftc.teamcode._OpModes.Auto.temp;
 
-import static org.firstinspires.ftc.teamcode._OpModes.Auto.Red.RedNear3x9Gateless.AutoState.*;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
+import static org.firstinspires.ftc.teamcode._OpModes.Auto.temp.GateBlueNear3x9.AutoState.*;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.frontFeedRoller;
-import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightSideFeedRoller;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCH_TICK_VELOCITY_NEAR;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.Launch_Time;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFETY_HOLDING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRING;
 import static org.firstinspires.ftc.teamcode._Proccedural.Constants.timeoutTime;
 
-
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.AngularVelConstraint;
-import com.acmerobotics.roadrunner.CompositeVelConstraint;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -35,11 +27,10 @@ import org.firstinspires.ftc.teamcode._Util.AutoUtil;
 import org.firstinspires.ftc.teamcode._Util.IntakeUtil;
 import org.firstinspires.ftc.teamcode._Util.LightUtil;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 @Autonomous
-public class RedNear3x9Gateless extends OpMode {
+@Deprecated
+@Disabled
+public class GateBlueNear3x9 extends OpMode {
     IntakeUtil intakeUtil = new IntakeUtil();
     MecanumDrive drive;
 
@@ -50,11 +41,6 @@ public class RedNear3x9Gateless extends OpMode {
     });
     InstantAction offIntake = new InstantAction(() -> {
         intakeUtil.intakeOff();
-        LeftSideFeedRoller.setPower(0);
-        rightSideFeedRoller.setPower(0);
-        frontFeedRoller.setPower(0);
-        IntakeMotor.setPower(0);
-        ConveyorMotor.setPower(0);
         LauncherSafetyServo.setPosition(SAFTEY_FIRING);
     });
     InstantAction setVelocity = new InstantAction(() -> LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR));
@@ -89,39 +75,38 @@ public class RedNear3x9Gateless extends OpMode {
 
     @Override
     public void init() {
-        autoUtil = new AutoUtil(.2);
-        drive = new MecanumDrive(hardwareMap, new Pose2d(-57,49,Math.toRadians(135)));
+        autoUtil = new AutoUtil(.175);
+        drive = new MecanumDrive(hardwareMap, new Pose2d(-55,-49,Math.toRadians(-135)));
         state = START;
         Components.initComponents(hardwareMap);
-        turnToLaunch = drive.actionBuilder(new Pose2d(-57,49,Math.toRadians(135)))
-                .strafeToLinearHeading(new Vector2d(-46.5, 38.25),Math.toRadians(125))
+        turnToLaunch = drive.actionBuilder(new Pose2d(-55,-49,Math.toRadians(-135)))
+                .strafeToLinearHeading(new Vector2d(-46.5, -38.25),Math.toRadians(-125),new TranslationalVelConstraint(60))
                 .afterTime(0.05, setVelocity)
                 .build();
-        driveToIntakeOne = drive.actionBuilder(new Pose2d(-46.5,38.25,Math.toRadians(125)))
-                .strafeToLinearHeading(new Vector2d(-15,26),Math.toRadians(90))
-                .waitSeconds(0.03)
-                .afterDisp(0, runIntake)
-                .strafeToConstantHeading(new Vector2d(-15,51))
-                .afterDisp(35, offIntake)
-                .strafeToLinearHeading(new Vector2d(-36,36),Math.toRadians(133))
+        driveToIntakeOne = drive.actionBuilder(new Pose2d(-46.5,-38.25,Math.toRadians(-125)))
+                .strafeToLinearHeading(new Vector2d(-14,-24),Math.toRadians(-90))
+                .afterDisp(.1, runIntake)
+                .strafeToConstantHeading(new Vector2d(-14,-56), new TranslationalVelConstraint(50))
+                .afterDisp(7.5, offIntake)
+                .strafeToLinearHeading(new Vector2d(-24,-24),Math.toRadians(-130))
                 .build();
-        driveToIntakeTwo = drive.actionBuilder(new Pose2d(-36,36,Math.toRadians(133)))
-                .strafeToLinearHeading(new Vector2d(9,24),Math.toRadians(90))
+        driveToIntakeTwo = drive.actionBuilder(new Pose2d(-24,-24,Math.toRadians(-130)))
+                .strafeToLinearHeading(new Vector2d(9,-28),Math.toRadians(-90))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(9, 57))
-                .setTangent(Math.toRadians(-90))
-                .afterDisp(50, offIntake)
-                .splineToLinearHeading(new Pose2d(-24,26,Math.toRadians(133)),Math.toRadians(90))
-                //.strafeToLinearHeading(new Vector2d(-24,24),Math.toRadians(132))
+                .strafeToConstantHeading(new Vector2d(9, -61),new TranslationalVelConstraint(50))
+                .waitSeconds(0.05)
+                .lineToYConstantHeading(-50) // to save time lessen this distance
+                .strafeToConstantHeading(new Vector2d(-4,-60))
+                .afterDisp(7.5, offIntake)
+                .strafeToLinearHeading(new Vector2d(-24,-24),Math.toRadians(-130))
                 .build();
-        driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, 24, Math.toRadians(132)))
-                .strafeToLinearHeading(new Vector2d(30.5, 24), Math.toRadians(90))
+        driveToIntakeThree = drive.actionBuilder(new Pose2d(-24, -24, Math.toRadians(-130)))
+                .strafeToLinearHeading(new Vector2d(29.7, -24), Math.toRadians(-90))
                 .afterTime(0.1, runIntake)
-                .strafeToConstantHeading(new Vector2d(30.5,57))
-                .setTangent(-90)
-                .afterDisp(50, offIntake)
-                .splineToLinearHeading(new Pose2d(-36,26,Math.toRadians(122)),Math.toRadians(90))
-                //.strafeToLinearHeading(new Vector2d(-36, 26), Math.toRadians(120))
+                .strafeToConstantHeading(new Vector2d(29.7,-63.5),new TranslationalVelConstraint(50))
+                .lineToYConstantHeading(-50)
+                .afterDisp(7.5, offIntake)
+                .strafeToLinearHeading(new Vector2d(-36, -26), Math.toRadians(-122.5))
                 .build();
         telemetry.addLine("Ready to Launch");
         lightUtil = new LightUtil(2, hardwareMap);
@@ -131,14 +116,14 @@ public class RedNear3x9Gateless extends OpMode {
 
     @Override
     public void start(){
-        //LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 100);
+        //LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR  100);
         LauncherHoodServo.setPosition(0.05);
         lightUtil.makeOff();
         lightUtil.updateLights();
         faultTimer.reset();
         LauncherMotor.setPower(1);
         Actions.runBlocking(turnToLaunch);
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 135);
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 125);
     }
 
     @Override
@@ -164,11 +149,11 @@ public class RedNear3x9Gateless extends OpMode {
         switch (state){
             case START:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 135);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR - 125);
                 state = LAUNCH_ONE;
                 break;
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 135){
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_NEAR - 125){
                     LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                     intakeUtil.launchStart();
                     launchTimer.reset();
@@ -178,7 +163,7 @@ public class RedNear3x9Gateless extends OpMode {
                 break;
             case RESET_ONE:
                 if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
-                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 120);
+                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 153);
                     LauncherHoodServo.setPosition(0.2);
                     intakeUtil.launchEnd();
                     state = DRIVE_TO_INTAKE_ONE;
@@ -189,11 +174,11 @@ public class RedNear3x9Gateless extends OpMode {
                 state = SPIN_UP_TWO;
                 break;
             case SPIN_UP_TWO:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 120);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 153);
                 state = LAUNCH_TWO;
                 break;
             case LAUNCH_TWO:
-                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 120)){
+                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 153)){
                     intakeUtil.launchStart();
                     state = RESET_TWO;
                     launchTimer.reset();
@@ -202,7 +187,7 @@ public class RedNear3x9Gateless extends OpMode {
                 break;
             case RESET_TWO:
                 if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
-                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 162);
+                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 160);
                     intakeUtil.launchEnd();
                     state = DRIVE_TO_INTAKE_TWO;
                     launchTimer.reset();
@@ -210,16 +195,15 @@ public class RedNear3x9Gateless extends OpMode {
                 break;
 
             case DRIVE_TO_INTAKE_TWO:
-                timeoutTime = 1.00;
                 Actions.runBlocking(driveToIntakeTwo);
                 state = DRIVE_TO_LAUNCH_THREE;
                 break;
             case DRIVE_TO_LAUNCH_THREE:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 162);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 160);
                 state = LAUNCH_THREE;
                 break;
             case LAUNCH_THREE:
-                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 162 )) {
+                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 160 )) {
                     intakeUtil.launchStart();
                     state = RESET_THREE;
                     launchTimer.reset();
@@ -228,7 +212,7 @@ public class RedNear3x9Gateless extends OpMode {
                 break;
             case RESET_THREE:
                 if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()) {
-                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 170);
+                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 190);
                     intakeUtil.launchEnd();
                     state = DRIVE_TO_INTAKE_THREE;
                     launchTimer.reset();
@@ -243,11 +227,11 @@ public class RedNear3x9Gateless extends OpMode {
 //                }
 //                break;
             case DRIVE_TO_LAUNCH_FOUR:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 170);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 190);
                 state = LAUNCH_FOUR;
                 break;
             case LAUNCH_FOUR:
-                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 170)) {
+                if(LauncherMotor.getVelocity() >= (LAUNCH_TICK_VELOCITY_NEAR + 190)) {
                     intakeUtil.launchStart();
                     launchTimer.reset();
                     autoUtil.resetEmptyTimer();
@@ -257,7 +241,7 @@ public class RedNear3x9Gateless extends OpMode {
                 break;
             case RESET_FOUR:
                 if(launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty()){
-                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 170);
+                    LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_NEAR + 190);
                     intakeUtil.launchEnd();
                     state = PARK;
                 }

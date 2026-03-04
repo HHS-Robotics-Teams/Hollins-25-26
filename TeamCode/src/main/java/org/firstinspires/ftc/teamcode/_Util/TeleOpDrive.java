@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightBack;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.rightFront;
+import static org.firstinspires.ftc.teamcode._Proccedural.Constants.LAUNCHER_RUN;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
@@ -23,7 +24,7 @@ public class TeleOpDrive {
         }
 
         //Power fixer
-        double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 1.90);
+        double denominator = max((abs(forward) + abs(strafes) + abs(rotates)), 0.95);
 
         //Setting Powers
         leftFront.setPower((forward + strafes + rotates) / denominator);

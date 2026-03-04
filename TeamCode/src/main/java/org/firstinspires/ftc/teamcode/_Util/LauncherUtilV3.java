@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode._Util;
 
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.ConveyorMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.IntakeMotor;
+import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LeftSideFeedRoller;
@@ -46,6 +47,7 @@ public class LauncherUtilV3 {
     private double phi;
     private final LightUtil lightUtil;
     private final HoodUtil hoodUtil;
+    private double hoodLaunchingTargetPose;
     ElapsedTime launchTimer = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
     ElapsedTime timeout = new ElapsedTime(ElapsedTime.SECOND_IN_NANO);
 
@@ -111,7 +113,9 @@ public class LauncherUtilV3 {
      */
     public String runLauncher() {
         setLightOff();
-        hoodUtil.updateHoodState(aprilTagMethod);
+        if(!launchState.equals(LaunchState.LAUNCH)){
+            hoodUtil.updateHoodState(aprilTagMethod);
+        }
         LauncherSafetyServo.setPosition(SAFTEY_FIRING);
         lightUtil.makeOff();
         lightUtil.updateLights();
@@ -154,6 +158,7 @@ public class LauncherUtilV3 {
                 } else if (isAuto || aprilTagMethod.tagMatchesAlliance(color)) {
                     if ((moveToLaunch()) && isSpunUp()) {
                         launchState = LaunchState.LAUNCH;
+                        hoodLaunchingTargetPose = LauncherHoodServo.getPosition() - 0.1;
                         launchTimer.reset();
                         autoUtil.resetEmptyTimer();
                     }
@@ -166,12 +171,17 @@ public class LauncherUtilV3 {
                 LeftSideFeedRoller.setPower(1);
                 rightSideFeedRoller.setPower(1);
                 frontFeedRoller.setPower(1);
-                if(target > 1500) {
-                    IntakeMotor.setPower(0.6);
-                    ConveyorMotor.setPower(0.6);
-                    LeftSideFeedRoller.setPower(0.6);
-                    rightSideFeedRoller.setPower(0.6);
-                    frontFeedRoller.setPower(0.6);
+                if(target > 1200) {
+                    if(launchTimer.seconds() >= 0.45) {
+                        LauncherHoodServo.setPosition(hoodLaunchingTargetPose);
+                    }
+                    if (target > 1500) {
+                        IntakeMotor.setPower(0.6);
+                        ConveyorMotor.setPower(0.6);
+                        LeftSideFeedRoller.setPower(0.6);
+                        rightSideFeedRoller.setPower(0.6);
+                        frontFeedRoller.setPower(0.6);
+                    }
                 }
                 if (launchTimer.seconds() >= 2.5 || autoUtil.isBotEmpty()) { //todo check this time
                     launchState = LaunchState.EXIT;
@@ -206,11 +216,17 @@ public class LauncherUtilV3 {
             if (range >= 90) {
                 margin = 1.25;
                 phi = 4;
-                turnPower = 0.4;
+                turnPower = 0.5;
             } else {
                 phi = 8;
                 margin = 2;
                 turnPower = 0.65;
+            }
+            if(abs(theta - phi) < 2.5 * margin) {
+                turnPower *= 0.75;
+                if(abs(theta - phi) < 1.5 * margin){
+                    turnPower *= 0.75;
+                }
             }
             if (theta >= phi + margin) {
                 leftFront.setPower(-turnPower);

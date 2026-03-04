@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode._OpModes.Auto.Red;
 
-import static org.firstinspires.ftc.teamcode._OpModes.Auto.Red.RedVeryFarMysteria.AutoState.*;
+import static org.firstinspires.ftc.teamcode._OpModes.Auto.Red.RedVeryFarSpikeMark.AutoState.*;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherHoodServo;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode._Proccedural.Components.LauncherSafetyServo;
@@ -11,9 +11,7 @@ import static org.firstinspires.ftc.teamcode._Proccedural.Constants.SAFTEY_FIRIN
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
-import com.acmerobotics.roadrunner.InstantFunction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -27,7 +25,7 @@ import org.firstinspires.ftc.teamcode._Util.LightUtil;
 import org.firstinspires.ftc.teamcode._Proccedural.Components;
 
 @Autonomous
-public class RedVeryFarMysteria extends OpMode {
+public class RedVeryFarSpikeMark extends OpMode {
     MecanumDrive drive;
     IntakeUtil intakeUtil = new IntakeUtil();
     InstantAction IntakePickup = new InstantAction(() -> intakeUtil.intakeOn());
@@ -79,24 +77,25 @@ public class RedVeryFarMysteria extends OpMode {
         Components.initComponents(hardwareMap);
         turnToLaunch = drive.actionBuilder(new Pose2d(72 - (16.25/2), (13 / 2) + 24, Math.toRadians(180)))
                 .waitSeconds(3)
-                .strafeToLinearHeading(new Vector2d(50, 13), Math.toRadians(152))
+                .strafeToLinearHeading(new Vector2d(50, 13), Math.toRadians(151))
                 .build();
         driveToIntakeOne = drive.actionBuilder(new Pose2d(50, 13, Math.toRadians(152)))
                 .afterDisp(20, () -> intakeUtil.intakeOn())
-                .strafeToLinearHeading(new Vector2d(65,55),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(60,54),Math.toRadians(90))
                 .waitSeconds(0.1)
-                .strafeToConstantHeading(new Vector2d(68,60))
+                .strafeToConstantHeading(new Vector2d(65,54))
+                .strafeToLinearHeading(new Vector2d(68,60),Math.toRadians(60))
                 .strafeToLinearHeading(new Vector2d(50, 12), Math.toRadians(152.5))
                 .afterDisp(5, () -> intakeUtil.intakeOff())
                 .build();
         driveToIntakeTwo = drive.actionBuilder(new Pose2d(52, 12, Math.toRadians(153)))
-                .strafeToLinearHeading(new Vector2d(40,28),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(38,28),Math.toRadians(90))
                 .afterDisp(1,IntakePickup)
                 .waitSeconds(0.2)
                 .lineToY(41)
                 .lineToY(59)
                 .waitSeconds(0.2)
-                .strafeToLinearHeading(new Vector2d(50, 13),Math.toRadians(154))
+                .strafeToLinearHeading(new Vector2d(50, 13),Math.toRadians(155))
                 .build();
         telemetry.addLine("Ready to Launch");
         lightUtil = new LightUtil(2, hardwareMap);
@@ -109,8 +108,8 @@ public class RedVeryFarMysteria extends OpMode {
     public void start(){
         lightUtil.makeOff();
         lightUtil.updateLights();
-        LauncherHoodServo.setPosition(0.8);
-        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 380);
+        LauncherHoodServo.setPosition(0.75);
+        LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 425);
         Actions.runBlocking(turnToLaunch);
     }
 
@@ -140,20 +139,21 @@ public class RedVeryFarMysteria extends OpMode {
                 break;
 
             case SPIN_UP:
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 380);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 425);
                 state = LAUNCH_ONE;
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
                 break;
             case LAUNCH_ONE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 380){ // do not change this time
-                    intakeUtil.launchStart(0.6, 0.6);
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 425){ // do not change this time
+                    intakeUtil.launchStart(0.5, 0.5);
                     launchTimer.reset();
                     autoUtil.resetEmptyTimer();
                     state = RESET_ONE;
                 }
                 break;
             case RESET_ONE:
-                if (launchTimer.seconds() >= Launch_Time || autoUtil.isBotEmpty() ) { // todo change Time
+                if (launchTimer.seconds() >= (Launch_Time + .5) || autoUtil.isBotEmpty() ) { // todo change Time
+
                     LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR);
                     intakeUtil.launchEnd();
                     state = DRIVE_TO_INTAKE_ONE;
@@ -164,6 +164,7 @@ public class RedVeryFarMysteria extends OpMode {
                 state = DRIVE_TO_LAUNCH_TWO;
                 Actions.runBlocking(driveToIntakeOne);
                 intakeUtil.intakeOff();
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 405);
                 break;
             case DRIVE_TO_LAUNCH_TWO:
                 intakeTimer.reset();
@@ -171,13 +172,13 @@ public class RedVeryFarMysteria extends OpMode {
                 break;
             case SPIN_UP_TWO:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 400);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 405);
                 state = LAUNCH_TWO;
                 launchTimer.reset();
                 autoUtil.resetEmptyTimer();
                 break;
             case LAUNCH_TWO:
-                if(LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 400){
+                if(LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 405){
                     intakeUtil.launchStart(0.8, 0.8);
                     launchTimer.reset();
                     autoUtil.resetEmptyTimer();
@@ -200,6 +201,7 @@ public class RedVeryFarMysteria extends OpMode {
                 break;
             case INTAKE_TWO:
                 state = DRIVE_TO_LAUNCH_THREE;
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 410);
                 break;
             case DRIVE_TO_LAUNCH_THREE:
                 intakeTimer.reset();
@@ -207,11 +209,11 @@ public class RedVeryFarMysteria extends OpMode {
                 break;
             case SPIN_UP_THREE:
                 LauncherSafetyServo.setPosition(SAFTEY_FIRING);
-                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 400);
+                LauncherMotor.setVelocity(LAUNCH_TICK_VELOCITY_FAR + 410);
                 state = LAUNCH_THREE;
                 break;
             case LAUNCH_THREE:
-                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 400) { // todo change Time
+                if (LauncherMotor.getVelocity() >= LAUNCH_TICK_VELOCITY_FAR + 410) { // todo change Time
 
                     intakeUtil.launchStart(0.8, 0.8);
                     launchTimer.reset();

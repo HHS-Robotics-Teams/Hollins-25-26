@@ -23,7 +23,7 @@ public class AutoUtil {
             //|| frontDistance.getDistance(DistanceUnit.INCH) <= 7
             || rearDistance.getDistance(DistanceUnit.INCH) <= 11.5
             || rearSideDistance.getDistance(DistanceUnit.INCH) <= 6
-            || rearTopDistance.getDistance(DistanceUnit.INCH) <= 9) {
+            || rearTopDistance.getDistance(DistanceUnit.INCH) <= 4) {
             emptyTimer.reset();
         }
         return emptyTimer.seconds() >= timeout;
