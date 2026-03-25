@@ -4,7 +4,9 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHan
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.initComponents;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeedRoller2;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeedRoller2;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Launcher_close_Vel;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.first_intake_Powers;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.intake_reversed;
@@ -31,14 +33,18 @@ public class LauncherHandServoTesting extends OpMode {
     @Override
     public void loop() {
         input.pollGamepad(gamepad1);
-        LauncherMotor.setVelocity(Launcher_close_Vel);
+        //LauncherMotor.setVelocity(Launcher_close_Vel);
         if (input.dpad_up.held()) {
             leftFeedRoller.setPower(1);
             rightFeedRoller.setPower(1);
+            leftFeedRoller2.setPower(1);
+            rightFeedRoller2.setPower(1);
         }
         else  {
             leftFeedRoller.setPower(0);
             rightFeedRoller.setPower(0);
+            leftFeedRoller2.setPower(0);
+            rightFeedRoller2.setPower(0);
         }
         if (input.x.down()){
             intake_reversed = true;

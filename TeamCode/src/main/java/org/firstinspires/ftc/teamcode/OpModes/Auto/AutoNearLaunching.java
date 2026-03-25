@@ -2,8 +2,14 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHandServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeSecondRollerMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeedRoller2;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftRear;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeedRoller2;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Idle_Vel;
@@ -54,11 +60,12 @@ public class AutoNearLaunching extends OpMode {
     }
     @Override
     public void start() {
-        leftFront.setPower(.2);
-        rightFront.setPower(.2);
-        leftRear.setPower(.2);
-        rightRear.setPower(.2);
-        LauncherMotor.setVelocity(targetVel);
+        leftFront.setPower(-.4);
+        rightFront.setPower(-.4);
+        leftRear.setPower(-.4);
+        rightRear.setPower(-.4);
+        LauncherMotor.setVelocity(targetVelTwo);
+        LauncherHandServo.setPosition(0.85);
         timeAtStart = getRuntime();
         state = LaunchState.IDLE;
     }
@@ -76,33 +83,35 @@ public class AutoNearLaunching extends OpMode {
 
             switch (state) {
                 case IDLE:
-                    if (getRuntime() > (timeAtStart + 5.25)) { //todo tune this value
+                    if (getRuntime() > (timeAtStart + 3.15)) { //todo tune this value
                         leftFront.setPower(0);
                         rightFront.setPower(0);
                         leftRear.setPower(0);
                         rightRear.setPower(0);
                         LauncherMotor.setPower(0);
-                        LauncherHandServo.setPosition(loading);
                         state = LaunchState.SPIN_UP;
                     }
                     break;
                 case SPIN_UP:
-                    LauncherMotor.setVelocity(targetVelTwo);
                     state = LaunchState.FIRE_BALL;
-                    if (Intake_Time.seconds() >= 2) {
-                        Launcher_Time.reset();
-                        state = LaunchState.FIRE_BALL;
-                    }
+                    Launcher_Time.reset();
                     break;
 
                 case FIRE_BALL:
                     LauncherMotor.setVelocity(targetVelTwo);
+                    LauncherHandServo.setPosition(0.8);
                     // Use a 90-95% threshold so it actually fires even if the motor is slightly slow
-                    if (LauncherMotor.getVelocity() >= (targetVelTwo* 0.975)) {
-                        LauncherHandServo.setPosition(firing);
-                        if (Launcher_Time.seconds() >= TimeTwo + 2) {
+                    if (LauncherMotor.getVelocity() >= (targetVelTwo * 0.975)) {
+                        //LauncherHandServo.setPosition(firing);
+                        rightFeedRoller.setPower(1);
+                        rightFeedRoller2.setPower(1);
+                        leftFeedRoller.setPower(1);
+                        leftFeedRoller2.setPower(1);
+                        intakeMotor.setPower(0.45);
+                        intakeSecondRollerMotor.setPower(0.6);
+                        if (Launcher_Time.seconds() >= 8) {
                             Intake_Time.reset();
-                            state = LaunchState.LOAD_BALL_TWO;
+                            state = LaunchState.STRAFE;
                         }
                     }
                     break;
@@ -156,15 +165,21 @@ public class AutoNearLaunching extends OpMode {
                     break;
                 case STRAFE:
                     LauncherMotor.setVelocity(Idle_Vel);
-                    leftFront.setPower(-.2);
-                    rightFront.setPower(.2);
-                    leftRear.setPower(.2);
-                    rightRear.setPower(-.2);
+                    rightFeedRoller.setPower(0);
+                    rightFeedRoller2.setPower(0);
+                    leftFeedRoller.setPower(0);
+                    leftFeedRoller2.setPower(0);
+                    intakeMotor.setPower(0);
+                    intakeSecondRollerMotor.setPower(0);
+                    leftFront.setPower(-.5);
+                    rightFront.setPower(.5);
+                    leftRear.setPower(.5);
+                    rightRear.setPower(-.5);
                     Strafe_Time.reset();
                     state = LaunchState.END;
                     break;
                 case END:
-                    if (Strafe_Time.seconds() >= 4) {
+                    if (Strafe_Time.seconds() >= 2) {
                         leftFront.setPower(0);
                         rightFront.setPower(0);
                         leftRear.setPower(0);

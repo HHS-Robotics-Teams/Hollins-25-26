@@ -6,9 +6,11 @@ import static org.firstinspires.ftc.teamcode.aProccedural.Components.initCompone
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeSecondRollerMotor;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeedRoller2;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeedRoller2;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Idle_Vel;
@@ -79,6 +81,12 @@ public class CompDriveV3 extends OpMode {
             intake_reversed = false;
             Launching_Far = false;
             Launching_Close = true;
+            leftFeedRoller.setPower(0);
+            rightFeedRoller.setPower(0);
+            leftFeedRoller2.setPower(0);
+            rightFeedRoller2.setPower(0);
+            intake_stop();
+            LauncherHandServo.setPosition(loading);
             state = LaunchState.IDLE;
         }
 
@@ -120,13 +128,18 @@ public class CompDriveV3 extends OpMode {
         intake_reversed = input.x.held();
 
 
-            /* Manual Hand Movements */
+            /* Manual Feed Movements */
             if (input.dpad_up.down()) {
                 rightFeedRoller.setPower(1);
                 leftFeedRoller.setPower(1);
+                rightFeedRoller2.setPower(1);
+                leftFeedRoller2.setPower(1);
             }
             if (input.dpad_down.down()) {
-                intake_stop();
+                rightFeedRoller.setPower(0);
+                leftFeedRoller.setPower(0);
+                rightFeedRoller2.setPower(0);
+                leftFeedRoller2.setPower(0);
             }
 
 
@@ -135,8 +148,8 @@ public class CompDriveV3 extends OpMode {
             /* ---------- Drivetrain ---------- */
 
             //Drivetrain movement values
-            double forward = gamepad1.left_stick_y;  //x
-            double strafes = -gamepad1.left_stick_x;  //y
+            double forward = -gamepad1.left_stick_y;  //x
+            double strafes = gamepad1.left_stick_x;  //y
             double rotates = (gamepad1.right_stick_x * .8); //rx
 
             //Setting Powers
@@ -160,7 +173,7 @@ public class CompDriveV3 extends OpMode {
             if (Launching_Far || Launching_Close) {
                 switch (state) {
                     case IDLE:
-                        LauncherMotor.setVelocity(Idle_Vel);
+                        LauncherMotor.setVelocity(Idle_Vel + 300);
                         break;
 
                     case SPIN_UP:
@@ -174,22 +187,50 @@ public class CompDriveV3 extends OpMode {
                         LauncherHandServo.setPosition(.8);
                         // Use a 90-95% threshold so it actually fires even if the motor is slightly slow
                         main_intake_Powers();
-                        rightFeedRoller.setPower(1);
-                        leftFeedRoller.setPower(1);
                         Intake_Time.reset();
                         state = LaunchState.LOAD_BALL_TWO;
 
                         break;
                     case LOAD_BALL_TWO:
-                        if (Intake_Time.seconds() >= 5) {
+                        if (Intake_Time.seconds() >= 5.75) {
                             intake_stop();
                             LauncherHandServo.setPosition(loading);
                             rightFeedRoller.setPower(0);
                             leftFeedRoller.setPower(0);
+                            rightFeedRoller2.setPower(0);
+                            leftFeedRoller2.setPower(0);
                             Launching_Far = false;
                             Launching_Close = false;
                             isIntaking = true;
                             state = LaunchState.STOP_AND_RESET;
+                        } else if (Launcher_Time.seconds() >= 4.5 || LauncherMotor.getVelocity() >= 875) {
+                            leftFeedRoller.setPower(1);
+                            rightFeedRoller.setPower(1);
+                            leftFeedRoller2.setPower(1);
+                            rightFeedRoller2.setPower(1);
+                            intakeSecondRollerMotor.setPower(0.75);
+                        } else if (Launcher_Time.seconds() >= 3.25) {
+                            rightFeedRoller.setPower(0);
+                            leftFeedRoller.setPower(0);
+                            rightFeedRoller2.setPower(0);
+                            leftFeedRoller2.setPower(0);
+                        } else if (Launcher_Time.seconds() >= 2.25 || LauncherMotor.getVelocity() >= 875) {
+                            leftFeedRoller.setPower(1);
+                            rightFeedRoller.setPower(1);
+                            leftFeedRoller2.setPower(1);
+                            rightFeedRoller2.setPower(1);
+                            intakeSecondRollerMotor.setPower(0.75);
+                        } else if (Launcher_Time.seconds() >= 1.5) {
+                            rightFeedRoller.setPower(0);
+                            leftFeedRoller.setPower(0);
+                            rightFeedRoller2.setPower(0);
+                            leftFeedRoller2.setPower(0);
+                        } else if (Launcher_Time.seconds() >= 0.5 || LauncherMotor.getVelocity() >= 875) {
+                            leftFeedRoller.setPower(1);
+                            rightFeedRoller.setPower(1);
+                            leftFeedRoller2.setPower(1);
+                            rightFeedRoller2.setPower(1);
+                            intakeSecondRollerMotor.setPower(0.75);
                         }
                         break;
 
@@ -199,7 +240,8 @@ public class CompDriveV3 extends OpMode {
                 }
             } else {
                 // Default state when not shooting
-                LauncherMotor.setVelocity(Idle_Vel);
+                LauncherMotor.setVelocity(Idle_Vel + 300);
+                LauncherHandServo.setPosition(0.8);
             }
         }
     }

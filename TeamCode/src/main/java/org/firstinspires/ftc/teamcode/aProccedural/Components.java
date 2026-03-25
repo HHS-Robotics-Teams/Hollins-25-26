@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 /**
  * File to store all hardware code
@@ -26,7 +27,9 @@ public class Components {
     public static Servo LauncherHandServo;
     public static Servo holderServo;
     public static CRServo leftFeedRoller;
+    public static CRServo leftFeedRoller2;
     public static CRServo rightFeedRoller;
+    public static CRServo rightFeedRoller2;
 
 
 
@@ -48,7 +51,8 @@ public class Components {
         holderServo = hardwareMap.get(Servo.class, "holderServo");
         leftFeedRoller = hardwareMap.get(CRServo.class,"leftFeedRoller");
         rightFeedRoller = hardwareMap.get(CRServo.class,"rightFeedRoller");
-
+        leftFeedRoller2 = hardwareMap.get(CRServo.class,"leftFeedRoller2");
+        rightFeedRoller2 = hardwareMap.get(CRServo.class,"rightFeedRoller2");
 
 
 
@@ -60,12 +64,18 @@ public class Components {
 
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
+
         LauncherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         LauncherMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        MotorConfigurationType type = LauncherMotor.getMotorType().clone();
+        type.setAchieveableMaxRPMFraction(1.0);
+        LauncherMotor.setMotorType(type);
         //LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(75, 7.5, 10, 20));
-        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(130, 5, 50, 20));
+        //LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(130, 5, 50, 20));
+        LauncherMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(250, 20, 15, 17));
+
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -75,6 +85,8 @@ public class Components {
 
         leftFeedRoller.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFeedRoller.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFeedRoller2.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFeedRoller2.setDirection(DcMotorSimple.Direction.FORWARD);
 
     }
 

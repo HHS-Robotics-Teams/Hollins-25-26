@@ -2,8 +2,14 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherHandServo;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.LauncherMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.intakeSecondRollerMotor;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFeedRoller2;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.leftRear;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeedRoller;
+import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFeedRoller2;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightFront;
 import static org.firstinspires.ftc.teamcode.aProccedural.Components.rightRear;
 import static org.firstinspires.ftc.teamcode.aProccedural.Constants.Idle_Vel;
@@ -50,7 +56,12 @@ public class AutoFarLaunching extends OpMode {
     }
     @Override
     public void start() {
+        leftFront.setPower(.15);
+        rightFront.setPower(.15);
+        leftRear.setPower(.15);
+        rightRear.setPower(.15);
         LauncherMotor.setVelocity(targetVel);
+        Launcher_Time.reset();
         state = LaunchState.IDLE;
     }
 
@@ -66,12 +77,18 @@ public class AutoFarLaunching extends OpMode {
 
             switch (state) {
                 case IDLE:
+                    if (Launcher_Time.seconds() >= 1){
+                        leftFront.setPower(.0);
+                        rightFront.setPower(.0);
+                        leftRear.setPower(.0);
+                        rightRear.setPower(.0);}
                     Intake_Time.reset();
                     state = LaunchState.SPIN_UP;
+                break;
 
                 case SPIN_UP:
                     LauncherMotor.setVelocity(targetVel);
-                    LauncherHandServo.setPosition(loading);
+                    //LauncherHandServo.setPosition(loading);
                     if (Intake_Time.seconds() >= 2) {
                         Launcher_Time.reset();
                         state = LaunchState.FIRE_BALL;
@@ -82,10 +99,16 @@ public class AutoFarLaunching extends OpMode {
                     LauncherMotor.setVelocity(targetVel);
                     // Use a 90-95% threshold so it actually fires even if the motor is slightly slow
                     if (LauncherMotor.getVelocity() >= (targetVel * 0.95)) {
-                        LauncherHandServo.setPosition(firing);
-                        if (Launcher_Time.seconds() >= TimeTwo) {
+                        //LauncherHandServo.setPosition(firing);
+                        rightFeedRoller.setPower(1);
+                        rightFeedRoller2.setPower(1);
+                        leftFeedRoller.setPower(1);
+                        leftFeedRoller2.setPower(1);
+                        intakeMotor.setPower(0.45);
+                        intakeSecondRollerMotor.setPower(0.6);
+                        if (Launcher_Time.seconds() >= 10) {
                             Intake_Time.reset();
-                            state = LaunchState.LOAD_BALL_TWO;
+                            state = LaunchState.DRIVE_FORWARD;
                         }
                     }
                     break;
@@ -138,15 +161,21 @@ public class AutoFarLaunching extends OpMode {
                     break;
                 case DRIVE_FORWARD:
                     LauncherMotor.setVelocity(Idle_Vel);
-                    leftFront.setPower(-.2);
-                    rightFront.setPower(-.2);
-                    leftRear.setPower(-.2);
-                    rightRear.setPower(-.2);
+                    rightFeedRoller.setPower(0);
+                    rightFeedRoller2.setPower(0);
+                    leftFeedRoller.setPower(0);
+                    leftFeedRoller2.setPower(0);
+                    intakeMotor.setPower(0);
+                    intakeSecondRollerMotor.setPower(0);
+                    leftFront.setPower(0.1);
+                    rightFront.setPower(0.1);
+                    leftRear.setPower(0.1);
+                    rightRear.setPower(0.1);
                     Strafe_Time.reset();
                     state = LaunchState.END;
                     break;
                 case END:
-                    if (Strafe_Time.seconds() >= TimeTwo) {
+                    if (Strafe_Time.seconds() >= 3) {
                         leftFront.setPower(0);
                         rightFront.setPower(0);
                         leftRear.setPower(0);

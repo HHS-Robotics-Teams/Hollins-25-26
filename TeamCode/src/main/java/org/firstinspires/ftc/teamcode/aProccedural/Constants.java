@@ -9,8 +9,8 @@ public class Constants {
         public static final double shootingClose = .3;
     /* New Launcher Velocity's */
         public static final double Idle_Vel = 500;
-        public static final double Launcher_far_Vel = 1100;
-        public static final double Launcher_close_Vel = 800;
+        public static final double Launcher_far_Vel = 1125;
+        public static final double Launcher_close_Vel = 900;
         public static double targetVel;
 
     /* Old positions for holder servo */

@@ -28,7 +28,7 @@ public class VeloPidTunner  extends LinearOpMode {
             DcMotorEx myMotor = hardwareMap.get(DcMotorEx.class, "LauncherMotor");
 
             // Reverse as appropriate
-            myMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            myMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
             for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
                 module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
