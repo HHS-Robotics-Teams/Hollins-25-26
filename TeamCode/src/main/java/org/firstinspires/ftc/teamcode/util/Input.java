@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.aProccedural;
+package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
  tracking of how long a button has been held
  */
 public class Input {
-
-
     public static class ButtonState {
         public int numTicksReleased = -1;
         public int numTicksHeld = -1;
@@ -46,9 +44,7 @@ public class Input {
             return numTicksReleased == 0;
         }
     }
-
     public static class DisplacingButtonState extends ButtonState {
-
         /**
          * Usually, how 'far down' a button has been pressed. (i.e. trigger pull depth)
          */
@@ -59,7 +55,6 @@ public class Input {
          * Negative is the "towards released" direction and positive "towards pressed".
          */
         public double displacementDelta = 0;
-
     }
 
     public ButtonState a = new ButtonState();
