@@ -20,8 +20,7 @@ public class exampleOpMode extends NextFTCOpMode {
     public exampleOpMode() {
         addComponents(
                 new SubsystemComponent(ExampleSystem.INSTANCE),
-                BulkReadComponent.INSTANCE,
-                BindingsComponent.INSTANCE
+                BulkReadComponent.INSTANCE
         );
     }
     private Command run() {
@@ -42,5 +41,6 @@ public class exampleOpMode extends NextFTCOpMode {
     public void onStartButtonPressed() {
         run().schedule();
         //then do other stuff
+        requestOpModeStop();
     }
 }

@@ -19,19 +19,18 @@ public class ExampleSystem implements Subsystem {
 
     private int target_vel = 1100;
     private final MotorEx exampleMotor = new MotorEx("example");
-    private final ServoEx exampleServo = new ServoEx("example");
+    private final ServoEx exampleServo = new ServoEx("exServo");
 
     private final ControlSystem motorControl = ControlSystem.builder()
             .velPid(25,1,5)
             .basicFF(45)
             .build();
 
-    private final Command backgroundSpinUp = new RunToVelocity(motorControl, target_vel).requires(this);
     public Command idle = new RunToVelocity(motorControl, 1100)
             .then(new SetPosition(exampleServo, 1))
             .requires(this);
     public Command spinUp = new InstantCommand(this::calcTarget)
-            .then(backgroundSpinUp).requires(this /* would also need camera & calculation stuff */);
+            .then(new RunToVelocity(motorControl, target_vel)).requires(this /* would also need camera & calculation stuff */);
     public Command launch = new IfElseCommand(() -> abs(exampleMotor.getVelocity() - target_vel) <= 50,
             new SetPosition(exampleServo, 0)
             .then(new InstantCommand(() -> LAUNCHER_RUN = true))).requires(this);
